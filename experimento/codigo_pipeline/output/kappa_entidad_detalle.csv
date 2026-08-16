@@ -1,0 +1,129 @@
+variant,k,entity,entity_base,es_LOO,kappa_raw,kappa_used,n_train,d_features,kappa_inf,es_artefacto_standardscaler,genuinamente_singular,motivo_singularidad,historia_corta_registro,oos_MASE,oos_RMSE,oos_Count
+baseline,2,BCIE Systemic Hub,BCIE Systemic Hub,False,7084.803782491389,7084.803782491389,55,14,False,False,False,,False,0.12494927811938397,0.17291115670479085,1.0
+baseline,2,Guatemala,Guatemala,False,282.95081823245647,282.95081823245647,53,14,False,False,False,,False,2.782790838103555,6.248500828353194,6.0
+baseline,2,El Salvador,El Salvador,False,989.5067931423464,989.5067931423464,53,14,False,False,False,,False,0.2081801360888237,0.35063772942164434,4.0
+baseline,2,Honduras,Honduras,False,77.59020164732055,77.59020164732055,54,14,False,False,False,,False,0.9185118508144501,1.5849044490042086,6.0
+baseline,2,Nicaragua,Nicaragua,False,308.65788655392925,308.65788655392925,49,14,False,False,False,,False,3.225336955193102,8.422575679876427,4.0
+baseline,2,Costa Rica,Costa Rica,False,392.11543671760415,392.11543671760415,53,14,False,False,False,,False,0.21574965048308933,0.3204428767288262,6.0
+baseline,2,Panamá,Panamá,False,2.2370961239828256e+17,2.2370961239828256e+17,9,14,False,False,False,,False,0.7016792273853637,1.1583449641244827,4.0
+baseline,2,República Dominicana,República Dominicana,False,3.93153948481934e+180,3.93153948481934e+180,2,14,False,False,False,,True,,,
+baseline,2,Colombia,Colombia,False,4.039245600038499e+17,4.039245600038499e+17,4,14,False,False,False,,False,1.2010279808944226,1.6620435150721935,1.0
+baseline,2,__LOO__Guatemala,Guatemala,True,3195.7205555697983,3195.7205555697983,55,14,False,False,False,,False,,,
+baseline,2,__LOO__El Salvador,El Salvador,True,4367.926400429935,4367.926400429935,55,14,False,False,False,,False,,,
+baseline,2,__LOO__Honduras,Honduras,True,6601.125950799149,6601.125950799149,55,14,False,False,False,,False,,,
+baseline,2,__LOO__Nicaragua,Nicaragua,True,3352.8948143406456,3352.8948143406456,55,14,False,False,False,,False,,,
+baseline,2,__LOO__Costa Rica,Costa Rica,True,7112.833218293063,7112.833218293063,55,14,False,False,False,,False,,,
+baseline,2,__LOO__Panamá,Panamá,True,7015.477185919711,7015.477185919711,55,14,False,False,False,,False,,,
+baseline,2,__LOO__República Dominicana,República Dominicana,True,6838.275303990381,6838.275303990381,55,14,False,False,False,,True,,,
+baseline,2,__LOO__Colombia,Colombia,True,7417.633966094142,7417.633966094142,55,14,False,False,False,,False,,,
+baseline,3,BCIE Systemic Hub,BCIE Systemic Hub,False,54051.93833680965,54051.93833680965,54,27,False,False,False,,False,0.9311963867374322,1.4966960197887158,1.0
+baseline,3,Guatemala,Guatemala,False,1446.8057050020502,1446.8057050020502,52,27,False,False,False,,False,1.4631965881828508,3.450510842324081,6.0
+baseline,3,El Salvador,El Salvador,False,4582.5111033643125,4582.5111033643125,52,27,False,False,False,,False,,,
+baseline,3,Honduras,Honduras,False,644.694455166033,644.694455166033,53,27,False,False,False,,False,0.5309032982302858,1.057134499717574,6.0
+baseline,3,Nicaragua,Nicaragua,False,3323.1371412997946,3323.1371412997946,48,27,False,False,False,,False,4.425072679493406,13.238801759994422,4.0
+baseline,3,Costa Rica,Costa Rica,False,4291.357102467447,4291.357102467447,52,27,False,False,False,,False,0.13463301286874677,0.24993090153030734,6.0
+baseline,3,Panamá,Panamá,False,4.655203410773999e+17,4.655203410773999e+17,8,27,False,False,False,,False,0.49105991891358625,0.8778503227379689,4.0
+baseline,3,Colombia,Colombia,False,inf,inf,3,27,True,False,True,singular_real_en_entrenamiento,False,1.45545565852274,2.3393289773408257,1.0
+baseline,3,__LOO__Guatemala,Guatemala,True,15502.669806653987,15502.669806653987,54,27,False,False,False,,False,,,
+baseline,3,__LOO__El Salvador,El Salvador,True,28459.4551683504,28459.4551683504,54,27,False,False,False,,False,,,
+baseline,3,__LOO__Honduras,Honduras,True,66115.34577505353,66115.34577505353,54,27,False,False,False,,False,,,
+baseline,3,__LOO__Nicaragua,Nicaragua,True,25394.395217315086,25394.395217315086,54,27,False,False,False,,False,,,
+baseline,3,__LOO__Costa Rica,Costa Rica,True,62731.84203785698,62731.84203785698,54,27,False,False,False,,False,,,
+baseline,3,__LOO__Panamá,Panamá,True,54238.227147937214,54238.227147937214,54,27,False,False,False,,False,,,
+baseline,3,__LOO__Colombia,Colombia,True,60697.18161749327,60697.18161749327,54,27,False,False,False,,False,,,
+ledoitwolf,2,BCIE Systemic Hub,BCIE Systemic Hub,False,7084.803782491389,10.050873031344807,55,14,False,False,False,,False,0.12494927811938379,0.17291115670479051,1.0
+ledoitwolf,2,Guatemala,Guatemala,False,282.95081823245647,1.9097383127814362,53,14,False,False,False,,False,2.7827908381035558,6.248500828353193,6.0
+ledoitwolf,2,El Salvador,El Salvador,False,989.5067931423464,1.5841177921232317,53,14,False,False,False,,False,0.20818013608882321,0.350637729421643,4.0
+ledoitwolf,2,Honduras,Honduras,False,77.59020164732055,6.930239928578555,54,14,False,False,False,,False,0.9185118508144507,1.5849044490042088,6.0
+ledoitwolf,2,Nicaragua,Nicaragua,False,308.65788655392925,5.235181569174557,49,14,False,False,False,,False,3.2253369551931037,8.422575679876427,4.0
+ledoitwolf,2,Costa Rica,Costa Rica,False,392.11543671760415,1.661052972308576,53,14,False,False,False,,False,0.21574965048309,0.3204428767288272,6.0
+ledoitwolf,2,Panamá,Panamá,False,2.2370961239828256e+17,4.792478664904652,9,14,False,False,False,,False,0.701679227385364,1.1583449641244827,4.0
+ledoitwolf,2,República Dominicana,República Dominicana,False,3.93153948481934e+180,3.93153948481934e+180,2,14,False,False,False,,True,,,
+ledoitwolf,2,Colombia,Colombia,False,4.039245600038499e+17,7.150276589538426,4,14,False,False,False,,False,1.201027980894423,1.6620435150721935,1.0
+ledoitwolf,2,__LOO__Guatemala,Guatemala,True,3195.7205555697983,15.052960835925068,55,14,False,False,False,,False,,,
+ledoitwolf,2,__LOO__El Salvador,El Salvador,True,4367.926400429935,8.914110921860157,55,14,False,False,False,,False,,,
+ledoitwolf,2,__LOO__Honduras,Honduras,True,6601.125950799149,5.450593389839898,55,14,False,False,False,,False,,,
+ledoitwolf,2,__LOO__Nicaragua,Nicaragua,True,3352.8948143406456,13.230053755141789,55,14,False,False,False,,False,,,
+ledoitwolf,2,__LOO__Costa Rica,Costa Rica,True,7112.833218293063,10.606372917140758,55,14,False,False,False,,False,,,
+ledoitwolf,2,__LOO__Panamá,Panamá,True,7015.477185919711,9.838313836828034,55,14,False,False,False,,False,,,
+ledoitwolf,2,__LOO__República Dominicana,República Dominicana,True,6838.275303990381,10.03259986829494,55,14,False,False,False,,True,,,
+ledoitwolf,2,__LOO__Colombia,Colombia,True,7417.633966094142,10.030860339438663,55,14,False,False,False,,False,,,
+ledoitwolf,3,BCIE Systemic Hub,BCIE Systemic Hub,False,54051.93833680965,15.596756900530023,54,27,False,False,False,,False,0.931196386737434,1.4966960197887182,1.0
+ledoitwolf,3,Guatemala,Guatemala,False,1446.8057050020502,1.424257222782742,52,27,False,False,False,,False,1.4631965881828481,3.450510842324082,6.0
+ledoitwolf,3,El Salvador,El Salvador,False,4582.5111033643125,1.8661175308239106,52,27,False,False,False,,False,,,
+ledoitwolf,3,Honduras,Honduras,False,644.694455166033,7.025000239453192,53,27,False,False,False,,False,0.5309032982302851,1.0571344997175725,6.0
+ledoitwolf,3,Nicaragua,Nicaragua,False,3323.1371412997946,6.023482789557377,48,27,False,False,False,,False,4.425072679493407,13.238801759994422,4.0
+ledoitwolf,3,Costa Rica,Costa Rica,False,4291.357102467447,2.8826595350635005,52,27,False,False,False,,False,0.13463301286874652,0.2499309015303069,6.0
+ledoitwolf,3,Panamá,Panamá,False,4.655203410773999e+17,6.572476998100431,8,27,False,False,False,,False,0.4910599189135891,0.8778503227379746,4.0
+ledoitwolf,3,Colombia,Colombia,False,inf,27.51433415281818,3,27,False,False,False,,False,1.4554556585227365,2.3393289773408195,1.0
+ledoitwolf,3,__LOO__Guatemala,Guatemala,True,15502.669806653987,17.982603651653527,54,27,False,False,False,,False,,,
+ledoitwolf,3,__LOO__El Salvador,El Salvador,True,28459.4551683504,14.958119242681104,54,27,False,False,False,,False,,,
+ledoitwolf,3,__LOO__Honduras,Honduras,True,66115.34577505353,9.127951783663812,54,27,False,False,False,,False,,,
+ledoitwolf,3,__LOO__Nicaragua,Nicaragua,True,25394.395217315086,15.949860446862465,54,27,False,False,False,,False,,,
+ledoitwolf,3,__LOO__Costa Rica,Costa Rica,True,62731.84203785698,12.220185232014654,54,27,False,False,False,,False,,,
+ledoitwolf,3,__LOO__Panamá,Panamá,True,54238.227147937214,15.20396855894794,54,27,False,False,False,,False,,,
+ledoitwolf,3,__LOO__Colombia,Colombia,True,60697.18161749327,15.582738735751386,54,27,False,False,False,,False,,,
+tikhonov_covariance,2,BCIE Systemic Hub,BCIE Systemic Hub,False,7084.803782491389,28.61702561489414,55,14,False,False,False,,False,0.12494927811938315,0.17291115670478974,1.0
+tikhonov_covariance,2,Guatemala,Guatemala,False,282.95081823245647,17.657423291573302,53,14,False,False,False,,False,2.7827908381035553,6.248500828353195,6.0
+tikhonov_covariance,2,El Salvador,El Salvador,False,989.5067931423464,17.144791105941476,53,14,False,False,False,,False,0.20818013608882313,0.35063772942164306,4.0
+tikhonov_covariance,2,Honduras,Honduras,False,77.59020164732055,14.635000065708702,54,14,False,False,False,,False,0.91851185081445,1.5849044490042083,6.0
+tikhonov_covariance,2,Nicaragua,Nicaragua,False,308.65788655392925,18.79279136551219,49,14,False,False,False,,False,3.2253369551931015,8.422575679876427,4.0
+tikhonov_covariance,2,Costa Rica,Costa Rica,False,392.11543671760415,17.24694763433561,53,14,False,False,False,,False,0.21574965048308928,0.3204428767288261,6.0
+tikhonov_covariance,2,Panamá,Panamá,False,2.2370961239828256e+17,23.071709693391426,9,14,False,False,False,,False,0.701679227385364,1.1583449641244832,4.0
+tikhonov_covariance,2,República Dominicana,República Dominicana,False,3.93153948481934e+180,57.00000000000003,2,14,False,False,False,,True,,,
+tikhonov_covariance,2,Colombia,Colombia,False,4.039245600038499e+17,29.984283035543516,4,14,False,False,False,,False,1.2010279808944209,1.6620435150721913,1.0
+tikhonov_covariance,2,__LOO__Guatemala,Guatemala,True,3195.7205555697983,30.521092169356695,55,14,False,False,False,,False,,,
+tikhonov_covariance,2,__LOO__El Salvador,El Salvador,True,4367.926400429935,28.039557312187785,55,14,False,False,False,,False,,,
+tikhonov_covariance,2,__LOO__Honduras,Honduras,True,6601.125950799149,24.528324479334945,55,14,False,False,False,,False,,,
+tikhonov_covariance,2,__LOO__Nicaragua,Nicaragua,True,3352.8948143406456,28.241442877471002,55,14,False,False,False,,False,,,
+tikhonov_covariance,2,__LOO__Costa Rica,Costa Rica,True,7112.833218293063,29.836844221736992,55,14,False,False,False,,False,,,
+tikhonov_covariance,2,__LOO__Panamá,Panamá,True,7015.477185919711,28.384646962353237,55,14,False,False,False,,False,,,
+tikhonov_covariance,2,__LOO__República Dominicana,República Dominicana,True,6838.275303990381,28.563768215118397,55,14,False,False,False,,True,,,
+tikhonov_covariance,2,__LOO__Colombia,Colombia,True,7417.633966094142,28.627867838233104,55,14,False,False,False,,False,,,
+tikhonov_covariance,3,BCIE Systemic Hub,BCIE Systemic Hub,False,54051.93833680965,48.894598937267695,54,27,False,False,False,,False,0.9311963867374325,1.4966960197887162,1.0
+tikhonov_covariance,3,Guatemala,Guatemala,False,1446.8057050020502,28.69583251998332,52,27,False,False,False,,False,1.463196588182848,3.45051084232408,6.0
+tikhonov_covariance,3,El Salvador,El Salvador,False,4582.5111033643125,27.40584516991193,52,27,False,False,False,,False,,,
+tikhonov_covariance,3,Honduras,Honduras,False,644.694455166033,25.270721957381234,53,27,False,False,False,,False,0.530903298230285,1.0571344997175725,6.0
+tikhonov_covariance,3,Nicaragua,Nicaragua,False,3323.1371412997946,27.081740827577068,48,27,False,False,False,,False,4.425072679493408,13.238801759994427,4.0
+tikhonov_covariance,3,Costa Rica,Costa Rica,False,4291.357102467447,30.691273938939478,52,27,False,False,False,,False,0.1346330128687465,0.24993090153030692,6.0
+tikhonov_covariance,3,Panamá,Panamá,False,4.655203410773999e+17,37.29557617172553,8,27,False,False,False,,False,0.49105991891358736,0.877850322737971,4.0
+tikhonov_covariance,3,Colombia,Colombia,False,inf,59.854577494604825,3,27,False,False,False,,False,1.4554556585227383,2.339328977340823,1.0
+tikhonov_covariance,3,__LOO__Guatemala,Guatemala,True,15502.669806653987,49.80477876147217,54,27,False,False,False,,False,,,
+tikhonov_covariance,3,__LOO__El Salvador,El Salvador,True,28459.4551683504,47.95486951233787,54,27,False,False,False,,False,,,
+tikhonov_covariance,3,__LOO__Honduras,Honduras,True,66115.34577505353,43.12268224102777,54,27,False,False,False,,False,,,
+tikhonov_covariance,3,__LOO__Nicaragua,Nicaragua,True,25394.395217315086,46.125638973000626,54,27,False,False,False,,False,,,
+tikhonov_covariance,3,__LOO__Costa Rica,Costa Rica,True,62731.84203785698,49.112318183745444,54,27,False,False,False,,False,,,
+tikhonov_covariance,3,__LOO__Panamá,Panamá,True,54238.227147937214,48.348519429553775,54,27,False,False,False,,False,,,
+tikhonov_covariance,3,__LOO__Colombia,Colombia,True,60697.18161749327,48.92852696371052,54,27,False,False,False,,False,,,
+nnls_directo,2,BCIE Systemic Hub,BCIE Systemic Hub,False,7084.803782491389,84.17127646943075,55,14,False,False,False,,False,0.3782396872197013,0.3561077024221847,6.0
+nnls_directo,2,Guatemala,Guatemala,False,282.95081823245647,16.82114200143553,53,14,False,False,False,,False,1.8780089602462575,2.205379671581953,6.0
+nnls_directo,2,El Salvador,El Salvador,False,989.5067931423464,31.456426897254033,53,14,False,False,False,,False,0.567715918076702,0.4790828917955135,4.0
+nnls_directo,2,Honduras,Honduras,False,77.59020164732055,8.808530050316037,54,14,False,False,False,,False,0.8992404468045471,0.8927640985238149,6.0
+nnls_directo,2,Nicaragua,Nicaragua,False,308.65788655392925,17.568662059301072,49,14,False,False,False,,False,0.7883281016953665,0.8308417763745755,4.0
+nnls_directo,2,Costa Rica,Costa Rica,False,392.11543671760415,19.80190487598615,53,14,False,False,False,,False,0.3035068030015116,0.31946488225776504,6.0
+nnls_directo,2,Panamá,Panamá,False,2.2370961239828256e+17,inf,9,14,True,False,True,insuficiente_muestra (n_train<=D_features),False,,,
+nnls_directo,2,República Dominicana,República Dominicana,False,3.93153948481934e+180,inf,2,14,True,False,True,insuficiente_muestra (n_train<=D_features),True,,,
+nnls_directo,2,Colombia,Colombia,False,4.039245600038499e+17,inf,4,14,True,False,True,insuficiente_muestra (n_train<=D_features),False,,,
+nnls_directo,2,__LOO__Guatemala,Guatemala,True,3195.7205555697983,56.53070453806408,55,14,False,False,False,,False,,,
+nnls_directo,2,__LOO__El Salvador,El Salvador,True,4367.926400429935,66.09028975900856,55,14,False,False,False,,False,,,
+nnls_directo,2,__LOO__Honduras,Honduras,True,6601.125950799149,81.24731349896517,55,14,False,False,False,,False,,,
+nnls_directo,2,__LOO__Nicaragua,Nicaragua,True,3352.8948143406456,57.90418650098707,55,14,False,False,False,,False,,,
+nnls_directo,2,__LOO__Costa Rica,Costa Rica,True,7112.833218293063,84.33761449254534,55,14,False,False,False,,False,,,
+nnls_directo,2,__LOO__Panamá,Panamá,True,7015.477185919711,83.75844546024678,55,14,False,False,False,,False,,,
+nnls_directo,2,__LOO__República Dominicana,República Dominicana,True,6838.275303990381,82.69386497189777,55,14,False,False,False,,True,,,
+nnls_directo,2,__LOO__Colombia,Colombia,True,7417.633966094142,86.12568702828929,55,14,False,False,False,,False,,,
+nnls_directo,3,BCIE Systemic Hub,BCIE Systemic Hub,False,54051.93833680965,232.49072742128823,54,27,False,False,False,,False,0.41897283871007546,0.3771333056187062,6.0
+nnls_directo,3,Guatemala,Guatemala,False,1446.8057050020502,38.03689925588164,52,27,False,False,False,,False,1.889047308994016,2.2055585550915113,6.0
+nnls_directo,3,El Salvador,El Salvador,False,4582.5111033643125,67.69424719549231,52,27,False,False,False,,False,0.5551455898544361,0.4705874652402672,4.0
+nnls_directo,3,Honduras,Honduras,False,644.694455166033,25.39083407779341,53,27,False,False,False,,False,0.8625469944222566,0.8637678084352383,6.0
+nnls_directo,3,Nicaragua,Nicaragua,False,3323.1371412997946,57.64665767674496,48,27,False,False,False,,False,0.7796330171569527,0.8214116374079535,4.0
+nnls_directo,3,Costa Rica,Costa Rica,False,4291.357102467447,65.50845061873757,52,27,False,False,False,,False,0.30696815805891087,0.3202403418475042,6.0
+nnls_directo,3,Panamá,Panamá,False,4.655203410773999e+17,inf,8,27,True,False,True,insuficiente_muestra (n_train<=D_features),False,,,
+nnls_directo,3,Colombia,Colombia,False,inf,inf,3,27,True,False,True,insuficiente_muestra (n_train<=D_features),False,,,
+nnls_directo,3,__LOO__Guatemala,Guatemala,True,15502.669806653987,124.50971771978365,54,27,False,False,False,,False,,,
+nnls_directo,3,__LOO__El Salvador,El Salvador,True,28459.4551683504,168.69930399494584,54,27,False,False,False,,False,,,
+nnls_directo,3,__LOO__Honduras,Honduras,True,66115.34577505353,257.1290449854419,54,27,False,False,False,,False,,,
+nnls_directo,3,__LOO__Nicaragua,Nicaragua,True,25394.395217315086,159.35618976789087,54,27,False,False,False,,False,,,
+nnls_directo,3,__LOO__Costa Rica,Costa Rica,True,62731.84203785698,250.46325486547937,54,27,False,False,False,,False,,,
+nnls_directo,3,__LOO__Panamá,Panamá,True,54238.227147937214,232.89101989548791,54,27,False,False,False,,False,,,
+nnls_directo,3,__LOO__Colombia,Colombia,True,60697.18161749327,246.3679800977172,54,27,False,False,False,,False,,,

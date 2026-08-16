@@ -1,0 +1,74 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./registro_avance.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-29>
+(c:/ProgramData/TinyTeX/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(c:/ProgramData/TinyTeX/texmf-dist/tex/latex/base/size11.clo)) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/base/fontenc.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/base/inputenc.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/babel/babel.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/babel/txtbabel.def) (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/babel/locale/es/babel-spanish.tex) (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/babel-spanish/spanish.ldf)) (c:/ProgramData/TinyTeX/texmf-local/tex/latex/geometry/geometry.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/graphics/keyval.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/iftex/ifvtex.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/iftex/iftex.sty))) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(c:/ProgramData/TinyTeX/texmf-dist/tex/latex/amsmath/amstext.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/amsmath/amsgen.sty)) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/amsmath/amsbsy.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/amsmath/amsopn.sty)) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/amsfonts/amssymb.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/amsfonts/amsfonts.sty)) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/graphics/graphicx.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/graphics/graphics.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/graphics/trig.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/graphics-cfg/graphics.cfg) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/graphics-def/pdftex.def))) (c:/ProgramData/TinyTeX/texmf-local/tex/latex/booktabs/booktabs.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/tools/longtable.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/url/url.sty) (c:/ProgramData/TinyTeX/texmf-local/tex/latex/xcolor/xcolor.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/graphics-cfg/color.cfg) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/graphics/mathcolor.ltx)) (c:/ProgramData/TinyTeX/texmf-local/tex/latex/hyperref/hyperref.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/pdfescape/pdfescape.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/infwarerr/infwarerr.sty))) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/hycolor/hycolor.sty) (c:/ProgramData/TinyTeX/texmf-local/tex/latex/hyperref/nameref.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/refcount/refcount.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/kvoptions/kvoptions.sty))) (c:/ProgramData/TinyTeX/texmf-local/tex/latex/etoolbox/etoolbox.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/stringenc/stringenc.sty) (c:/ProgramData/TinyTeX/texmf-local/tex/latex/hyperref/pd1enc.def) (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/intcalc/intcalc.sty) (c:/ProgramData/TinyTeX/texmf-local/tex/latex/hyperref/puenc.def) (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/bitset/bitset.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))) (c:/ProgramData/TinyTeX/texmf-local/tex/latex/hyperref/hpdftex.def (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty))) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/caption/caption.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/caption/caption3.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/caption/ltcaption.sty)) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/float/float.sty) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def) (./registro_avance.aux)
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+(c:/ProgramData/TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg)) (./registro_avance.out) (./registro_avance.out) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd) (c:/ProgramData/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd) (./registro_avance.toc [1{c:/ProgramData/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/ProgramData/TinyTeX/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}])
+
+LaTeX Warning: Reference `sec:bugs' on page 2 undefined on input line 98.
+
+[2]
+
+LaTeX Warning: Reference `eq:ridge' on page 3 undefined on input line 131.
+
+
+LaTeX Warning: Reference `eq:lw' on page 3 undefined on input line 131.
+
+
+Overfull \hbox (0.71873pt too wide) in paragraph at lines 141--144
+[]\T1/cmr/m/n/10.95 Copia ais-la-da del pi-pe-li-ne de Ar-tícu-lo 2 ($\T1/cmtt/m/n/10.95 Articulo _ 4 _ NGRC _ Regularizado _ SSRC / experimento/$\T1/cmr/m/n/10.95 ),
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[3] [4] [5] [6 <./figuras/fig1_kappa_vs_T.pdf>] [7 <./figuras/fig3_qlike_barras.pdf>] [8 <./figuras/fig6_nnls_tradeoff.pdf>] [9 <./figuras/fig2_lorenz_shock.pdf>] [10 <./figuras/fig2b_lorenz_atractor.pdf> <./figuras/fig4_mase_lorenz.pdf>] [11]
+
+LaTeX Warning: Reference `fig:ridge_fragil' on page 12 undefined on input line 455.
+
+[12 <./figuras/fig5_ridge_fragilidad.pdf>] [13] [14 <./figuras/fig7_combustibles_precios.pdf>] [15 <./figuras/fig11_combustibles_panel_2019_2023.pdf>] [16 <./figuras/fig8_combustibles_qlike.pdf>]
+
+LaTeX Warning: Reference `fig:mecanismo_falla' on page 17 undefined on input line 621.
+
+[17 <./figuras/fig9_mecanismo_falla_nnls.pdf>]
+
+LaTeX Warning: Reference `fig:tasa_negativas_comb' on page 18 undefined on input line 636.
+
+
+LaTeX Warning: Reference `tab:skew' on page 18 undefined on input line 666.
+
+[18 <./figuras/fig10_tasa_negativas_combustibles.pdf>] [19]
+
+LaTeX Warning: Reference `sec:bugs' on page 20 undefined on input line 739.
+
+[20] [21]
+Underfull \hbox (badness 1540) in paragraph at lines 843--845
+[]\T1/cmr/m/n/10.95 On the emer-gen-ce of nu-me-ri-cal ins-ta-bi-li-ties in Next Ge-ne-ra-tion Re-ser-vo-ir Com-pu-ting.
+
+Underfull \hbox (badness 10000) in paragraph at lines 849--851
+[]\T1/cmr/m/n/10.95 Susceptible Re-ser-vo-ir Ar-chi-tec-tu-res for Regime-Conditional Vo-la-ti-lity Fo-re-cas-ting.
+[22] (./registro_avance.aux)
+
+LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+
+Package rerunfilecheck Warning: File `registro_avance.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+ )
+(see the transcript file for additional information)<c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbi1095.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx1095.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx1200.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx1440.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm1200.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm1728.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti1095.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb>
+Output written on registro_avance.pdf (22 pages, 872288 bytes).
+Transcript written on registro_avance.log.

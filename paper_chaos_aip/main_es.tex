@@ -1,0 +1,348 @@
+\documentclass[aip,cha,reprint,amsmath,amssymb]{revtex4-2}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{dcolumn}
+\usepackage{bm}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\hypersetup{colorlinks=true,linkcolor=blue!70!black,citecolor=blue!70!black,urlcolor=blue!70!black}
+
+\begin{document}
+
+\title{Inestabilidad, Amplificación de Shocks y Restricciones de Positividad en Computación por Reservorio de Próxima Generación}
+
+\author{Norman Reynaldo Sabill{\'o}n Castro}
+\email{sabillonrey2004@gmail.com}
+\affiliation{Departamento de Matemáticas, Universidad Nacional Autónoma de Honduras, Tegucigalpa, Honduras}
+
+\date{\today}
+
+\begin{abstract}
+La Computación por Reservorio de Próxima Generación (NG-RC) reemplaza las redes recurrentes aleatorias de alta dimensión por mapas de características polinomiales explícitos de rezagos temporales, ofreciendo una alta eficiencia paramétrica. Sin embargo, su uso práctico suele enfrentar mal condicionamiento numérico y degradación del pronóstico bajo ruido de medición, asimetrías de retornos o shocks exógenos localizados. En este trabajo realizamos una investigación analítica y empírica de estos modos de falla en dinámica caótica y series temporales reales de cola pesada. En primer lugar, demostramos que los bloques cuadráticos de características someten la regularización Ridge proporcional a la traza ($\lambda \propto \operatorname{tr}(\mathbf{F}^\top\mathbf{F})$) a un escalamiento cuártico ($\sim M^4$) ante shocks de magnitud $M$, confirmado empíricamente con una pendiente log--log de 3.99. En segundo lugar, probamos que los desplazamientos espectrales de Tikhonov sobre covarianzas muestrales preservan los autovectores principales de forma idéntica, separando la estabilización de covarianza de la regularización del lector lineal. En tercer lugar, a lo largo de 30 realizaciones estocásticas y 288,420 evaluaciones de ventanas en Lorenz63 (evaluadas mediante un bootstrap por bloques cruzados en dos vías), las activaciones acotadas ($\tanh$) previenen la divergencia multipaso iterada que afecta a los lectores polinomiales no restringidos en horizontes cortos e intermedios ($H \le 15$), y la memoria recurrente aporta una ventaja genuina de filtrado de ruido (intervalos bootstrap al 95\% en la diferencia media de MASE que excluyen estrictamente el cero); la robustez a shocks, en contraste, depende fuertemente de la condición y no es uniforme en el atractor. Finalmente, en volatilidad diaria de FX y criptomonedas, los mínimos cuadrados no negativos (NNLS) sobre bases estrictamente positivas eliminan las varianzas negativas sin recorte artificial, aunque el lector de reservorio recurrente no resulta competitivo frente a modelos econométricos tradicionales (EWMA, GARCH, GJR-GARCH) cuando se evalúan estadísticas de pérdida sensibles a las colas.
+\end{abstract}
+
+\begin{quotation}
+\textbf{Párrafo Inicial:} El pronóstico guiado por datos en sistemas dinámicos complejos fue transformado por la Computación por Reservorio de Próxima Generación (NG-RC), que prescinde de grandes redes neuronales aleatorias proyectando la serie temporal en monomios lineales y no lineales de rezagos. Pese a su elegancia, se observa con frecuencia que NG-RC se degrada ante quiebres estructurales, ruido de medición o restricciones físicas de no negatividad. En este artículo clarificamos los mecanismos matemáticos que rigen estas fallas y auditamos las afirmaciones empíricas que suelen acompañar a las correcciones basadas en reservorios. Mostramos que las regularizaciones heurísticas escalan a tasa cuártica ($\sim M^4$) ante shocks aislados, sobre-regularizando regímenes en calma. En pronósticos iterados a múltiples pasos discretos ($H \in \{1, \dots, 40\}$), los mapas polinomiales retroalimentan errores compuestos en términos cuadráticos, mientras que las activaciones acotadas ($\tanh$) estabilizan la continuación de trayectorias en horizontes intermedios, y un reservorio recurrente aporta un filtrado condicional efectivo bajo ruido. Asimismo, cuando los objetivos tienen cotas físicas o estadísticas (como la volatilidad o precios de energía), los lectores lineales deben restringirse a conos convexos apropiados, si bien la positividad por sí sola no garantiza una calibración probabilística óptima. Nuestros hallazgos establecen límites de diseño rigurosos para elegir entre expansiones polinomiales deterministas y arquitecturas de reservorio.
+\end{quotation}
+
+\maketitle
+
+% ======================================================================
+\section{Introducción}
+\label{sec:intro}
+% ======================================================================
+
+La Computación por Reservorio (RC) se ha consolidado como un paradigma efectivo para reconstruir, predecir y sincronizar sistemas dinámicos no lineales \cite{jaeger2001echo,maass2002realtime,nakajima2021reservoir,yildiz2012revisiting,pathak2018model}. Al alimentar una serie temporal $\mathbf{x}_t \in \mathbb{R}^{d_{\text{in}}}$ a una red recurrente fija de alta dimensión (el ``reservorio'') y entrenar únicamente una capa de lectura lineal mediante mínimos cuadrados regularizados, las Redes de Estados de Eco (ESN) estándar evitan el costo computacional y los gradientes desvanecientes del entrenamiento temporal tradicional. Una línea relacionada, los Reservorios con Estructura Estocástica (SSRC) \cite{banegas2025ssrc}, enriquece esta plantilla con acoplamientos basados en grafos e incrustaciones que preservan estructura para la identificación de sistemas económicos; el ESN disperso y aleatorio que evaluamos en este artículo pertenece a esta familia general de reservorios recurrentes no estructurados, y empleamos la denominación estándar ESN para mantener una estricta precisión conceptual.
+
+Recientemente, Gauthier \emph{et al.} \cite{gauthier2021next} introdujeron la Computación por Reservorio de Próxima Generación (NG-RC), demostrando que para atractores caóticos clásicos, el reservorio aleatorio puede omitirse. Al construir directamente un vector de características $\mathbf{F}_t$ compuesto por $k$ rezagos temporales y sus combinaciones polinomiales únicas, NG-RC logra un rendimiento equivalente o superior con órdenes de magnitud menos parámetros y sin varianza estocástica de inicialización \cite{bollt2021explaining}.
+
+Pese a estas ventajas, estudios teóricos y aplicados recientes han puesto de relieve vulnerabilidades críticas en representaciones polinomiales deterministas. Roque dos Santos y Bollt \cite{dossantos2025instability} demostraron que el número de condición $\kappa$ de la matriz de covarianza de diseño en NG-RC diverge rápidamente a medida que la dimensión de características $D = k + k(k+1)/2$ se aproxima al tamaño de muestra efectivo $T$. De forma paralela, Zhang, Roque dos Santos y Cornelius \cite{zhang2025moredata} evidenciaron que añadir más datos de entrenamiento o incrementar la profundidad de rezagos puede paradójicamente degradar el pronóstico fuera de muestra por mal condicionamiento espectral y amplificación de ruido.
+
+En aplicaciones prácticas---desde flujos geofísicos hasta volatilidad econométrica y tasas de cambio de alta frecuencia---las series temporales rara vez son trayectorias limpias y estacionarias \cite{carroll2022dimension,vlachas2020backpropagation}. Presentan típicamente: (i) shocks exógenos localizados y quiebres de régimen, (ii) ruido de medición no gaussiano, y (iii) cotas físicas o estadísticas estrictas (como energía cinética, precios o varianza realizada $y_t = r_t^2 \ge 0$).
+
+En este trabajo abordamos estos desafíos mediante un marco analítico y empírico unificado:
+\begin{enumerate}
+    \item \textbf{Mecanismo Analítico de Escalamiento Cuártico de Traza ($\sim M^4$):} Demostramos que ante un shock aislado de magnitud $M$, la traza de la matriz de Gram en NG-RC cuadrático escala como $\mathcal{O}(M^4) + \mathcal{O}(M^2) + \mathcal{O}(T(C^2+C^4))$. Por ende, la heurística Ridge proporcional a la traza ($\lambda \propto \operatorname{tr}(\mathbf{F}^\top\mathbf{F})$) infla $\lambda$ en varios órdenes de magnitud, sobre-regularizando la ventana completa.
+    \item \textbf{Invarianza Espectral bajo Regularización de Covarianza:} Probamos que los desplazamientos espectrales de Tikhonov $\mathbf{C} + \lambda\mathbf{I}$ preservan idénticamente los autovectores principales, demostrando que la regularización de covarianza estabiliza el rango numérico sin rotar el subespacio principal.
+    \item \textbf{Robustez Estocástica en 30 Semillas y Ablación en Lorenz63:} En 30 realizaciones estocásticas y 288,420 registros de evaluación evaluados mediante bootstrap por bloques cruzados en dos vías, las no linealidades acotadas ($\tanh$) preservan la estabilidad en horizontes multipaso para $H \le 15$. Bajo ruido ($\sigma=0.1$), la memoria recurrente ($\mathbf{W}_{\text{res}} \neq \mathbf{0}$) supera a las proyecciones estáticas con intervalos bootstrap que excluyen el cero. Ante shocks, la respuesta depende de la condición: a $15\sigma$, 5 condiciones favorecen al ESN, 3 a Ridge y 2 son inconclusas.
+    \item \textbf{Restricciones Cónicas y Evaluación Sensible a las Colas en Volatilidad:} En volatilidad de FX y cripto, NNLS no negativo elimina predicciones negativas sin recorte artificial. No obstante, al evaluar estadísticas de cola (mediana de medias por serie), los modelos econométricos tradicionales (EWMA, GARCH, GJR-GARCH) superan ampliamente a los lectores de reservorio.
+\end{enumerate}
+
+% ======================================================================
+\section{Marco Matemático y Mecanismos Analíticos}
+\label{sec:math}
+% ======================================================================
+
+\subsection{Topologías de Espacio de Características: NG-RC vs. ESN Disperso}
+
+Sea $x_t \in \mathbb{R}$ un escalar observable en tiempo discreto $t$. El vector lineal de $k$ rezagos se define como $\bm{\ell}_t = (x_{t-k+1}, \dots, x_t)^\top \in \mathbb{R}^k$.
+
+\subsubsection{NG-RC Cuadrático Determinista}
+La representación cuadrática de NG-RC construye el producto tensorial explícito de monomios:
+\begin{equation}
+\mathbf{F}_t = \bm{\ell}_t \;\oplus\; \Big( \ell_{t,i} \, \ell_{t,j} \Big)_{1 \le i \le j \le k} \;\in \mathbb{R}^D,
+\label{eq:ngrc_state}
+\end{equation}
+con dimensión total $D = k + \frac{k(k+1)}{2}$. La constante se maneja separadamente de la covarianza para evitar deficiencia mecánica de rango.
+
+\subsubsection{Arquitectura de Reservorio Recurrente Disperso (ESN)}
+Un reservorio recurrente mapea un vector de entrada $\mathbf{u}_t$ a un estado interno $\mathbf{h}_t \in \mathbb{R}^{d_{\text{res}}}$:
+\begin{equation}
+\mathbf{h}_t = (1 - a)\,\mathbf{h}_{t-1} + a\,\tanh\!\Big( \mathbf{W}_{\text{in}} \mathbf{u}_t + \mathbf{W}_{\text{res}} \mathbf{h}_{t-1} \Big),
+\label{eq:esn_state}
+\end{equation}
+donde $a \in (0, 1]$ es la tasa de fuga, $\mathbf{W}_{\text{in}} \in \mathbb{R}^{d_{\text{res}} \times d_{\text{in}}}$ se extrae de $[-1, 1]$ y $\mathbf{W}_{\text{res}} \in \mathbb{R}^{d_{\text{res}} \times d_{\text{res}}}$ es una matriz dispersa escalada a radio espectral $\rho(\mathbf{W}_{\text{res}}) < 1$ (heurística estándar de estabilidad asintótica local del punto de equilibrio nulo, que no garantiza por sí sola la contracción global sin cotas en valores singulares \cite{manjunath2013theory}). Distinguimos tres casos:
+\begin{itemize}
+    \item \textbf{ESN-lag:} Entrada de rezagos crudos $\mathbf{u}_t = \bm{\ell}_t \in \mathbb{R}^k$.
+    \item \textbf{ESN-NGRC:} Entrada del bloque polinomial $\mathbf{u}_t = \mathbf{F}_t \in \mathbb{R}^D$.
+    \item \textbf{Proyección Estática $\tanh$ ($\mathbf{W}_{\text{res}} = \mathbf{0}$):} $\mathbf{h}_t = \tanh(\mathbf{W}_{\text{in}} \mathbf{u}_t)$.
+\end{itemize}
+
+\subsection{Teorema de Inflación Cuártica de Traza (Escalamiento $M^4$)}
+\label{subsec:m4_theorem}
+
+En implementaciones comunes de reservorios y NG-RC, la regularización Ridge \cite{hoerl1970ridge} se parametriza con la heurística proporcional a la traza:
+\begin{equation}
+\lambda = \gamma \cdot \frac{\operatorname{tr}(\mathbf{F}^\top\mathbf{F})}{D}, \qquad \gamma > 0.
+\label{eq:ridge_heuristic}
+\end{equation}
+
+\textbf{Teorema 1 (Escalamiento de la Matriz de Gram Cuadrática ante Outliers).} \emph{Sea $\{x_t\}_{t=1}^T$ una serie temporal compuesta por un proceso base acotado por $|x_t| \le C$ y un shock aislado en $t^*$ de magnitud $x_{t^*} = M \gg C$. Entonces, la traza de la matriz de Gram de NG-RC satisface:}
+\begin{align}
+\operatorname{tr}(\mathbf{F}^\top\mathbf{F}) &= k M^4 + \mathcal{O}(k^2 M^2 C^2) \nonumber\\
+&\quad + (T-k) \mathcal{O}(k^2 (C^2 + C^4)).
+\end{align}
+\emph{Por consiguiente, el parámetro $\lambda$ calculado mediante Eq.~\eqref{eq:ridge_heuristic} escala asintóticamente como $\lambda = \frac{\gamma k}{D} M^4 + \mathcal{O}(M^2)$.}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures_es/fig5_ridge_fragilidad.pdf}
+\caption{Mediana de $\lambda \propto \operatorname{tr}(\mathbf{F}^\top\mathbf{F})$ en función de la magnitud del shock inyectado $M$ ($\sigma$), en escala log--log, medida directamente del experimento en Lorenz63 (\S\ref{sec:lorenz}). El ajuste de ley de potencia arroja una pendiente empírica de $3.99$, validando el escalamiento $\sim M^4$ predicho por el Teorema 1.}
+\label{fig:ridge_fragility}
+\end{figure}
+
+\textbf{Demostración.} La traza total es la suma de normas euclidianas al cuadrado:
+\begin{align}
+\operatorname{tr}(\mathbf{F}^\top\mathbf{F}) &= \sum_{t=1}^T \|\mathbf{F}_t\|_2^2 \nonumber\\
+&= \sum_{t=1}^T \left( \sum_{i=1}^k \ell_{t,i}^2 + \sum_{1 \le i \le j \le k} (\ell_{t,i}\ell_{t,j})^2 \right).
+\end{align}
+Dado que el shock $x_{t^*} = M$ entra en $\bm{\ell}_t$ durante exactamente $k$ pasos consecutivos $t \in [t^*, t^* + k - 1]$, los términos cuadráticos $(\ell_{t,i}\ell_{t,j})^2$ incluyen términos de la forma $(x_{t^*})^4 = M^4$. Para cada uno de los $k$ pasos, existe al menos una contribución $M^4$ y $k-1$ términos $M^2 \ell_{t,j}^2 \le M^2 C^2$. Sumando sobre los $T$ pasos temporales:
+\begin{align}
+\operatorname{tr}(\mathbf{F}^\top\mathbf{F}) &= k M^4 + \mathcal{O}(k^2 M^2 C^2) \nonumber\\
+&\quad + (T-k) \mathcal{O}(k^2 (C^2 + C^4)).
+\end{align}
+Dividiendo entre $D$ se obtiene $\lambda = \frac{\gamma k}{D} M^4 + \mathcal{O}(M^2)$. $\square$
+
+Este teorema explica por qué Ridge heurístico degrada las predicciones: $\lambda$ se infla hasta $270\times$ (de $M=0$ a $M=30\sigma$), penalizando excesivamente los pesos del lector y colapsando las predicciones hacia cero en regímenes en calma posteriores (Fig.~\ref{fig:ridge_fragility}).
+
+\subsection{Invarianza de Autovectores bajo Desplazamientos Espectrales de Covarianza}
+
+Para estabilizar covarianzas mal condicionadas previo a PCA se aplica el desplazamiento de Tikhonov: $\mathbf{C}_\lambda = \operatorname{cov}(\mathbf{F}) + \lambda_{\text{cov}}\mathbf{I}$.
+
+\textbf{Proposición 1 (Invarianza Espectral).} \emph{Para toda matriz de covarianza simétrica $\mathbf{C} \in \mathbb{R}^{D \times D}$ y $\lambda_{\text{cov}} > 0$, las matrices $\mathbf{C}$ y $\mathbf{C}_\lambda = \mathbf{C} + \lambda_{\text{cov}}\mathbf{I}$ comparten exactamente los mismos subespacios propios.}
+
+\textbf{Demostración.} Sea $\mathbf{C} = \mathbf{V} \bm{\Lambda} \mathbf{V}^\top$ la descomposición espectral de $\mathbf{C}$, con matriz ortogonal $\mathbf{V}$ y matriz diagonal $\bm{\Lambda} = \operatorname{diag}(\mu_1, \dots, \mu_D)$. Entonces:
+\begin{equation}
+\mathbf{C}_\lambda = \mathbf{V} \bm{\Lambda} \mathbf{V}^\top + \lambda_{\text{cov}} \mathbf{V}\mathbf{I}\mathbf{V}^\top = \mathbf{V} (\bm{\Lambda} + \lambda_{\text{cov}}\mathbf{I}) \mathbf{V}^\top.
+\end{equation}
+Los autovalores se desplazan uniformemente ($\mu_i \mapsto \mu_i + \lambda_{\text{cov}}$), preservando el orden ($\mu_1 \ge \dots \ge \mu_D$) y manteniendo invariantes los subespacios propios (salvo rotaciones internas en autovalores repetidos). $\square$
+
+% ======================================================================
+\section{Evaluación Dinámica en Lorenz63}
+\label{sec:lorenz}
+% ======================================================================
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures_es/fig2b_lorenz_atractor.pdf}
+\caption{Reconstrucción en espacio de fase $(x, z)$ que ilustra la excursión de un outlier sintético ($+15\sigma$) fuera del atractor fractal de Lorenz63.}
+\label{fig:lorenz_phase}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures_es/fig_lyapunov_curve.pdf}
+\caption{Error de pronóstico iterado multipaso (MASE) a través de horizontes discretos $H \in \{1, 2, 3, 5, 8, 10, 15, 20, 30, 40\}$ parametrizados en tiempos de Lyapunov ($\tau = H \cdot \Delta t \cdot \lambda_{\max}$, con $\lambda_{\max} \approx 0.9056$). NG-RC polinomial (Ridge y OLS) explota rápidamente más allá de $\tau \approx 0.2$, mientras que las activaciones acotadas ($\tanh$) preservan la estabilidad hasta $\tau \approx 0.68$ ($H=15$); más allá de $\tau \approx 1.0$, las trayectorias saturan a escala del atractor.}
+\label{fig:lyapunov_curve}
+\end{figure}
+
+Simulamos el sistema caótico clásico de Lorenz63 \cite{lorenz1963deterministic}:
+\begin{equation}
+\dot{x} = \sigma (y - x), \quad \dot{y} = x (\rho - z) - y, \quad \dot{z} = x y - \beta z,
+\end{equation}
+con parámetros $\sigma = 10$, $\rho = 28$, $\beta = 8/3$, integrando por Runge-Kutta 4 ($\mathrm{d}t_{\text{int}} = 0.01$, $\text{skip} = 5$, $\Delta t = 0.05$, 30,000 puntos).
+
+\subsection{Protocolo Experimental y Métodos}
+
+\begin{itemize}
+    \item \textbf{Métrica de Pérdida (MASE):} El error fuera de muestra se calcula mediante el Error Escalar Absoluto Medio sobre $T_{\text{train}}=500$:
+    \begin{equation}
+    \text{MASE} = \frac{\frac{1}{H}\sum_{h=1}^H |y_{t+h} - \hat{y}_{t+h}|}{\frac{1}{T_{\text{train}}-1}\sum_{i=2}^{T_{\text{train}}} |y_i - y_{i-1}|}.
+    \end{equation}
+    \item \textbf{Ventanas Rodantes:} $T_{\text{train}} = 500$ puntos, paso $= 40$ puntos (738 ventanas a lo largo de la trayectoria).
+    \item \textbf{Hiperparámetros de ESN:} $d_{\text{res}} = 50$, radio espectral $\rho = 0.9$, densidad $0.1$, tasa de fuga $a = 1.0$. Estado inicializado en $\mathbf{h}_0 = \mathbf{0}$ con calentamiento causal en el prefijo.
+    \item \textbf{Selección Causal de $\lambda$:} Validación temporal interna ($80\%$ entrenamiento / $20\%$ prueba interna) en grilla $\lambda / \lambda_{\text{scale}} \in [10^{-6}, 10^2]$.
+    \item \textbf{Two-Way Crossed Block Bootstrap:} 2000 réplicas remuestreando bloques temporales de longitud $L = \lceil T_{\text{train}} / \text{step} \rceil = 13$ simultáneamente para todas las semillas, preservando la dependencia cruzada. Para shocks, las 5 ubicaciones se remuestrean conservando ambos signos pareados.
+\end{itemize}
+
+\begin{table*}[t]
+\centering
+\caption{Desempeño en 30 realizaciones estocásticas en Lorenz63. Reporta mediana de MASE entre semillas, rangos percentiles 2.5\%--97.5\%, intervalos Clopper--Pearson al 95\% para tasas de victoria frente a Ridge, e intervalos bootstrap en dos vías al 95\% sobre la diferencia media pareada (ESN-lag $-$ Ridge; valores negativos favorecen a ESN).}
+\label{tab:30seeds_rigorous}
+\begin{ruledtabular}
+\begin{tabular}{lcrrrrrr}
+Régimen & $H$ & ESN-lag Mediana [P2.5, P97.5] & Static-lag Mediana & Ridge NG-RC & OLS NG-RC & Victoria vs Ridge [IC 95\%] & $\Delta$ media vs Ridge [IC 95\% Dos Vías] \\
+\midrule
+Limpio 1-paso & 1 & 0.0292 [0.0161, 0.0523] & 0.0154 (IQR 0.002) & 0.2397 & 0.2406 & \textbf{100.0\%} [0.88, 1.00] & $-0.242$ [$-0.262$, $-0.226$] \\
+Limpio Multi & 5 & 0.2438 [0.1355, 0.4727] & 0.1450 (IQR 0.022) & 1.5262 & 1.6037 & \textbf{100.0\%} [0.88, 1.00] & $-1.299$ [$-1.396$, $-1.203$] \\
+Limpio Multi & 10 & 0.7071 [0.3616, 1.8195] & 0.4251 (IQR 0.052) & 2.5375 & 2.5004 & \textbf{100.0\%} [0.88, 1.00] & $-1.290$ [$-1.539$, $-1.034$] \\
+\midrule
+Ruido 0.1 (Filtrado) & 1 & \textbf{0.3633} [0.3409, 0.3796] & 0.3983 (IQR 0.003) & 0.6059 & 0.6018 & \textbf{100.0\%} [0.88, 1.00] & $-0.272$ [$-0.315$, $-0.232$] \\
+Ruido 0.1 (Observ.) & 1 & \textbf{0.4607} [0.4327, 0.4861] & 0.4866 (IQR 0.006) & 0.6799 & 0.6865 & \textbf{96.7\%} [0.83, 1.00] & $-0.236$ [$-0.281$, $-0.196$] \\
+Ruido 0.5 (Filtrado) & 1 & \textbf{0.4734} [0.4463, 0.4942] & 0.5254 (IQR 0.007) & 0.5440 & 0.5357 & \textbf{100.0\%} [0.88, 1.00] & $-0.087$ [$-0.119$, $-0.057$] \\
+Ruido 0.5 (Observ.) & 1 & \textbf{0.7166} [0.6918, 0.7367] & 0.7453 (IQR 0.005) & 0.7490 & 0.7392 & \textbf{100.0\%} [0.88, 1.00] & $-0.058$ [$-0.091$, $-0.023$] \\
+\midrule
+Shock $15\sigma$ (5 locs) & 1 & 0.2223 [0.1165, 0.3604] & 0.2187 (IQR 0.062) & 0.3301 & 0.2654 & 90.0\% [0.73, 0.98] & $+0.927$ [$-0.233$, $+3.093$] \\
+Shock $50\sigma$ (5 locs) & 1 & 0.4237 [0.2987, 0.5712] & 0.3381 (IQR 0.099) & 0.2218 & 0.2184 & 0.0\% [0.00, 0.12] & $+1.131$ [$-0.316$, $+3.710$] \\
+\end{tabular}
+\end{ruledtabular}
+\end{table*}
+
+\subsection{Análisis de Resultados y Hallazgos de Ablación}
+
+La Tabla~\ref{tab:30seeds_rigorous} y la Fig.~\ref{fig:lyapunov_curve} evidencian:
+\begin{enumerate}
+    \item \textbf{Saturación Acotada y Estabilidad Multipaso en Horizontes Intermedios:} En pronósticos multipaso iterados a través de horizontes discretos $H \in \{1, 2, 3, 5, 8, 10, 15, 20, 30, 40\}$, las activaciones acotadas ($\tanh$) superan a NG-RC polinomial en el \textbf{100\% de las semillas} hasta $H=10$ ($\tau \approx 0.45$), con intervalos bootstrap estrictamente negativos (Tabla~\ref{tab:30seeds_rigorous}). A $H=10$, los errores de NG-RC explotan a MASE $\approx 2.50$, mientras que los lectores acotados preservan una trayectoria estable ($H=10$ MASE $\approx 0.43$--$0.74$). No obstante, en horizontes asintóticos ($H=30, 40$, $\tau \ge 1.36$), las trayectorias alcanzan saturación a escala del atractor donde la proyección estática $\tanh$ retiene menor error que el ESN recurrente (MASE mediano 3.04 frente a 5.28 a $H=40$), y el ESN recurrente deja de superar a Ridge (1/30 victorias a $H=40$).
+    \item \textbf{Filtrado de Ruido por Memoria Recurrente:} En régimen limpio, la proyección estática $\tanh$ es ligeramente más parsimoniosa. No obstante, con ruido ($\sigma=0.1$ y $0.5$), el ESN recurrente supera a la proyección estática en la recuperación de la señal limpia (MASE 0.363 vs 0.398 a $\sigma=0.1$), con intervalos bootstrap que excluyen el cero en todos los regímenes de ruido.
+    \item \textbf{Dependencia de la Condición ante Shocks:} La tasa de victoria del 90\% ante Ridge a $15\sigma$ refleja el agregado entre 30 semillas y 5 ubicaciones. Al desglosar las 10 condiciones (ubicación $\times$ signo), 5 favorecen claramente al ESN, 3 a Ridge y 2 son inconclusas. Esta variación explica por qué el intervalo bootstrap cruzado para la diferencia media cruza el cero ($[-0.233, +3.093]$), descartando una robustez incondicional.
+\end{enumerate}
+
+% ======================================================================
+\section{Restricciones Cónicas en Volatilidad Financiera Real}
+\label{sec:empirical}
+% ======================================================================
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures_es/fig13_qlike_piso_fx.pdf}
+\caption{Pérdida QLIKE mediana en función del piso numérico $\epsilon$. Los lectores tradicionales con signo (Ridge, OLS) explotan al hacer $\epsilon \to 0$ debido a predicciones de varianza negativa, mientras que NNLS no negativo se mantiene estrictamente invariante.}
+\label{fig:qlike_tradeoff}
+\end{figure}
+
+\subsection{Objetivos con Cota Inferior y Sensibilidad de Pérdida}
+
+El pronóstico de volatilidad realizada $y_{t+1} = r_{t+1}^2 \ge 0$ se evalúa mediante la pérdida de cuasi-verosimilitud (QLIKE) \cite{patton2011volatility}:
+\begin{equation}
+L_{\text{QLIKE}}(y, \hat{y}) = \frac{y}{\hat{y}} - \log\left(\frac{y}{\hat{y}}\right) - 1.
+\label{eq:qlike}
+\end{equation}
+QLIKE penaliza severamente la subestimación ($\hat{y} \to 0$). Al evaluar lectores con signo que producen varianzas negativas, se requiere imponer un piso artificial $\hat{y}_{\text{clipped}} = \max(\hat{y}, \epsilon)$.
+
+En 15 años de datos diarios de 7 divisas latinoamericanas y 2 criptomonedas ($T \approx 3900$), Ridge y OLS generan varianzas negativas en 0.67\% y 4.18\% de las ventanas. Como muestra la Fig.~\ref{fig:qlike_tradeoff}, cuando $\epsilon$ desciende de $10^{-6}$ a $10^{-12}$, el QLIKE de Ridge explota en órdenes de magnitud.
+
+\begin{table}[h]
+\centering
+\caption{QLIKE fuera de muestra en 9 series de divisas y criptomonedas ($T \approx 3900$ observaciones diarias), ordenado por la mediana entre series del QLIKE medio. La mediana agregada se reporta como referencia.}
+\label{tab:fx_qlike}
+\begin{ruledtabular}
+\begin{tabular}{lrrr}
+Arquitectura de Modelo & Mediana entre Series & Mediana Agregada & \% Neg. \\
+\midrule
+EWMA ($\lambda=0.94$) & \textbf{2.359} & 1.157 & 0.00\% \\
+Standard GARCH(1,1) & 2.383 & 1.316 & 0.00\% \\
+GJR-GARCH(1,1) & 2.456 & 1.287 & 0.00\% \\
+NNLS No Negativo ($|\bm{\ell}_t|$) & 2.565 & 1.450 & \textbf{0.00\%} \\
+Ridge Legacy (recortado $\epsilon=10^{-10}$) & 3.472 & 1.475 & 0.67\% \\
+Log-Link Ridge & 12.19 & 1.561 & \textbf{0.00\%} \\
+ESN Disperso (Log-Readout) & 14.33 & 1.501 & \textbf{0.00\%} \\
+NNLS Legacy con Signo & 66.12 & 1.490 & 2.15\% \\
+Persistencia Ingenua & 2580 & 1.779 & 0.00\% \\
+OLS Legacy & 18552 & 1.475 & 4.18\% \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+\subsection{Conos Convexos vs. Monomios con Signo}
+
+Restringir $\mathbf{w} \ge \mathbf{0}$ en NNLS estándar \cite{lawson1974solving} no evita salidas negativas si las características contienen rezagos lineales con signo ($\ell_{t,i} < 0$). Para asegurar $\mathbf{F}_t \mathbf{w} \ge 0$ incondicionalmente, las características deben definirse en el ortante positivo $\mathbb{R}_+^D$:
+\begin{equation}
+\mathbf{F}_t^+ = |\bm{\ell}_t| \;\oplus\; \Big( |\ell_{t,i}| \cdot |\ell_{t,j}| \Big)_{1 \le i \le j \le k}.
+\end{equation}
+NNLS no negativo ($|\bm{\ell}_t|$) y el ESN logarítmico eliminan 100\% de varianzas negativas (0.00\%). Sin embargo, la positividad no equivale a buena calibración probabilística. La Tabla~\ref{tab:fx_qlike} muestra que al evaluar la mediana entre series del QLIKE medio, el ESN (14.33) es notablemente inferior a EWMA, GARCH(1,1) \cite{engle1982autoregressive,bollerslev1986generalized} y GJR-GARCH(1,1) \cite{glosten1993relation} (2.36--2.46), debido a ventanas raras donde el log-readout predice valores cercanos a cero y $y/\hat{y}$ explota. Descriptivamente, el ESN gana en 54.7\% de ventanas individuales frente a EWMA y en 57.0\% frente a GARCH, pero la diferencia media por bootstrap por bloques es estrictamente positiva a favor de los modelos econométricos. Concluimos que los modelos econométricos siguen siendo el estándar para volatilidad; los conos convexos son esenciales para garantizar no negatividad estructural sin recortes ad hoc, no para superar a GARCH en calibración de colas.
+
+% ======================================================================
+\section{Discusión y Conclusiones}
+\label{sec:discussion}
+% ======================================================================
+
+Nuestros hallazgos establecen principios operativos para la selección de arquitecturas de reservorio:
+\begin{enumerate}
+    \item \textbf{Reconstrucción Limpia a Un Paso ($H=1$):} NG-RC determinista ofrece una parsimonia paramétrica insuperable en atractores limpios de baja dimensión.
+    \item \textbf{Continuación Multipaso ($H \ge 5$):} Las expansiones polinomiales sufren divergencia iterativa de monomios a lo largo de tiempos de Lyapunov; las activaciones acotadas ($\tanh$) limitan el crecimiento del estado y reducen la amplificación de error en horizontes intermedios ($H \le 15$).
+    \item \textbf{Entornos Ruidosos:} Los reservorios recurrentes ($\mathbf{W}_{\text{res}} \neq \mathbf{0}$) actúan como filtros adaptativos paso-bajo con ventaja confirmada por bootstrap sobre proyecciones estáticas.
+    \item \textbf{Shocks y Regularización:} Las heurísticas Ridge proporcionales a la traza deben evitarse con monomios cuadráticos por el mecanismo $\mathcal{O}(M^4)$ (pendiente empírica $3.99$); la regularización exige validación temporal causal.
+    \item \textbf{Observables Físicos con Cota Inferior:} Los lectores lineales deben formularse sobre conos convexos para evitar artefactos de signo, si bien la positividad estructural no es suficiente por sí sola para una óptima calibración de colas.
+\end{enumerate}
+
+\section*{Material Suplementario}
+Consúltese el Material Suplementario para validaciones empíricas secundarias en el panel de préstamos del BCIE y precios de combustibles en Honduras, junto con una verificación de generalización en el atractor de R\"ossler.
+
+\section*{Declaraciones del Autor}
+\subsection*{Conflicto de Intereses}
+El autor declara no tener conflictos de intereses.
+
+\subsection*{Contribuciones del Autor}
+\textbf{Norman Reynaldo Sabill{\'o}n Castro:} Conceptualización, Metodología, Software, Análisis Formal, Redacción -- Borrador Original, Visualización.
+
+\section*{Declaración de Disponibilidad de Datos}
+Los datos y pipelines de reproducción en Python que respaldan este estudio están abiertamente documentados y disponibles en el repositorio complementario y archivo de Zenodo.
+
+\begin{thebibliography}{99}
+
+\bibitem{jaeger2001echo}
+H.~Jaeger, ``The `echo state' approach to analysing and training recurrent neural networks-with an erratum note,'' \emph{German National Research Center for Information Technology GMD Technical Report}, vol.~148, p.~34, 2001.
+
+\bibitem{maass2002realtime}
+W.~Maass, T.~Natschl{\"a}ger, and H.~Markram, ``Real-time computing without stable states: A new framework for neural computation based on perturbations,'' \emph{Neural Computation}, vol.~14, no.~11, pp.~2531--2560, 2002.
+
+\bibitem{nakajima2021reservoir}
+K.~Nakajima and I.~Fischer, \emph{Reservoir Computing: Theory, Physical Implementations, and Applications}.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2021.
+
+\bibitem{yildiz2012revisiting}
+I.~B. Yildiz, H.~Jaeger, and S.~J. Kiebel, ``Re-visiting the echo state property,'' \emph{Neural Networks}, vol.~35, pp.~1--9, 2012.
+
+\bibitem{pathak2018model}
+J.~Pathak, B.~Hunt, M.~Girvan, Z.~Lu, and E.~Ott, ``Model-free prediction of large spatiotemporally chaotic systems from data: A reservoir computing approach,'' \emph{Physical Review Letters}, vol.~120, no.~2, p.~024102, 2018.
+
+\bibitem{banegas2025ssrc}
+L.~Banegas and F.~Vides, ``Stochastically structured reservoir computers for financial and economic system identification,'' \emph{IFAC-PapersOnLine}, vol.~59, no.~36, pp.~100--105, 2025, doi: 10.1016/j.ifacol.2026.03.018.
+
+\bibitem{gauthier2021next}
+D.~J. Gauthier, E.~Bollt, A.~Griffith, and W.~A. Barbosa, ``Next generation reservoir computing,'' \emph{Nature Communications}, vol.~12, no.~1, p. 5564, 2021.
+
+\bibitem{bollt2021explaining}
+E.~Bollt, ``On explaining the surprising success of reservoir computing forecaster of chaos? The effect of internal symmetries,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~31, no.~1, p.~013108, 2021.
+
+\bibitem{dossantos2025instability}
+E.~Roque dos Santos and E.~M. Bollt, ``On the emergence of numerical instabilities in Next Generation Reservoir Computing,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~35, no.~12, p. 123102, 2025.
+
+\bibitem{zhang2025moredata}
+Y.~Zhang, E.~Roque dos Santos, and S.~P. Cornelius, ``How more data can hurt: Instability and regularization in next-generation reservoir computing,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~35, no.~7, p. 073102, 2025.
+
+\bibitem{lorenz1963deterministic}
+E.~N. Lorenz, ``Deterministic nonperiodic flow,'' \emph{Journal of the Atmospheric Sciences}, vol.~20, no.~2, pp.~130--141, 1963.
+
+\bibitem{carroll2022dimension}
+T.~L. Carroll, ``Dimension of next generation reservoir computers,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~32, no.~4, p.~043127, 2022.
+
+\bibitem{vlachas2020backpropagation}
+P.~R. Vlachas, J.~Pathak, B.~R. Hunt, T.~P. Sapsis, M.~Girvan, E.~Ott, and P.~Koumoutsakos, ``Backpropagation algorithms and reservoir computing in chaotic systems: A comparative study,'' \emph{Neural Networks}, vol.~126, pp.~191--217, 2020.
+
+\bibitem{manjunath2013theory}
+G.~Manjunath and H.~Jaeger, ``Echo state property linked to an input: Exploring a fundamental characteristic of recurrent neural networks,'' \emph{Neural Computation}, vol.~25, no.~3, pp.~671--696, 2013.
+
+\bibitem{hoerl1970ridge}
+A.~E. Hoerl and R.~W. Kennard, ``Ridge regression: Biased estimation for nonorthogonal problems,'' \emph{Technometrics}, vol.~12, no.~1, pp.~55--67, 1970.
+
+\bibitem{lawson1974solving}
+C.~L. Lawson and R.~J. Hanson, \emph{Solving Least Squares Problems}.\hskip 1em plus 0.5em minus 0.4em\relax Prentice-Hall, 1974.
+
+\bibitem{engle1982autoregressive}
+R.~F. Engle, ``Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation,'' \emph{Econometrica}, vol.~50, no.~4, pp.~987--1007, 1982.
+
+\bibitem{bollerslev1986generalized}
+T.~Bollerslev, ``Generalized autoregressive conditional heteroskedasticity,'' \emph{Journal of Econometrics}, vol.~31, no.~3, pp.~307--327, 1986.
+
+\bibitem{glosten1993relation}
+L.~R. Glosten, R.~Jagannathan, and D.~E. Runkle, ``On the relation between the expected value and the volatility of the nominal excess return on stocks,'' \emph{Journal of Finance}, vol.~48, no.~5, pp.~1779--1801, 1993.
+
+\bibitem{patton2011volatility}
+A.~J. Patton, ``Volatility forecast comparison using imperfect volatility proxies,'' \emph{Journal of Econometrics}, vol.~160, no.~1, pp.~246--256, 2011.
+
+\end{thebibliography}
+
+\end{document}

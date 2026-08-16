@@ -1,0 +1,9 @@
+%% textcase.sty - minimal shim for REVTeX on modern LaTeX engines
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{textcase}[2022/07/01 v1.00 Minimal textcase shim]
+\DeclareOption{overload}{}
+\ProcessOptions\relax
+\providecommand{\MakeTextUppercase}[1]{\MakeUppercase{#1}}
+\providecommand{\MakeTextLowercase}[1]{\MakeLowercase{#1}}
+\providecommand{\NoCaseChange}[1]{#1}
+\endinput

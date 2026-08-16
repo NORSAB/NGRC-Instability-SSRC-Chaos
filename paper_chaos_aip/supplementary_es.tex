@@ -1,0 +1,161 @@
+\documentclass[aip,cha,reprint,amsmath,amssymb]{revtex4-2}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{bm}
+\usepackage{xcolor}
+\usepackage{hyperref}
+
+\hypersetup{colorlinks=true,linkcolor=blue!70!black,citecolor=blue!70!black,urlcolor=blue!70!black}
+
+\begin{document}
+
+\title{Material Suplementario: Inestabilidad, Amplificación de Shocks y Restricciones de Positividad en Computación por Reservorio de Próxima Generación}
+
+\author{Norman Reynaldo Sabill{\'o}n Castro}
+\email{sabillonrey2004@gmail.com}
+\affiliation{Departamento de Matemáticas, Universidad Nacional Autónoma de Honduras, Tegucigalpa, Honduras}
+
+\date{\today}
+
+\maketitle
+
+\noindent Este suplemento reporta tres elementos referenciados en el texto principal: dos dominios de validación empírica secundaria (el panel anual de préstamos multilaterales del BCIE y precios semanales de combustibles en Honduras) y una verificación descriptiva de generalización en un segundo sistema caótico (el atractor de R\"ossler). Ambos aplican el protocolo causal auditado en el artículo principal (separación estricta entre entrenamiento y prueba sobre prefijos históricos, un ESN recurrente disperso y mínimos cuadrados no negativos sobre bases estrictamente positivas). Ninguno de estos dominios sustenta por sí solo una afirmación principal: el resultado del BCIE no es estadísticamente significativo debido a la cobertura temporal disponible, y el ordenamiento en combustibles se invierte según la estadística de pérdida analizada.
+
+% ======================================================================
+\section{S1. Panel Anual de Préstamos del BCIE: Validación Secundaria No Significativa}
+\label{sec:bcie}
+% ======================================================================
+
+El Banco Centroamericano de Integración Económica (BCIE) publica un panel de aprobaciones de préstamos por país miembro (1961--2025). Construimos un nodo sistémico sintético a partir de las aprobaciones agregadas y estimamos un operador de acoplamiento $\mathbf{P}^*$ mediante NNLS por filas bajo una máscara de topología hub-and-spoke, comparando cuatro compresiones del bloque cuadrático de NG-RC (PCA base, contracción Ledoit--Wolf, covarianza con desplazamiento Tikhonov y regresión NNLS directa) frente a un ESN recurrente disperso de referencia, bajo protocolo causal (entrenamiento hasta 2019, evaluación fuera de muestra 2020--2025).
+
+\begin{table}[h]
+\centering
+\caption{Panel anual del BCIE, comparación con cobertura uniforme (8 entidades comunes, protocolo causal). Los valores $p$ de Diebold--Mariano emplean remuestreo por bloques anuales frente a la referencia ESN; \texttt{no} indica no significancia a $\alpha=0.05$.}
+\label{tab:bcie}
+\begin{ruledtabular}
+\begin{tabular}{lrrc}
+Método & MASE & $N$ & DM vs.\ ESN ($p$) \\
+\midrule
+NNLS directo ($k=2$) & \textbf{0.8155} & 32 & 0.50 (no) \\
+NNLS directo ($k=3$) & 0.8189 & 32 & 0.50 (no) \\
+ESN recurrente disperso (ref.) & 1.0356 & 32 & -- \\
+Covarianza Tikhonov ($k=3$) & 1.2437 & 28 & 0.75 (no) \\
+Ledoit--Wolf ($k=3$) & 1.2437 & 28 & 0.75 (no) \\
+PCA Base ($k=3$) & 1.2437 & 28 & 0.75 (no) \\
+Covarianza Tikhonov ($k=2$) & 1.3125 & 32 & 0.75 (no) \\
+Ledoit--Wolf ($k=2$) & 1.3125 & 32 & 0.75 (no) \\
+PCA Base ($k=2$) & 1.3125 & 32 & 0.75 (no) \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{figures_es/fig12_bcie_causal.pdf}
+\caption{Panel anual del BCIE: MASE causal fuera de muestra por lector, comparación en 8 entidades comunes, 2020--2025.}
+\label{fig:bcie}
+\end{figure}
+
+NNLS directo obtiene la menor estimación puntual, consistente con los hallazgos en FX/cripto y combustibles respecto a la utilidad de las restricciones de no negatividad cuando el objetivo es estructuralmente positivo. No obstante, con solo 6 años fuera de muestra y 8 entidades comunes, ninguna prueba pareada de Diebold--Mariano alcanza significancia estadística ($p \ge 0.50$). Reportamos este resultado como una validación secundaria cualitativamente consistente pero no concluyente.
+
+% ======================================================================
+\section{S2. Precios de Combustibles en Honduras: Inversión de Jerarquías entre Pérdidas}
+\label{sec:fuel}
+% ======================================================================
+
+Evaluamos el pronóstico de volatilidad en 496 observaciones semanales (2017--2026) de cuatro productos regulados en Honduras (Gasolina Superior, Regular, Diésel, Kerosene). Los modelos predicen el \textbf{cuadrado de los retornos logarítmicos semanales} ($r_{t+1}^2 = (\log(P_{t+1}/P_t))^2 \ge 0$), evaluados bajo QLIKE y MASE.
+
+\begin{table}[h]
+\centering
+\caption{Pronóstico de volatilidad de retornos en combustibles de Honduras, comparación fuera de muestra a lo largo de 496 semanas.}
+\label{tab:fuel}
+\begin{ruledtabular}
+\begin{tabular}{lrrr}
+Método & QLIKE & MASE & \% Neg. \\
+\midrule
+NNLS No Negativo & \textbf{0.359} & 0.485 & 0\% \\
+GARCH(1,1) & 0.380 & 0.454 & 0\% \\
+GJR-GARCH(1,1) & 0.392 & 0.442 & 0\% \\
+Persistencia Ingenua & 0.432 & 0.369 & 0\% \\
+OLS Legacy (recortado) & 0.542 & 0.587 & 47\% \\
+Ridge Legacy (recortado) & 0.552 & 0.734 & 3\% \\
+Softplus NG-RC & 0.570 & 0.713 & 0\% \\
+EWMA ($\lambda=0.94$) & 0.677 & 0.736 & 0\% \\
+ESN Recurrente (log) & 1.313 & \textbf{0.338} & 0\% \\
+Log-link Ridge & 1.815 & 0.342 & 0\% \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{figures_es/fig7_combustibles_precios.pdf}
+\caption{Precios semanales de combustibles en Honduras, 2017--2026, con ventanas sombreadas para COVID-19, huracanes Eta/Iota, guerra Rusia--Ucrania y crisis en Medio Oriente 2026.}
+\label{fig:fuel_prices}
+\end{figure}
+
+NNLS no negativo logra el mejor QLIKE (0.359), coincidiendo con FX/cripto. Sin embargo, el ESN recurrente alcanza el mejor MASE (0.338 frente a 0.485 de NNLS), quedando rezagado en QLIKE (1.313). Esto ilustra la tensión estructural entre pérdidas: MASE premia la precisión típica en valores medios, mientras que QLIKE castiga fuertemente las predicciones cercanas a cero.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{figures_es/fig9_mecanismo_falla_nnls.pdf}
+\caption{Mecanismo de falla en lectores NNLS: predicción sin recortar frente a volatilidad realizada para gasolinas Superior y Regular, mostrando por qué pesos no negativos no aseguran no negatividad si los rezagos retienen signo.}
+\label{fig:fuel_failure}
+\end{figure}
+
+% ======================================================================
+\section{S3. Referencia de Figuras Suplementarias}
+\label{sec:supp_figs}
+% ======================================================================
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{figures_es/fig_supp_lambda_selection.pdf}
+\caption{Trayectoria de validación temporal anidada para la selección de $\lambda$ en Lorenz63 (\S3 del texto principal), ilustrando el MAE de validación interna y el parámetro seleccionado en cada ventana.}
+\label{fig:lambda_selection}
+\end{figure}
+
+% ======================================================================
+\section{S4. Verificación de Generalización: El Atractor de R\"ossler}
+\label{sec:rossler}
+% ======================================================================
+
+Evaluamos los tres mecanismos de Lorenz63 en el atractor de R\"ossler:
+\begin{equation}
+\dot x = -y - z, \quad \dot y = x + ay, \quad \dot z = b + z(x-c),
+\end{equation}
+con parámetros estándar $a=b=0.2$, $c=5.7$ y submuestreo $\Delta t_{\text{feature}}=0.20$. Es una verificación descriptiva donde el ensayo multipaso usa una semilla y el filtrado de ruido usa 5 semillas (sobre 30 ventanas causales); Ridge se parametriza con la heurística de traza de legado.
+
+\begin{table}[h]
+\centering
+\caption{Verificación descriptiva en R\"ossler: réplica cualitativa de los tres mecanismos de Lorenz63.}
+\label{tab:rossler}
+\begin{ruledtabular}
+\begin{tabular}{lll}
+Hallazgo & Lorenz63 & R\"ossler \\
+\midrule
+Pendiente log--log $M^4$ & 3.99 & 3.79 \\
+MASE mediano multipaso $H{=}10$ & & \\
+\quad Estático / ESN (acotado) & 0.43 / 0.74 & 0.26 / 0.58 \\
+\quad Ridge Legacy / OLS (no restringido) & 2.54 / 2.50 & 4.39 / 2.75 \\
+Tasa de victoria de filtrado por semilla & 100\% (todas) & 53\%--67\% (las 5 semillas $>$ 50\%) \\
+\end{tabular}
+\end{ruledtabular}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\columnwidth]{figures_es/fig_rossler_m4.pdf}
+\caption{Mediana de $\lambda \propto \operatorname{tr}(\mathbf{F}^\top\mathbf{F})$ vs magnitud del shock $M$ en R\"ossler, escala log--log. La pendiente ajustada (3.79) confirma la generalidad del Teorema 1.}
+\label{fig:rossler_m4}
+\end{figure}
+
+A $H=10$, OLS sin regularizar diverge a MASE superior a $10^{15}$ bajo retroalimentación iterada en R\"ossler, ilustrando con nitidez la explosión de monomios no acotados.
+
+\section*{Disponibilidad de Datos y Código}
+Los datos y pipelines en Python que respaldan este suplemento están disponibles en el repositorio complementario y archivo de Zenodo.
+
+\end{document}

@@ -1,0 +1,90 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{jaeger2001echo,maass2002realtime,nakajima2021reservoir,yildiz2012revisiting,pathak2018model}
+\citation{banegas2025ssrc}
+\citation{gauthier2021next}
+\citation{bollt2021explaining}
+\newlabel{FirstPage}{{}{1}{}{section*.1}{}}
+\@writefile{toc}{\contentsline {title}{Instability, Outlier Amplification, and Positivity Constraints in Next-Generation Reservoir Computing}{1}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {abstract}{Abstract}{1}{section*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {I}Introduction}{1}{section*.3}\protected@file@percent }
+\newlabel{sec:intro}{{I}{1}{}{section*.3}{}}
+\citation{dossantos2025instability}
+\citation{zhang2025moredata}
+\citation{carroll2022dimension,vlachas2020backpropagation}
+\citation{manjunath2013theory}
+\@writefile{toc}{\contentsline {section}{\numberline {II}Mathematical Framework and Analytical Mechanisms}{2}{section*.4}\protected@file@percent }
+\newlabel{sec:math}{{II}{2}{}{section*.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A}Feature Space Topologies: NG-RC vs. Sparse ESN}{2}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1}Deterministic Quadratic NG-RC}{2}{section*.6}\protected@file@percent }
+\newlabel{eq:ngrc_state}{{1}{2}{}{equation.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {2}Sparse Recurrent Reservoir (ESN) Architecture}{2}{section*.7}\protected@file@percent }
+\newlabel{eq:esn_state}{{2}{2}{}{equation.2}{}}
+\citation{hoerl1970ridge}
+\citation{lorenz1963deterministic}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Median trace-proportional $\lambda \propto \operatorname  {tr}(\mathbf  {F}^\top \mathbf  {F})$ as a function of injected shock magnitude $M$ ($\sigma $), on a log--log scale, measured directly from the Lorenz63 shock-grid experiment (\S  \ref {sec:lorenz}). A power-law fit over the largest magnitudes gives an empirical slope of $3.99$, matching the $\sim M^4$ scaling predicted by Theorem 1.}}{3}{figure.1}\protected@file@percent }
+\newlabel{fig:ridge_fragility}{{1}{3}{Median trace-proportional $\lambda \propto \operatorname {tr}(\mathbf {F}^\top \mathbf {F})$ as a function of injected shock magnitude $M$ ($\sigma $), on a log--log scale, measured directly from the Lorenz63 shock-grid experiment (\S \ref {sec:lorenz}). A power-law fit over the largest magnitudes gives an empirical slope of $3.99$, matching the $\sim M^4$ scaling predicted by Theorem 1}{figure.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B}Quartic Trace Inflation Theorem ($M^4$ Scaling)}{3}{section*.8}\protected@file@percent }
+\newlabel{subsec:m4_theorem}{{II\,B}{3}{}{section*.8}{}}
+\newlabel{eq:ridge_heuristic}{{3}{3}{}{equation.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {C}Eigenvector Invariance under Spectral Covariance Shifts}{3}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {III}Controlled Dynamical Benchmarking on Lorenz63}{3}{section*.10}\protected@file@percent }
+\newlabel{sec:lorenz}{{III}{3}{}{section*.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Phase space reconstruction $(x, z)$ illustrating the excursion of an additive unphysical outlier ($+15\sigma $) outside the low-dimensional fractal attractor manifold of Lorenz63.}}{4}{figure.2}\protected@file@percent }
+\newlabel{fig:lorenz_phase}{{2}{4}{Phase space reconstruction $(x, z)$ illustrating the excursion of an additive unphysical outlier ($+15\sigma $) outside the low-dimensional fractal attractor manifold of Lorenz63}{figure.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Iterated multi-step forecasting error (MASE) across discrete horizons $H \in \{1, 2, 3, 5, 8, 10, 15, 20, 30, 40\}$ parameterized in Lyapunov times ($\tau = H \cdot \Delta t \cdot \lambda _{\max }$, $\lambda _{\max } \approx 0.9056$). Unconstrained polynomial NG-RC (Ridge and OLS) explodes rapidly beyond $\tau \approx 0.2$, whereas bounded activations ($\tanh $) maintain stable continuation up to $\tau \approx 0.68$ ($H=15$); beyond $\tau \approx 1.0$, trajectories saturate at attractor scale.}}{4}{figure.3}\protected@file@percent }
+\newlabel{fig:lyapunov_curve}{{3}{4}{Iterated multi-step forecasting error (MASE) across discrete horizons $H \in \{1, 2, 3, 5, 8, 10, 15, 20, 30, 40\}$ parameterized in Lyapunov times ($\tau = H \cdot \Delta t \cdot \lambda _{\max }$, $\lambda _{\max } \approx 0.9056$). Unconstrained polynomial NG-RC (Ridge and OLS) explodes rapidly beyond $\tau \approx 0.2$, whereas bounded activations ($\tanh $) maintain stable continuation up to $\tau \approx 0.68$ ($H=15$); beyond $\tau \approx 1.0$, trajectories saturate at attractor scale}{figure.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A}Formal Experimental Protocol and Methods}{4}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B}Analysis of Results and Ablation Insights}{4}{section*.12}\protected@file@percent }
+\citation{patton2011volatility}
+\citation{lawson1974solving}
+\citation{engle1982autoregressive,bollerslev1986generalized}
+\citation{glosten1993relation}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces Performance across 30 independent stochastic realizations on the Lorenz63 attractor. Values report the median MASE across all 30 seeds, empirical 2.5\%--97.5\% percentile ranges across realizations, exact Clopper--Pearson 95\% win-rate intervals against Ridge, and the two-way crossed block bootstrap 95\% interval on the paired mean MASE difference (ESN-lag $-$ Ridge; negative favors the ESN).}}{5}{table.1}\protected@file@percent }
+\newlabel{tab:30seeds_rigorous}{{I}{5}{Performance across 30 independent stochastic realizations on the Lorenz63 attractor. Values report the median MASE across all 30 seeds, empirical 2.5\%--97.5\% percentile ranges across realizations, exact Clopper--Pearson 95\% win-rate intervals against Ridge, and the two-way crossed block bootstrap 95\% interval on the paired mean MASE difference (ESN-lag $-$ Ridge; negative favors the ESN)}{table.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Conical Constraints in Real-World Volatility}{5}{section*.13}\protected@file@percent }
+\newlabel{sec:empirical}{{IV}{5}{}{section*.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A}Lower-Bounded Targets and Loss Sensitivity}{5}{section*.14}\protected@file@percent }
+\newlabel{eq:qlike}{{10}{5}{}{equation.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Median QLIKE as a function of the artificial positive floor $\epsilon $ used to evaluate the loss, per readout. Legacy signed readouts (Ridge, OLS, signed NNLS) explode as $\epsilon \to 0$ due to negative variance estimates, whereas structurally non-negative NNLS remains strictly invariant.}}{5}{figure.4}\protected@file@percent }
+\newlabel{fig:qlike_tradeoff}{{4}{5}{Median QLIKE as a function of the artificial positive floor $\epsilon $ used to evaluate the loss, per readout. Legacy signed readouts (Ridge, OLS, signed NNLS) explode as $\epsilon \to 0$ due to negative variance estimates, whereas structurally non-negative NNLS remains strictly invariant}{figure.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B}Convex Cones vs. Signed Monomials}{5}{section*.15}\protected@file@percent }
+\bibcite{jaeger2001echo}{{1}{}{{}}{{}}}
+\bibcite{maass2002realtime}{{2}{}{{}}{{}}}
+\bibcite{nakajima2021reservoir}{{3}{}{{}}{{}}}
+\bibcite{yildiz2012revisiting}{{4}{}{{}}{{}}}
+\bibcite{pathak2018model}{{5}{}{{}}{{}}}
+\bibcite{banegas2025ssrc}{{6}{}{{}}{{}}}
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces Out-of-sample QLIKE across 9 currency and cryptocurrency series ($T \approx 3900$ daily observations), ranked by the median across series of mean QLIKE (each series' mean QLIKE over time, then the median of those 9 series means). The pooled median is reported for reference.}}{6}{table.2}\protected@file@percent }
+\newlabel{tab:fx_qlike}{{II}{6}{Out-of-sample QLIKE across 9 currency and cryptocurrency series ($T \approx 3900$ daily observations), ranked by the median across series of mean QLIKE (each series' mean QLIKE over time, then the median of those 9 series means). The pooled median is reported for reference}{table.2}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Discussion and Conclusions}{6}{section*.16}\protected@file@percent }
+\newlabel{sec:discussion}{{V}{6}{}{section*.16}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {}Supplementary Material}{6}{section*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {}Author Declarations}{6}{section*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {}Conflict of Interest}{6}{section*.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {}Author Contributions}{6}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {}Data Availability Statement}{6}{section*.21}\protected@file@percent }
+\bibcite{gauthier2021next}{{7}{}{{}}{{}}}
+\bibcite{bollt2021explaining}{{8}{}{{}}{{}}}
+\bibcite{dossantos2025instability}{{9}{}{{}}{{}}}
+\bibcite{zhang2025moredata}{{10}{}{{}}{{}}}
+\bibcite{lorenz1963deterministic}{{11}{}{{}}{{}}}
+\bibcite{carroll2022dimension}{{12}{}{{}}{{}}}
+\bibcite{vlachas2020backpropagation}{{13}{}{{}}{{}}}
+\bibcite{manjunath2013theory}{{14}{}{{}}{{}}}
+\bibcite{hoerl1970ridge}{{15}{}{{}}{{}}}
+\bibcite{lawson1974solving}{{16}{}{{}}{{}}}
+\bibcite{engle1982autoregressive}{{17}{}{{}}{{}}}
+\bibcite{bollerslev1986generalized}{{18}{}{{}}{{}}}
+\bibcite{glosten1993relation}{{19}{}{{}}{{}}}
+\bibcite{patton2011volatility}{{20}{}{{}}{{}}}
+\bibdata{mainNotes}
+\bibstyle{aipnum4-2}
+\citation{REVTEX42Control}
+\citation{aip41Control}
+\providecommand\NAT@force@numbers{}\NAT@force@numbers
+\newlabel{LastBibItem}{{20}{7}{}{section*.21}{}}
+\newlabel{LastPage}{{}{7}{}{}{}}
+\gdef \@abspage@last{7}
