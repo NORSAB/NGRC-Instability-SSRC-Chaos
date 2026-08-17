@@ -1,7 +1,8 @@
 # Zenodo Reproducibility Archive & Replication Instructions
-**Title:** Data and Code Replication Package for "Instability, Outlier Amplification, and Positivity Constraints in Next-Generation Reservoir Computing"  
+**Title:** Replication Package: Empirical Sensitivity of Next-Generation Reservoir Computing to Structural Perturbations  
 **Author:** Norman Reynaldo Sabillón Castro  
 **Target Journal:** *Chaos: An Interdisciplinary Journal of Nonlinear Science* (AIP Publishing)  
+**Zenodo DOI:** [10.5281/zenodo.21980410](https://doi.org/10.5281/zenodo.21980410)  
 **License:** Dual License — MIT License (Software / Code) / Creative Commons CC-BY 4.0 (Data, Visualizations & Documentation)  
 
 ---

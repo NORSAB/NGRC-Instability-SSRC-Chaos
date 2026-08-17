@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.3.12)  17 AUG 2026 07:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.3.12)  17 AUG 2026 07:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -501,21 +501,21 @@ LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-29>
  ***********
 Package rerunfilecheck Info: File `main_es.out' has not changed.
-(rerunfilecheck)             Checksum: 0E981A6148A9A5A7DA4BA0CA74D96B0F;5847.
+(rerunfilecheck)             Checksum: 101F9591392E61F4EBE18F33C9593535;5763.
  ) 
 Here is how much of TeX's memory you used:
- 12605 strings out of 469460
- 188079 string characters out of 5467890
- 644257 words of memory out of 5000000
- 40985 multiletter control sequences out of 15000+600000
- 655713 words of font info for 106 fonts, out of 8000000 for 9000
+ 12611 strings out of 469460
+ 188186 string characters out of 5467890
+ 645273 words of memory out of 5000000
+ 40989 multiletter control sequences out of 15000+600000
+ 656026 words of font info for 107 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
  75i,9n,79p,2421b,732s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx0700.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0500.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfso0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfss1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfsx0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti0700.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti0800.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb>
-Output written on main_es.pdf (9 pages, 828812 bytes).
+<c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx0700.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0500.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfso0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfss1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfsx0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti0700.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti0800.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
+Output written on main_es.pdf (9 pages, 857710 bytes).
 PDF statistics:
- 738 PDF objects out of 1000 (max. 8388607)
- 427 compressed objects within 5 object streams
- 105 named destinations out of 1000 (max. 500000)
+ 747 PDF objects out of 1000 (max. 8388607)
+ 434 compressed objects within 5 object streams
+ 106 named destinations out of 1000 (max. 500000)
  189 words of extra memory for PDF output out of 10000 (max. 10000000)
 
