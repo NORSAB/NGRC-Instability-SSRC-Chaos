@@ -66,30 +66,36 @@ def block_bootstrap_ci(
     diff_by_entity: dict, block_len: int, n_boot: int, rng: np.random.Generator
 ) -> tuple:
     """
-    Block bootstrap on the mean of a paired per-window difference series,
-    resampling blocks of `block_len` consecutive windows strictly WITHIN each
-    series (each entity resamples from its own blocks only).
+    Circular block bootstrap (Politis & Romano, 1992) on the mean of a paired
+    per-window difference series, resampling blocks of `block_len` consecutive
+    windows strictly WITHIN each series (each entity resamples from its own
+    series only).
+
+    Circular wrapping guarantees that every block has exactly `block_len`
+    observations. Each entity replicate is then trimmed to its original length
+    so its weight in the pooled mean stays constant across bootstrap draws.
     """
-    blocks_per_entity = {}
-    n_blocks_per_entity = {}
+    vals_per_entity = {}
+    n_per_entity = {}
     for entity, vals in diff_by_entity.items():
         vals = np.asarray(vals)
         n = len(vals)
         if n == 0:
             continue
-        n_blocks = int(np.ceil(n / block_len))
-        blocks = [vals[b * block_len : min((b + 1) * block_len, n)] for b in range(n_blocks)]
-        blocks_per_entity[entity] = blocks
-        n_blocks_per_entity[entity] = n_blocks
+        vals_per_entity[entity] = vals
+        n_per_entity[entity] = n
 
     boot_means = np.empty(n_boot)
     for i in range(n_boot):
         replicate_parts = []
-        for entity, blocks in blocks_per_entity.items():
-            n_need = n_blocks_per_entity[entity]
-            idx = rng.integers(0, len(blocks), size=n_need)
-            chosen = [blocks[j] for j in idx]
-            replicate_parts.append(np.concatenate(chosen))
+        for entity, vals in vals_per_entity.items():
+            n = n_per_entity[entity]
+            n_blocks = int(np.ceil(n / block_len))
+            starts = rng.integers(0, n, size=n_blocks)
+            blocks = [np.take(vals, np.arange(s, s + block_len) % n) for s in starts]
+            # Trim to exactly n so every replicate/entity carries the same
+            # weight regardless of how the last (partial) block landed.
+            replicate_parts.append(np.concatenate(blocks)[:n])
         concatenated = np.concatenate(replicate_parts)
         boot_means[i] = concatenated.mean()
 

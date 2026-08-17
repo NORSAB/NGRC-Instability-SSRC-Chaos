@@ -15,10 +15,11 @@ from scipy.optimize import nnls
 
 from eventos import categoria, tipo_categoria
 from modelos_volatilidad import causal_window, fit_nnls_nonnegative
+from data_paths import resolve_fuel_repository
 
 
 BASE = Path(__file__).resolve().parent
-REPO = Path(r"D:\2026\Tesis2026\Datos_Combustibles_Honduras\repositorio_combustibles_honduras.csv")
+REPO = resolve_fuel_repository()
 OUT = BASE / "output"
 FIG = BASE.parent / "paper" / "figuras"
 FUELS = ["Súper", "Regular", "Diesel", "Kerosene"]

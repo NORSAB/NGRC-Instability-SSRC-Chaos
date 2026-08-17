@@ -11,6 +11,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from eventos import EVENTOS
+from data_paths import resolve_fuel_repository
 
 plt.rcParams.update({"font.size": 11, "figure.dpi": 600, "savefig.dpi": 600,
                      "axes.spines.top": False, "axes.spines.right": False})
@@ -18,7 +19,7 @@ plt.rcParams.update({"font.size": 11, "figure.dpi": 600, "savefig.dpi": 600,
 BASE = Path(__file__).resolve().parent
 FIGURAS = BASE.parent / "paper" / "figuras"
 OUTPUT = BASE / "output"
-REPO = Path(r"D:\2026\Tesis2026\Datos_Combustibles_Honduras\repositorio_combustibles_honduras.csv")
+REPO = resolve_fuel_repository()
 FUELS = ["Súper", "Regular", "Diesel", "Kerosene"]
 W_FULL = 6.8
 EVENTO_COLOR = {"covid_2020": "#C44E52", "eta_iota_2020": "#4C72B0",
@@ -38,10 +39,8 @@ df["FechaInicioISO"] = pd.to_datetime(df["FechaInicioISO"])
 df = df.sort_values("FechaInicioISO")
 
 # ---------- Fig 7: precios, ancho completo, los 4 eventos sombreados ----------
-# FIX 2026-08-12: las etiquetas de texto DENTRO del grafico se superponian cuando dos
-# eventos caian cerca en el tiempo (COVID y Eta/Iota, ambos en 2020). Se quita el texto del
-# area de graficado por completo y se identifican los eventos SOLO por color, con una
-# leyenda unica fuera del grafico (mismo patron que la Fig. 11) — cero riesgo de solape.
+# Los eventos se identifican por color en una leyenda externa para evitar
+# superposiciones dentro del area de graficado.
 fig, ax = plt.subplots(figsize=(W_FULL, 4.2))
 colors = {"Súper": "#374649", "Regular": "#982C33", "Diesel": "#3f6c3e", "Kerosene": "#134966"}
 for fuel, c in colors.items():

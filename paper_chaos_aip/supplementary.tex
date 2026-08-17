@@ -29,12 +29,14 @@
 \label{sec:bcie}
 % ======================================================================
 
-The Central American Bank for Economic Integration (BCIE/CABEI) publishes an open panel of loan approvals by member country, 1961--2025. We construct a synthetic systemic hub from the pooled approvals and estimate a coupling operator $\mathbf{P}^*$ via row-wise non-negative least squares under a hub-and-spoke topology mask, comparing four compressions of the NG-RC quadratic feature block (PCA baseline, Ledoit--Wolf shrinkage, Tikhonov-shifted covariance, and direct NNLS regression) against a genuine recurrent sparse ESN reference, under a causal protocol (training through 2019, out-of-sample 2020--2025).
+The Central American Bank for Economic Integration (BCIE/CABEI) publishes an open panel of loan approvals by member country, 1961--2025. We construct a synthetic systemic hub from the pooled approvals and estimate a coupling operator $\mathbf{P}^*$ via row-wise non-negative least squares under a hub-and-spoke topology mask, comparing four compressions of the NG-RC quadratic feature block (PCA baseline, Ledoit--Wolf shrinkage \cite{ledoitwolf2004wellconditioned}, Tikhonov-shifted covariance, and direct NNLS regression) against a genuine recurrent sparse ESN reference, under a causal protocol (training through 2019, out-of-sample 2020--2025). Significance is assessed with the Diebold--Mariano test \cite{dieboldmariano1995comparing}.
 
 \begin{table}[h]
 \centering
 \caption{BCIE annual panel, coverage-matched comparison (8 common entities, causal protocol). Diebold--Mariano $p$-values use block-exact resampling by year against the recurrent sparse ESN reference; \texttt{no} indicates the difference is not significant at $\alpha=0.05$.}
 \label{tab:bcie}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Performance comparison table reporting out-of-sample MASE and Diebold--Mariano test $p$-values across eight financial forecasting architectures on the BCIE multilateral loan dataset. Non-negative readouts attain the lowest MASE point estimate (0.8155), but differences against the ESN reference (1.0356) are not statistically significant ($p \ge 0.50$).
 \begin{ruledtabular}
 \begin{tabular}{lrrc}
 Method & MASE & $N$ & DM vs.\ ESN ($p$) \\
@@ -52,12 +54,14 @@ Baseline PCA ($k=2$) & 1.3125 & 32 & 0.75 (no) \\
 \end{ruledtabular}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{figures/fig12_bcie_causal.pdf}
+\includegraphics[width=\textwidth]{figures/fig12_bcie_causal.pdf}
 \caption{BCIE annual panel: causal out-of-sample MASE by readout, coverage-matched 8-entity comparison, 2020--2025.}
 \label{fig:bcie}
-\end{figure}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Horizontal bar chart comparing out-of-sample forecasting accuracy (MASE) across nine statistical, reservoir, and penalized regression architectures on the BCIE multilateral loan dataset. Regularized non-negative readouts achieve the lowest MASE while eliminating economically invalid negative loan volume predictions.
+\end{figure*}
 
 NNLS direct achieves the lowest point estimate, consistent with the FX/crypto and fuel-price findings that non-negativity constraints tend to help when the target has a structural non-negative nature. However, with only 6 out-of-sample years and 8 common entities, no pairwise Diebold--Mariano comparison reaches significance (all $p \ge 0.50$). We report this as a directionally consistent but statistically inconclusive secondary validation.
 
@@ -70,8 +74,10 @@ We repeat the volatility comparison on 496 weekly observations (2017--2026) of f
 
 \begin{table}[h]
 \centering
-\caption{Honduras fuel squared log-return volatility forecasting, out-of-sample comparison by readout across 496 weeks.}
+\caption{Honduras fuel squared log-return volatility forecasting across 496 weeks. Each method contributes 344 causal out-of-sample forecast origins.}
 \label{tab:fuel}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Comparative evaluation table of volatility models for Honduras retail fuel price series reporting QLIKE, MASE, and negative prediction percentages. Unregularized OLS produces 13.7\% negative forecasts and Ridge produces 0.9\%, whereas non-negative readouts eliminate negative predictions entirely.
 \begin{ruledtabular}
 \begin{tabular}{lrrr}
 Method & QLIKE & MASE & \% Neg. \\
@@ -80,8 +86,8 @@ Non-negative NNLS & \textbf{0.359} & 0.485 & 0\% \\
 GARCH(1,1) & 0.380 & 0.454 & 0\% \\
 GJR-GARCH(1,1) & 0.392 & 0.442 & 0\% \\
 Naive persistence & 0.432 & 0.369 & 0\% \\
-Legacy OLS (clipped) & 0.542 & 0.587 & 47\% \\
-Legacy Ridge (clipped) & 0.552 & 0.734 & 3\% \\
+Legacy OLS (clipped) & 0.542 & 0.587 & 13.7\% \\
+Legacy Ridge (clipped) & 0.552 & 0.734 & 0.9\% \\
 Softplus NG-RC & 0.570 & 0.713 & 0\% \\
 EWMA ($\lambda=0.94$) & 0.677 & 0.736 & 0\% \\
 Recurrent sparse ESN (log) & 1.313 & \textbf{0.338} & 0\% \\
@@ -90,12 +96,14 @@ Log-link Ridge & 1.815 & 0.342 & 0\% \\
 \end{ruledtabular}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{figures/fig7_combustibles_precios.pdf}
+\includegraphics[width=\textwidth]{figures/fig7_combustibles_precios.pdf}
 \caption{Weekly retail prices for four Honduras fuel products, 2017--2026, with shaded windows for COVID-19, hurricanes Eta/Iota, the Russia--Ukraine war, and the 2026 Middle East strait crisis.}
 \label{fig:fuel_prices}
-\end{figure}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Time series plot of weekly retail fuel prices in Honduras (2017--2026) for Super gasoline, Regular gasoline, Diesel, and Kerosene. Four shaded intervals highlight major global economic shock episodes, including the 2020 pandemic crash and 2022 international energy price volatility.
+\end{figure*}
 
 Non-negative NNLS achieves the best QLIKE (0.359), matching the FX/crypto result. But the recurrent sparse ESN achieves the best MASE by a wide margin (0.338, versus 0.485 for NNLS), while ranking near the bottom on QLIKE (1.313). This directly mirrors the median-versus-tail tension: MASE rewards typical-case accuracy, whereas QLIKE punishes rare near-zero predictions severely.
 
@@ -104,6 +112,8 @@ Non-negative NNLS achieves the best QLIKE (0.359), matching the FX/crypto result
 \includegraphics[width=\columnwidth]{figures/fig9_mecanismo_falla_nnls.pdf}
 \caption{Mechanism of an NNLS-readout failure case: raw (unclipped) NNLS prediction versus realized volatility for Super and Regular gasoline, illustrating why non-negative weights do not guarantee a non-negative embedding when input features retain signed lags.}
 \label{fig:fuel_failure}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Line plots comparing realized squared return volatility against unclipped NNLS forecasts for fuel products. Illustrates that non-negative readout coefficients do not prevent negative variance predictions when input lag features contain signed raw returns.
 \end{figure}
 
 % ======================================================================
@@ -116,6 +126,8 @@ Non-negative NNLS achieves the best QLIKE (0.359), matching the FX/crypto result
 \includegraphics[width=\columnwidth]{figures/fig_supp_lambda_selection.pdf}
 \caption{Nested temporal validation path for the Ridge readout's regularization ratio on Lorenz63 (\S3 of the main text), showing the internal holdout MAE across the candidate grid and the ratio selected at each outer window.}
 \label{fig:lambda_selection}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Semi-log plot illustrating median out-of-sample MAE as a function of trace regularization ratio candidates on the Lorenz63 benchmark. The distribution confirms a stable minimum error region, validating the automatic trace-proportional hyperparameter selection rule under varying shock intensities.
 \end{figure}
 
 % ======================================================================
@@ -123,7 +135,7 @@ Non-negative NNLS achieves the best QLIKE (0.359), matching the FX/crypto result
 \label{sec:rossler}
 % ======================================================================
 
-To assess whether the three Lorenz63 findings of the main text are specific to that system, we repeat a reduced-scale version of each check on the R\"ossler attractor:
+To assess whether the three Lorenz63 findings of the main text are specific to that system, we repeat a reduced-scale version of each check on the R\"ossler attractor \cite{rossler1976equation}:
 \begin{equation}
 \dot x = -y - z, \quad \dot y = x + ay, \quad \dot z = b + z(x-c),
 \end{equation}
@@ -133,15 +145,17 @@ with standard chaotic parameters $a=b=0.2$, $c=5.7$. R\"ossler's spiral dynamics
 \centering
 \caption{R\"ossler descriptive generalization check: all three mechanisms replicate directionally.}
 \label{tab:rossler}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Mechanistic evaluation table comparing clean and shocked MASE, shock amplification ratios, and forecast retention horizons across candidate readout mechanisms on Lorenz63 and Rössler attractors, confirming directional replication of all three dynamical phenomena.
 \begin{ruledtabular}
-\begin{tabular}{lll}
+\begin{tabular}{p{3.2cm}cc}
 Finding & Lorenz63 & R\"ossler \\
 \midrule
-$M^4$ log--log slope & 3.99 & 3.79 \\
+$M^4$ log--log slope (Ridge-only) & 3.93 & 3.79 \\
 Multi-step $H{=}10$ median MASE & & \\
-\quad Static / ESN (bounded) & 0.43 / 0.74 & 0.26 / 0.58 \\
-\quad Legacy Ridge / OLS (unconstrained) & 2.54 / 2.50 & 4.39 / 2.75 \\
-Noise-filtering win rate by seed & 100\% (all seeds) & 53\%--67\% (all 5 seeds $>$ 50\%) \\
+\quad Static / ESN & 0.43 / 0.74 & 0.26 / 0.58 \\
+\quad Legacy Ridge / OLS & 2.54 / 2.50 & 4.39 / 2.75 \\
+Noise-filtering win rate & 100\% (all) & 53\%--67\% \\
 \end{tabular}
 \end{ruledtabular}
 \end{table}
@@ -151,11 +165,26 @@ Noise-filtering win rate by seed & 100\% (all seeds) & 53\%--67\% (all 5 seeds $
 \includegraphics[width=\columnwidth]{figures/fig_rossler_m4.pdf}
 \caption{Median trace-proportional $\lambda$ versus shock magnitude $M$ on R\"ossler, log--log scale. The fitted slope (3.79) is close to the Theorem 1 prediction of 4.}
 \label{fig:rossler_m4}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Log-log plot of optimal trace-proportional regularization parameter $\lambda$ against shock amplitude $M$ for the Rössler chaotic attractor. The empirical slope of $3.79$ closely aligns with the $O(M^4)$ theoretical scaling law derived for out-of-manifold state disturbances.
 \end{figure}
 
 At $H=10$, the unconstrained OLS readout occasionally diverges to MASE exceeding $10^{15}$ under iterated feedback on R\"ossler, starkly illustrating the unconstrained error-compounding mechanism.
 
 \section*{Data and Code Availability}
-The data and Python reproduction pipelines supporting this supplement are available in the companion repository and Zenodo archive.
+The data that support the findings of this study and the Python reproduction pipelines are available from the corresponding author upon reasonable request. A complete replication repository and Zenodo archive will be made publicly available upon publication.
+
+\begin{thebibliography}{9}
+
+\bibitem{ledoitwolf2004wellconditioned}
+O.~Ledoit and M.~Wolf, ``A well-conditioned estimator for large-dimensional covariance matrices,'' \emph{Journal of Multivariate Analysis}, vol.~88, no.~2, pp.~365--411, 2004, doi: 10.1016/S0047-259X(03)00096-4.
+
+\bibitem{dieboldmariano1995comparing}
+F.~X. Diebold and R.~S. Mariano, ``Comparing predictive accuracy,'' \emph{Journal of Business \& Economic Statistics}, vol.~13, no.~3, pp.~253--263, 1995, doi: 10.1080/07350015.1995.10524599.
+
+\bibitem{rossler1976equation}
+O.~E. R{\"o}ssler, ``An equation for continuous chaos,'' \emph{Physics Letters A}, vol.~57, no.~5, pp.~397--398, 1976, doi: 10.1016/0375-9601(76)90101-8.
+
+\end{thebibliography}
 
 \end{document}

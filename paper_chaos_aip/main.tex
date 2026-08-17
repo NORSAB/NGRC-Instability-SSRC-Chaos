@@ -22,32 +22,34 @@
 \date{\today}
 
 \begin{abstract}
-Next-Generation Reservoir Computing (NG-RC) replaces high-dimensional random recurrent networks with explicit polynomial feature maps of time-lagged observables, offering dramatic parameter efficiency. However, empirical deployments frequently encounter severe numerical ill-conditioning and forecast degradation under measurement noise, return asymmetries, or localized outlier shocks. We conduct an analytical and empirical investigation of these failure modes across chaotic dynamics and heavy-tailed real-world series. First, we prove that quadratic feature blocks subject trace-proportional Ridge regularization ($\lambda \propto \operatorname{tr}(\mathbf{F}^\top\mathbf{F})$) to a quartic scaling ($\sim M^4$) under outlier shocks of magnitude $M$, confirmed empirically with a measured log--log slope of 3.99. Second, we show that spectral Tikhonov shifts on sample covariances preserve principal eigenvectors identically, separating covariance stabilization from readout regularization. Third, across 30 independent reservoir realizations and 288,420 window evaluations on Lorenz63, evaluated with a two-way crossed block bootstrap, bounded activations ($\tanh$) prevent the iterated multi-step divergence that afflicts unconstrained polynomial readouts in short-to-intermediate horizons ($H \le 15$), and recurrent memory yields a genuine noise-filtering advantage (bootstrap 95\% intervals on the paired mean MASE difference strictly excluding zero); shock robustness, in contrast, is condition-dependent rather than uniform across the attractor. Finally, in daily FX/crypto volatility forecasting, non-negative least squares over strictly positive feature bases eliminates negative variance predictions without floor clipping, but a sparse recurrent reservoir readout is not competitive with econometric baselines (EWMA, GARCH, GJR-GARCH) once tail-sensitive loss statistics are evaluated.
+Next-Generation Reservoir Computing (NG-RC) replaces high-dimensional random recurrent networks with explicit polynomial feature maps of time-lagged observables, offering dramatic parameter efficiency. However, empirical deployments frequently encounter severe numerical ill-conditioning and forecast degradation under measurement noise, return asymmetries, or localized outlier shocks. We conduct an analytical and empirical investigation of these failure modes across chaotic dynamics and heavy-tailed real-world series. First, we prove that quadratic feature blocks subject trace-proportional Ridge regularization ($\lambda \propto \operatorname{tr}(\mathbf{F}^\top\mathbf{F})$) to a quartic scaling ($\sim M^4$) under outlier shocks of magnitude $M$, confirmed empirically with a measured log--log slope of 3.93 (Ridge readout only; SSRC's trace heuristic lives on a different feature space and is excluded from this fit). Second, we show that spectral Tikhonov shifts on sample covariances preserve principal eigenvectors identically, separating covariance stabilization from readout regularization. Third, across 30 independent reservoir realizations and 288,420 window evaluations on Lorenz63, evaluated with a two-way crossed block bootstrap, bounded activations ($\tanh$) prevent the iterated multi-step divergence that afflicts unconstrained polynomial readouts in short-to-intermediate horizons ($H \le 15$), and recurrent memory yields a genuine noise-filtering advantage (bootstrap 95\% intervals on the paired mean MASE difference strictly excluding zero); shock robustness, in contrast, is condition-dependent rather than uniform across the attractor. Finally, in daily FX/crypto volatility forecasting, non-negative least squares over strictly positive feature bases eliminates negative variance predictions without floor clipping, but a sparse recurrent reservoir readout is not competitive with econometric baselines (EWMA, GARCH, GJR-GARCH) once tail-sensitive loss statistics are evaluated.
 \end{abstract}
 
-\begin{quotation}
-\textbf{Lead Paragraph:} Data-driven forecasting of complex dynamical systems has been revolutionized by Next-Generation Reservoir Computing (NG-RC), which bypasses large random neural networks by projecting time series into linear and nonlinear lag monomials. Despite its elegance, practitioners observe that NG-RC can catastrophically degrade when encountering structural breaks, measurement noise, or non-negative physical constraints. Here, we clarify the mathematical mechanisms governing these failures and audit the empirical claims that commonly accompany reservoir-based fixes. We show that heuristic regularizations scale at a quartic rate ($\sim M^4$) under isolated shocks, over-regularizing calm dynamics. In iterative multi-step forecasting across fine horizons ($H \in \{1, \dots, 40\}$), unconstrained polynomial maps feed compounding errors back into quadratic terms, whereas bounded activations ($\tanh$) intrinsically stabilize trajectory continuation for intermediate horizons, and a sparse recurrent reservoir adds a genuine but conditional filtering benefit under noise. Furthermore, when target observables possess intrinsic physical or statistical bounds (such as volatility or energy prices), linear readouts must be constrained to the appropriate convex cones -- though positivity alone does not guarantee good probabilistic calibration. Our findings provide rigorous design boundaries, and explicit statistical caveats, for choosing between deterministic polynomial expansions and reservoir-based architectures.
-\end{quotation}
-
 \maketitle
+
+\begin{quotation}
+\textbf{Lead Paragraph:} Data-driven forecasting of complex dynamical systems has been revolutionized by Next-Generation Reservoir Computing (NG-RC), which bypasses large random neural networks by projecting time series into linear and nonlinear lag monomials. Despite its elegance, practitioners observe that NG-RC can catastrophically degrade when encountering exogenous out-of-manifold shocks and observational outliers, measurement noise, or non-negative physical constraints. Here, we clarify the mathematical mechanisms governing these failures and audit the empirical claims that commonly accompany reservoir-based fixes. We show that heuristic regularizations scale at a quartic rate ($\sim M^4$) under isolated shocks, over-regularizing calm dynamics. In iterative multi-step forecasting across discrete horizons ($H \in \{1,2,3,5,8,10,15,20,30,40\}$), unconstrained polynomial maps feed compounding errors back into quadratic terms, whereas bounded activations ($\tanh$) constrain state growth and delay the onset of iterated divergence for intermediate horizons, and a sparse recurrent reservoir adds a genuine but conditional filtering benefit under noise. Furthermore, when target observables possess intrinsic physical or statistical bounds (such as volatility or energy prices), linear readouts must be constrained to the appropriate convex cones, though positivity alone does not guarantee good probabilistic calibration. Our findings offer concrete design guidance, together with explicit statistical caveats, for choosing between deterministic polynomial expansions and reservoir-based architectures.
+\end{quotation}
 
 % ======================================================================
 \section{Introduction}
 \label{sec:intro}
 % ======================================================================
 
-Reservoir Computing (RC) has established itself as an effective paradigm for reconstructing, predicting, and synchronizing nonlinear dynamical systems \cite{jaeger2001echo,maass2002realtime,nakajima2021reservoir,yildiz2012revisiting,pathak2018model}. By feeding an input time series $\mathbf{x}_t \in \mathbb{R}^{d_{\text{in}}}$ into a high-dimensional, fixed recurrent network (the ``reservoir'') and training only a linear readout layer via regularized least squares, standard Echo State Networks (ESNs) avoid the computational cost and vanishing-gradient instabilities of backpropagation through time. A related line of work, Stochastically Structured Reservoir Computers (SSRC) \cite{banegas2025ssrc}, augments this template with graph-informed coupling structure and structure-preserving embeddings for economic and financial system identification; the sparse random-weight ESN we benchmark throughout this paper is a standard, unstructured recurrent reservoir in that same broad family, not a reimplementation of the structured SSRC architecture, and we use the standard ESN naming throughout the paper to maintain strict conceptual precision.
+Reservoir Computing (RC) has established itself as an effective paradigm for reconstructing, predicting, and synchronizing nonlinear dynamical systems \cite{jaeger2001echo,maass2002realtime,nakajima2021reservoir,yildiz2012revisiting,pathak2018model}, with universal approximation guarantees established for the echo state property \cite{grigoryevaortega2018echostate,gonon2023approximation} and recent perspectives surveying the field's theoretical foundations, pedagogy, and open challenges \cite{yan2024emerging,amann2026nonlinear,inoue2026bootcamp,schotz2026machine}. By feeding an input time series $\mathbf{x}_t \in \mathbb{R}^{d_{\text{in}}}$ into a high-dimensional, fixed recurrent network (the ``reservoir'') and training only a linear readout layer via regularized least squares, standard Echo State Networks (ESNs) avoid the computational cost and vanishing-gradient instabilities of backpropagation through time. A related line of work, Stochastically Structured Reservoir Computers (SSRC) \cite{banegas2025ssrc}, augments this template with graph-informed coupling structure and structure-preserving embeddings for economic and financial system identification; the sparse random-weight ESN we benchmark throughout this paper is a standard, unstructured recurrent reservoir in that same broad family, not a reimplementation of the structured SSRC architecture, and we use the standard ESN naming throughout the paper to avoid conflating the two architectures.
 
 Recently, Gauthier \emph{et al.} \cite{gauthier2021next} introduced Next-Generation Reservoir Computing (NG-RC), demonstrating that for many classical chaotic attractors, the high-dimensional random reservoir can be completely bypassed. By directly constructing a feature vector $\mathbf{F}_t$ consisting of $k$ historical time lags and their unique polynomial combinations, NG-RC achieves equivalent or superior short-term prediction with orders-of-magnitude fewer parameters and no stochastic initialization variance \cite{bollt2021explaining}.
 
-Despite these notable advantages, recent theoretical and applied investigations have exposed significant vulnerabilities in deterministic polynomial representations. Roque dos Santos and Bollt \cite{dossantos2025instability} demonstrated that the condition number $\kappa$ of the NG-RC design covariance matrix diverges rapidly as the feature dimension $D = k + k(k+1)/2$ approaches the effective sample size $T$. Concurrently, Zhang, Roque dos Santos, and Cornelius \cite{zhang2025moredata} showed that adding more training data or increasing lag depth can paradoxically degrade out-of-sample forecast accuracy due to spectral ill-conditioning and noise amplification.
+Despite these notable advantages, recent theoretical and applied investigations have exposed significant vulnerabilities in deterministic polynomial representations. Roque dos Santos and Bollt \cite{dossantos2025instability} demonstrated that the condition number $\kappa$ of the NG-RC design covariance matrix diverges rapidly as the feature dimension $D = k + k(k+1)/2$ approaches the effective sample size $T$. Concurrently, Zhang \emph{et al.} \cite{zhang2025moredata} showed that adding more training data or increasing lag depth can paradoxically degrade out-of-sample forecast accuracy due to spectral ill-conditioning and noise amplification, extending an earlier finding that even exact knowledge of the governing nonlinearity does not guarantee robust basin prediction under small model uncertainty \cite{zhangcornelius2023catch22}. Hybrid schemes that combine traditional and next-generation reservoirs \cite{chepuri2024hybridizing} and translational-symmetry exploitation for spatiotemporal chaos \cite{barbosagauthier2022learning} illustrate that these failure modes are actively being addressed, but not yet resolved, by the field.
 
-In practical applications---ranging from geophysical flows to econometric volatility and high-frequency exchange rates---time series rarely conform to clean, stationary trajectories \cite{carroll2022dimension,vlachas2020backpropagation}. Real-world data exhibit three pervasive characteristics: (i) localized outlier shocks and structural regime shifts, (ii) non-Gaussian measurement noise, and (iii) strict physical or statistical bounds on target observables (such as kinetic energy, prices, and realized variance $y_t = r_t^2 \ge 0$).
+Two recent alternatives further illustrate this active mitigation effort, and directly bound the novelty claimed here. Cestnik and Martens \cite{cestnik2026ngrc} replace the deterministic polynomial feature map with pseudorandom nonlinear projections of the delay vector, reporting stable autonomous rollouts and showing that a small amount of training noise can itself act as a regularizer. Gauthier, Pomerance, and Bollt \cite{gauthier2025locality} instead partition phase space into local polynomial patches (locality-blended NG-RC), avoiding the divergence of a single global high-degree expansion. Prosperino, Ma, and R\"ath \cite{prosperino2025tailored} further caution that the polynomial-versus-bounded-activation dichotomy is not absolute: forecast performance depends on how closely the reservoir's own nonlinearity matches that of the underlying data-generating process, an alignment we do not vary systematically in this work. None of these three studies isolates the quartic trace-scaling mechanism under an isolated interior shock, nor separates the causal contribution of recurrence from that of bounded activation via a controlled seed-level ablation. Our contribution is therefore not the first demonstration that non-polynomial or bounded representations can stabilize NG-RC forecasting; it is a mechanistic account of when and why the standard polynomial expansion fails, and which architectural component (recurrence, boundedness, or covariance regularization) is responsible for the observed robustness.
+
+In practical applications, ranging from geophysical flows to econometric volatility and high-frequency exchange rates, time series rarely conform to clean, stationary trajectories \cite{carroll2020dimension,vlachas2020backpropagation}. Real-world data exhibit three pervasive characteristics: (i) localized, exogenous out-of-manifold shocks (isolated events, as distinct from the persistent hidden regime variation studied by Hadipour Lakmesari, Kantz, and Sorrentino \cite{lakmesari2026regime}, which this paper does not attempt to model), (ii) non-Gaussian measurement noise, and (iii) strict physical or statistical bounds on target observables (such as kinetic energy, prices, and realized variance $y_t = r_t^2 \ge 0$).
 
 In this paper, we address these challenges through a unified mathematical and empirical framework. Our specific contributions are:
 \begin{enumerate}
     \item \textbf{Analytical Mechanism of Quartic Trace Scaling ($\sim M^4$):} We prove that when an isolated outlier shock of magnitude $M$ enters a time series, the trace of the quadratic NG-RC Gram matrix scales as $\mathcal{O}(M^4) + \mathcal{O}(M^2) + \mathcal{O}(T(C^2+C^4))$. Consequently, trace-based Ridge heuristics ($\lambda \propto \operatorname{tr}(\mathbf{F}^\top\mathbf{F})$) inflate $\lambda$ by orders of magnitude, causing severe over-regularization across the entire window.
-    \item \textbf{Spectral Invariance under Covariance Regularization:} We prove that Tikhonov spectral shifts $\mathbf{C} + \lambda\mathbf{I}$ on sample covariances preserve principal eigenvectors identically, clarifying that covariance regularization stabilizes numerical rank without rotating the principal subspace.
+    \item \textbf{Spectral Invariance under Covariance Regularization:} Tikhonov spectral shifts $\mathbf{C} + \lambda\mathbf{I}$ on sample covariances preserve principal eigenvectors identically, clarifying that covariance regularization stabilizes numerical rank without rotating the principal subspace.
     \item \textbf{Controlled 30-Seed Stochastic Robustness and Ablation:} Across 30 independent reservoir realizations and 288,420 window evaluations on Lorenz63, evaluated with a two-way crossed block bootstrap (temporal blocks of length $\lceil T_{\text{train}}/\text{step}\rceil$ resampled simultaneously across all seeds), we isolate the roles of recurrence and bounded activation. While NG-RC polynomials diverge under iterative feedback, bounded nonlinearities ($\tanh$) maintain stable multi-step trajectories across Lyapunov times for $H \le 15$. Under measurement noise ($\sigma=0.1$), recurrent memory ($\mathbf{W}_{\text{res}} \neq \mathbf{0}$) yields a genuine filtering advantage over static projections, with a bootstrap 95\% interval on the paired mean MASE difference strictly excluding zero. Under localized shocks, by contrast, the response is condition-dependent rather than uniform: out of 10 location$\times$sign conditions at $15\sigma$, 5 clearly favor the ESN, 3 favor Ridge, and 2 remain inconclusive.
     \item \textbf{Conical Constraints and Tail-Sensitive Volatility Evaluation:} In daily FX/crypto volatility, non-negative least squares (NNLS) over strictly positive feature bases eliminates negative variance predictions without floor clipping. However, ranking methods by median QLIKE alone hides catastrophic tail behavior: once tail-aware statistics are reported (median across series of mean QLIKE), a sparse recurrent reservoir readout is not competitive with domain-specific econometric baselines (EWMA, GARCH, GJR-GARCH).
 \end{enumerate}
@@ -92,17 +94,17 @@ In standard reservoir computing and NG-RC implementations, Ridge regularization 
 \end{equation}
 where $\mathbf{F} \in \mathbb{R}^{T \times D}$ is the design matrix across a training window of length $T$.
 
-\textbf{Theorem 1 (Outlier Scaling of Quadratic Gram Matrix).} \emph{Let a time series $\{x_t\}_{t=1}^T$ consist of a calm background process bounded by $|x_t| \le C$ and an isolated localized outlier shock at index $t^*$ of magnitude $x_{t^*} = M \gg C$. Then, the trace of the NG-RC design Gram matrix satisfies:}
+\textbf{Theorem 1 (Outlier Scaling of Quadratic Gram Matrix).} \emph{Let a time series $\{x_t\}_{t=1}^T$ consist of a calm background process bounded by $|x_t| \le C$ and an isolated localized outlier shock at an interior index $t^*$, with $k \le t^* \le T-k+1$, of magnitude $x_{t^*} = M \gg C$. Then, the trace of the NG-RC design Gram matrix satisfies:}
 \begin{align}
-\operatorname{tr}(\mathbf{F}^\top\mathbf{F}) &= k M^4 + \mathcal{O}(k^2 M^2 C^2) \nonumber\\
+\operatorname{tr}(\mathbf{F}^\top\mathbf{F}) &= k M^4 + k M^2 + \mathcal{O}(k^2 M^2 C^2) \nonumber\\
 &\quad + (T-k) \mathcal{O}(k^2 (C^2 + C^4)).
 \end{align}
-\emph{Consequently, the regularization parameter $\lambda$ computed via Eq.~\eqref{eq:ridge_heuristic} scales asymptotically as $\lambda = \frac{\gamma k}{D} M^4 + \mathcal{O}(M^2)$.}
+\emph{Consequently, for any $C \ge 0$, the regularization parameter $\lambda$ computed via Eq.~\eqref{eq:ridge_heuristic} scales asymptotically as $\lambda = \frac{\gamma k}{D} M^4 + \frac{\gamma k}{D} M^2 + \mathcal{O}(M^2 C^2 + 1) = \frac{\gamma k}{D} M^4 + \mathcal{O}(M^2)$.}
 
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig5_ridge_fragilidad.pdf}
-\caption{Median trace-proportional $\lambda \propto \operatorname{tr}(\mathbf{F}^\top\mathbf{F})$ as a function of injected shock magnitude $M$ ($\sigma$), on a log--log scale, measured directly from the Lorenz63 shock-grid experiment (\S\ref{sec:lorenz}). A power-law fit over the largest magnitudes gives an empirical slope of $3.99$, matching the $\sim M^4$ scaling predicted by Theorem 1.}
+\caption{Median trace-proportional $\lambda \propto \operatorname{tr}(\mathbf{F}^\top\mathbf{F})$ as a function of injected shock magnitude $M$ ($\sigma$), on a log--log scale, measured directly from the Lorenz63 shock-grid experiment (\S\ref{sec:lorenz}). A power-law fit over the largest magnitudes, restricted to the Ridge NG-RC readout, gives an empirical slope of $3.93$, matching the $\sim M^4$ scaling predicted by Theorem 1.}
 \label{fig:ridge_fragility}
 \end{figure}
 
@@ -111,18 +113,18 @@ where $\mathbf{F} \in \mathbb{R}^{T \times D}$ is the design matrix across a tra
 \operatorname{tr}(\mathbf{F}^\top\mathbf{F}) &= \sum_{t=1}^T \|\mathbf{F}_t\|_2^2 \nonumber\\
 &= \sum_{t=1}^T \left( \sum_{i=1}^k \ell_{t,i}^2 + \sum_{1 \le i \le j \le k} (\ell_{t,i}\ell_{t,j})^2 \right).
 \end{align}
-Because the shock $x_{t^*} = M$ enters the lag vector $\bm{\ell}_t$ for exactly $k$ consecutive time steps $t \in [t^*, t^* + k - 1]$, the quadratic terms $(\ell_{t,i}\ell_{t,j})^2$ include diagonal contributions of the form $(x_{t^*})^4 = M^4$. Specifically, for each of the $k$ affected time steps, there is at least one term contributing $M^4$ and $k-1$ terms contributing $M^2 \ell_{t,j}^2 \le M^2 C^2$. Summing over the $T$ time steps yields:
+The interior-index condition guarantees that the shock $x_{t^*} = M$ enters the lag vector $\bm{\ell}_t$ for exactly $k$ consecutive time steps $t \in [t^*, t^* + k - 1]$ within the design window. The linear block $\sum_{i=1}^k \ell_{t,i}^2$ contains exactly one entry $M^2$ for each affected step, contributing $k M^2 + \mathcal{O}(k^2 C^2)$. The quadratic block $(\ell_{t,i}\ell_{t,j})^2$ includes one diagonal term $(x_{t^*})^4 = M^4$ and $k-1$ cross-terms $M^2 \ell_{t,j}^2 \le M^2 C^2$, contributing $k M^4 + \mathcal{O}(k^2 M^2 C^2)$. The remaining $T-k$ unaffected steps contribute $(T-k)\mathcal{O}(k^2(C^2 + C^4))$. Summing over all $T$ steps yields:
 \begin{align}
-\operatorname{tr}(\mathbf{F}^\top\mathbf{F}) &= k M^4 + \mathcal{O}(k^2 M^2 C^2) \nonumber\\
+\operatorname{tr}(\mathbf{F}^\top\mathbf{F}) &= k M^4 + k M^2 + \mathcal{O}(k^2 M^2 C^2) \nonumber\\
 &\quad + (T-k) \mathcal{O}(k^2 (C^2 + C^4)).
 \end{align}
-Dividing by $D$ establishes $\lambda = \frac{\gamma k}{D} M^4 + \mathcal{O}(M^2)$. $\square$
+Dividing by $D$ establishes $\lambda = \frac{\gamma k}{D} M^4 + \mathcal{O}(M^2)$ uniformly for all $C \ge 0$. $\square$
 
-This theorem explains why Ridge regression with trace heuristics degrades in the presence of even a single large spike: $\lambda$ increases by several orders of magnitude (e.g., $270\times$ from $M=0$ to $M=30\sigma$), over-penalizing readout weights and pulling predictions toward zero during subsequent calm periods (Fig.~\ref{fig:ridge_fragility}).
+This theorem explains why Ridge regression with trace heuristics degrades in the presence of even a single large spike: $\lambda$ increases by several orders of magnitude (e.g., a $230.95\times$ median increase across the shock grid from $M=5\sigma$ to $M=30\sigma$), over-penalizing readout weights and pulling predictions toward zero during subsequent calm periods (Fig.~\ref{fig:ridge_fragility}).
 
 \subsection{Eigenvector Invariance under Spectral Covariance Shifts}
 
-A common practice in reservoir pipelines is to stabilize ill-conditioned covariance matrices prior to Principal Component Analysis (PCA) via Tikhonov shifts: $\mathbf{C}_\lambda = \operatorname{cov}(\mathbf{F}) + \lambda_{\text{cov}}\mathbf{I}$.
+A common practice in reservoir pipelines is to stabilize ill-conditioned covariance matrices prior to Principal Component Analysis (PCA) via Tikhonov shifts \cite{tikhonovarsenin1977solutions}: $\mathbf{C}_\lambda = \operatorname{cov}(\mathbf{F}) + \lambda_{\text{cov}}\mathbf{I}$.
 
 \textbf{Proposition 1 (Spectral Invariance).} \emph{For any symmetric covariance matrix $\mathbf{C} \in \mathbb{R}^{D \times D}$ and any $\lambda_{\text{cov}} > 0$, the matrices $\mathbf{C}$ and $\mathbf{C}_\lambda = \mathbf{C} + \lambda_{\text{cov}}\mathbf{I}$ share the identical eigenspaces.}
 
@@ -132,7 +134,7 @@ A common practice in reservoir pipelines is to stabilize ill-conditioned covaria
 \end{equation}
 The eigenvalues are shifted uniformly ($\mu_i \mapsto \mu_i + \lambda_{\text{cov}}$), preserving eigenvalue ordering ($\mu_1 \ge \mu_2 \ge \dots \ge \mu_D$) and leaving the eigenspaces invariant (up to arbitrary internal basis rotations for repeated eigenvalues). $\square$
 
-Thus, covariance Tikhonov shifts do not rotate principal subspace directions; practical variations in unconstrained PCA implementations arise purely from numerical sign ambiguities in SVD solvers.
+Thus, covariance Tikhonov shifts do not rotate principal subspace directions; practical variations in unconstrained PCA implementations arise purely from numerical sign ambiguities in SVD solvers (and arbitrary unitary rotations within repeated or near-degenerate eigenspaces).
 
 % ======================================================================
 \section{Controlled Dynamical Benchmarking on Lorenz63}
@@ -159,6 +161,8 @@ To evaluate the predictive and numerical stability of NG-RC and the sparse ESN i
 \end{equation}
 with standard chaotic parameters $\sigma = 10$, $\rho = 28$, $\beta = 8/3$. We integrate via 4th-order Runge-Kutta with fine step $\mathrm{d}t_{\text{int}} = 0.01$ and subsample with $\text{skip} = 5$ ($\Delta t = 0.05$, trajectory seed 7, 30,000 points).
 
+We parameterize the multi-step horizon in units of the target system's leading Lyapunov time, $\tau = H \cdot \Delta t \cdot \lambda_{\max}$ with $\lambda_{\max} \approx 0.9056$, which measures the intrinsic divergence rate of the physical Lorenz63 flow, not any property of the reservoir itself. Hart \cite{hart2024attractor} shows that faithful attractor reconstruction instead depends on the reservoir's own conditional Lyapunov exponents and on the smoothness of its generalized-synchronization manifold with the driving signal, with related embedding-theoretic conditions developed in Ref.~\onlinecite{hart2025generic}; Suetani and Parlitz \cite{suetani2026impact} further show that weak generalized synchronization, transverse stability loss, and noise-induced bubbling can govern forecast sensitivity even when synchronization nominally holds. We do not estimate the sparse ESN's conditional Lyapunov spectrum in this work, so the physical Lyapunov time reported below should be read strictly as a normalization of the forecast horizon, not as a claim about the reservoir's internal contraction rate; estimating that spectrum directly is identified in Sec.~\ref{sec:discussion} as the highest-value follow-up experiment.
+
 \subsection{Formal Experimental Protocol and Methods}
 
 For strict reproducibility, we formalize the evaluation protocol across all experiments:
@@ -167,31 +171,34 @@ For strict reproducibility, we formalize the evaluation protocol across all expe
     \begin{equation}
     \text{MASE} = \frac{\frac{1}{H}\sum_{h=1}^H |y_{t+h} - \hat{y}_{t+h}|}{\frac{1}{T_{\text{train}}-1}\sum_{i=2}^{T_{\text{train}}} |y_i - y_{i-1}|}.
     \end{equation}
-    \item \textbf{Sliding Window Geometry:} $T_{\text{train}} = 500$ points, step $= 40$ points, yielding 738 unique temporal origins across the 30,000-point trajectory.
+    \item \textbf{Sliding Window Geometry:} $T_{\text{train}} = 500$ points, step $= 40$ points, yielding 738 unique temporal origins across the 30,000-point trajectory. The Lyapunov horizon curve (Fig.~\ref{fig:lyapunov_curve}) evaluates 737 of these origins, since the final origin does not have $H=40$ future points available within the trajectory and is reserved rather than padded.
     \item \textbf{Model Specifications:} ESN reservoir dimension $d_{\text{res}} = 50$, spectral radius $\rho = 0.9$, density $0.1$, leaking rate $a = 1.0$. State initialized at $\mathbf{h}_0 = \mathbf{0}$ and warmed up through the prefix.
     \item \textbf{Causal Hyperparameter Selection:} The regularization parameter $\lambda$ is selected via an internal temporal split ($80\%$ train / $20\%$ holdout) within each training window over a candidate grid $\lambda / \lambda_{\text{scale}} \in [10^{-6}, 10^2]$. No future data are ever accessed.
-    \item \textbf{Two-Way Crossed Block Bootstrap:} We run 2000 bootstrap replicates. In each replicate, temporal blocks of length $L = \lceil T_{\text{train}} / \text{step} \rceil = 13$ windows are resampled simultaneously for all 30 seeds to preserve the cross-seed temporal correlation structure, combined with resampling across seeds. For shocks, the 5 locations are resampled with both signs paired.
+    \item \textbf{Two-Way Crossed Block Bootstrap:} We run 2000 bootstrap replicates, following the block-resampling principle for dependent data of Politis and Romano \cite{politis1994stationary}. In each replicate, temporal blocks of length $L = \lceil T_{\text{train}} / \text{step} \rceil = 13$ windows are resampled simultaneously for all 30 seeds to preserve the cross-seed temporal correlation structure, combined with resampling across seeds. For shocks, the 5 locations are resampled with both signs paired.
+    \item \textbf{Per-Seed Win Definition (Lyapunov Curve):} For the multi-step win counts reported against the Lyapunov horizon curve (e.g., the ``1/30 seed wins at $H=40$'' figure in Sec.~\ref{sec:lorenz}.B), a seed is counted as a win for a given readout if that readout attains a strictly lower per-window MASE than the comparator in more than 50\% of that seed's evaluation windows at the given horizon: a per-window majority vote, not a comparison of per-seed median MASE.
 \end{itemize}
 
 \begin{table*}[t]
 \centering
-\caption{Performance across 30 independent stochastic realizations on the Lorenz63 attractor. Values report the median MASE across all 30 seeds, empirical 2.5\%--97.5\% percentile ranges across realizations, exact Clopper--Pearson 95\% win-rate intervals against Ridge, and the two-way crossed block bootstrap 95\% interval on the paired mean MASE difference (ESN-lag $-$ Ridge; negative favors the ESN).}
+\caption{Performance across 30 independent stochastic realizations on the Lorenz63 attractor. Values report the median MASE across all 30 seeds, empirical 2.5\%--97.5\% percentile ranges across realizations, exact Clopper--Pearson 95\% win-rate intervals against Ridge, and the two-way crossed block bootstrap 95\% interval on the paired mean MASE difference (ESN-lag $-$ Ridge; negative favors the ESN). The Ridge and OLS columns denote Ridge NG-RC and OLS NG-RC, respectively.}
 \label{tab:30seeds_rigorous}
 \begin{ruledtabular}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
 \begin{tabular}{lcrrrrrr}
-Regime & $H$ & ESN-lag Median [P2.5, P97.5] & Static-lag Median & Ridge NG-RC & OLS NG-RC & Win vs Ridge [95\% CI] & $\Delta$ mean vs Ridge [Two-Way 95\% CI] \\
+Regime & $H$ & ESN-lag [P2.5,P97.5] & Static-lag & Ridge & OLS & Win vs Ridge & $\Delta$ mean [95\% CI] \\
 \midrule
-Clean 1-step & 1 & 0.0292 [0.0161, 0.0523] & 0.0154 (IQR 0.002) & 0.2397 & 0.2406 & \textbf{100.0\%} [0.88, 1.00] & $-0.242$ [$-0.262$, $-0.226$] \\
-Clean Multi & 5 & 0.2438 [0.1355, 0.4727] & 0.1450 (IQR 0.022) & 1.5262 & 1.6037 & \textbf{100.0\%} [0.88, 1.00] & $-1.299$ [$-1.396$, $-1.203$] \\
-Clean Multi & 10 & 0.7071 [0.3616, 1.8195] & 0.4251 (IQR 0.052) & 2.5375 & 2.5004 & \textbf{100.0\%} [0.88, 1.00] & $-1.290$ [$-1.539$, $-1.034$] \\
+Clean 1-step & 1 & 0.0292 [0.0161,0.0523] & 0.0154 (IQR 0.002) & 0.2391 & 0.2406 & \textbf{100.0\%} [0.88,1.00] & $-0.242$ [$-0.262$,$-0.226$] \\
+Clean Multi & 5 & 0.2431 [0.1350,0.4727] & 0.1450 (IQR 0.023) & 1.5251 & 1.6044 & \textbf{100.0\%} [0.88,1.00] & $-1.299$ [$-1.396$,$-1.203$] \\
+Clean Multi & 10 & 0.7063 [0.3614,1.8185] & 0.4265 (IQR 0.051) & 2.5320 & 2.5031 & \textbf{100.0\%} [0.88,1.00] & $-1.290$ [$-1.539$,$-1.034$] \\
 \midrule
-Noise 0.1 (Filter) & 1 & \textbf{0.3633} [0.3409, 0.3796] & 0.3983 (IQR 0.003) & 0.6059 & 0.6018 & \textbf{100.0\%} [0.88, 1.00] & $-0.272$ [$-0.315$, $-0.232$] \\
-Noise 0.1 (Obs) & 1 & \textbf{0.4607} [0.4327, 0.4861] & 0.4866 (IQR 0.006) & 0.6799 & 0.6865 & \textbf{96.7\%} [0.83, 1.00] & $-0.236$ [$-0.281$, $-0.196$] \\
-Noise 0.5 (Filter) & 1 & \textbf{0.4734} [0.4463, 0.4942] & 0.5254 (IQR 0.007) & 0.5440 & 0.5357 & \textbf{100.0\%} [0.88, 1.00] & $-0.087$ [$-0.119$, $-0.057$] \\
-Noise 0.5 (Obs) & 1 & \textbf{0.7166} [0.6918, 0.7367] & 0.7453 (IQR 0.005) & 0.7490 & 0.7392 & \textbf{100.0\%} [0.88, 1.00] & $-0.058$ [$-0.091$, $-0.023$] \\
+Noise 0.1 (Filter) & 1 & \textbf{0.3628} [0.3402,0.3799] & 0.3987 (IQR 0.004) & 0.6074 & 0.6027 & \textbf{100.0\%} [0.88,1.00] & $-0.272$ [$-0.315$,$-0.232$] \\
+Noise 0.1 (Obs) & 1 & \textbf{0.4603} [0.4321,0.4859] & 0.4869 (IQR 0.006) & 0.6831 & 0.6856 & \textbf{96.7\%} [0.83,1.00] & $-0.236$ [$-0.281$,$-0.196$] \\
+Noise 0.5 (Filter) & 1 & \textbf{0.4744} [0.4468,0.4952] & 0.5259 (IQR 0.008) & 0.5440 & 0.5379 & \textbf{100.0\%} [0.88,1.00] & $-0.087$ [$-0.119$,$-0.057$] \\
+Noise 0.5 (Obs) & 1 & \textbf{0.7172} [0.6920,0.7367] & 0.7451 (IQR 0.005) & 0.7484 & 0.7389 & \textbf{100.0\%} [0.88,1.00] & $-0.058$ [$-0.091$,$-0.023$] \\
 \midrule
-Shock $15\sigma$ (5 locs) & 1 & 0.2223 [0.1165, 0.3604] & 0.2187 (IQR 0.062) & 0.3301 & 0.2654 & 90.0\% [0.73, 0.98] & $+0.927$ [$-0.233$, $+3.093$] \\
-Shock $50\sigma$ (5 locs) & 1 & 0.4237 [0.2987, 0.5712] & 0.3381 (IQR 0.099) & 0.2218 & 0.2184 & 0.0\% [0.00, 0.12] & $+1.131$ [$-0.316$, $+3.710$] \\
+Shock $15\sigma$ (5 locs) & 1 & 0.2227 [0.1166,0.3610] & 0.2192 (IQR 0.062) & 0.3305 & 0.2650 & 90.0\% [0.73,0.98] & $+0.927$ [$-0.233$,$+3.093$] \\
+Shock $50\sigma$ (5 locs) & 1 & 0.4234 [0.2986,0.5711] & 0.3380 (IQR 0.100) & 0.2215 & 0.2181 & 0.0\% [0.00,0.12] & $+1.131$ [$-0.316$,$+3.710$] \\
 \end{tabular}
 \end{ruledtabular}
 \end{table*}
@@ -201,7 +208,7 @@ Shock $50\sigma$ (5 locs) & 1 & 0.4237 [0.2987, 0.5712] & 0.3381 (IQR 0.099) & 0
 Table~\ref{tab:30seeds_rigorous} and Fig.~\ref{fig:lyapunov_curve} establish several clear empirical conclusions:
 \begin{enumerate}
     \item \textbf{Bounded Saturation Prevents Multi-Step Divergence up to Intermediate Horizons:} In iterated multi-step forecasting across discrete horizons $H \in \{1, 2, 3, 5, 8, 10, 15, 20, 30, 40\}$, bounded activations ($\tanh$) outperform polynomial NG-RC across \textbf{100\% of random seeds} up to $H=10$ ($\tau \approx 0.45$), with a two-way crossed bootstrap 95\% interval on the mean difference that is strictly negative and excludes zero (Table~\ref{tab:30seeds_rigorous}). At $H=10$, NG-RC errors explode to MASE $\approx 2.50$ due to unconstrained monomial error compounding, whereas bounded mappings maintain stable continuation ($H=10$ MASE $\approx 0.43$--$0.74$). However, at asymptotic horizons ($H=30, 40$, $\tau \ge 1.36$), trajectories reach attractor-scale error saturation where static $\tanh$ projection retains lower median error than recurrent ESN (median MASE 3.04 vs 5.28 at $H=40$), and recurrent ESN is no longer superior to Ridge (1/30 seed wins at $H=40$).
-    \item \textbf{Recurrent Memory Enables Genuine Signal Filtering:} In clean, noise-free dynamics, static $\tanh$ projections are slightly more parsimonious than the recurrent ESN. However, under measurement noise ($\sigma=0.1$ and $\sigma=0.5$), the full recurrent ESN outperforms static projections in essentially every realization for true signal recovery (filtering target, MASE 0.363 vs. 0.398 at $\sigma=0.1$), and the two-way bootstrap interval on the paired difference strictly excludes zero in all noise regimes. The internal state $\mathbf{h}_{t-1}$ acts as an adaptive temporal low-pass filter.
+    \item \textbf{Recurrent Memory Enables Genuine Signal Filtering:} In clean, noise-free dynamics, static $\tanh$ projections are slightly more parsimonious than the recurrent ESN. However, under measurement noise ($\sigma=0.1$ and $\sigma=0.5$), the full recurrent ESN outperforms static projections in essentially every realization for true signal recovery (filtering target, MASE 0.363 vs. 0.398 at $\sigma=0.1$), and the two-way bootstrap interval on the paired difference strictly excludes zero in all noise regimes. The internal state $\mathbf{h}_{t-1}$ acts as an adaptive temporal low-pass filter. We attribute this advantage to recurrent memory as a whole; Sedehi \emph{et al.} \cite{sedehi2025denoising} show that a truncated reservoir's denoising performance is jointly shaped by pruning, leaking rate, spectral radius, and Ridge regularization acting together, and we do not decompose these individual hyperparameters here.
     \item \textbf{Shock Response Is Condition-Dependent, Not Uniform:} The 90\% win rate against Ridge at $15\sigma$ describes an outcome pooled across 30 seeds and 5 shock locations. Breaking down the 10 individual location$\times$sign conditions shows that 5 clearly favor the ESN, 3 clearly favor Ridge, and 2 remain inconclusive. This condition dependence explains why the crossed bootstrap interval for the mean difference crosses zero ($[-0.233, +3.093]$): localized catastrophic spikes in specific flow regions affect the mean, while favorable conditions dominate the median-based win count. We therefore make no claim of unconditional shock robustness for ESNs.
 \end{enumerate}
 
@@ -213,13 +220,13 @@ Table~\ref{tab:30seeds_rigorous} and Fig.~\ref{fig:lyapunov_curve} establish sev
 \begin{figure}[t]
 \centering
 \includegraphics[width=\columnwidth]{figures/fig13_qlike_piso_fx.pdf}
-\caption{Median QLIKE as a function of the artificial positive floor $\epsilon$ used to evaluate the loss, per readout. Legacy signed readouts (Ridge, OLS, signed NNLS) explode as $\epsilon \to 0$ due to negative variance estimates, whereas structurally non-negative NNLS remains strictly invariant.}
+\caption{Median QLIKE as a function of the artificial positive floor $\epsilon$ used to evaluate the loss, per readout. Legacy signed readouts (Ridge, OLS, signed NNLS) explode as $\epsilon \to 0$ due to negative variance estimates, whereas structurally non-negative NNLS remains constant at $1.4498$ for $\epsilon \le 10^{-8}$ and shifts slightly to $1.2244$ at $\epsilon = 10^{-6}$ because 3 of the 1,485 positive forecasts fall below that threshold.}
 \label{fig:qlike_tradeoff}
 \end{figure}
 
 \subsection{Lower-Bounded Targets and Loss Sensitivity}
 
-In financial econometrics, predicting realized volatility $y_{t+1} = r_{t+1}^2 \ge 0$ is evaluated via the quasi-likelihood (QLIKE) loss \cite{patton2011volatility}:
+In financial econometrics, predicting realized volatility $y_{t+1} = r_{t+1}^2 \ge 0$ remains dominated by conditionally heteroscedastic and exponentially weighted baselines \cite{poongranger2003forecasting,andersenbollerslev1998answering} and is evaluated via the quasi-likelihood (QLIKE) loss \cite{patton2011volatility}:
 \begin{equation}
 L_{\text{QLIKE}}(y, \hat{y}) = \frac{y}{\hat{y}} - \log\left(\frac{y}{\hat{y}}\right) - 1.
 \label{eq:qlike}
@@ -230,19 +237,21 @@ Across 15 years of daily data for 7 Latin American currencies and 2 cryptocurren
 
 \begin{table}[h]
 \centering
-\caption{Out-of-sample QLIKE across 9 currency and cryptocurrency series ($T \approx 3900$ daily observations), ranked by the median across series of mean QLIKE (each series' mean QLIKE over time, then the median of those 9 series means). The pooled median is reported for reference.}
+\caption{Out-of-sample QLIKE across 9 currency and cryptocurrency series ($T \approx 3900$ daily observations), ranked by the median across series of mean QLIKE (each series' mean QLIKE over time, then the median of those 9 series means). The pooled median is reported for reference. ``Legacy Ridge'' is clipped at $\epsilon = 10^{-10}$.}
 \label{tab:fx_qlike}
 \begin{ruledtabular}
+\scriptsize
+\setlength{\tabcolsep}{2pt}
 \begin{tabular}{lrrr}
-Model Architecture & Median Across Series Mean & Pooled Median & \% Neg. \\
+Method & Med.\ of Mean & Pooled Med.\ & \% Neg.\ \\
 \midrule
 EWMA ($\lambda=0.94$) & \textbf{2.359} & 1.157 & 0.00\% \\
-Standard GARCH(1,1) & 2.383 & 1.316 & 0.00\% \\
+GARCH(1,1) & 2.383 & 1.316 & 0.00\% \\
 GJR-GARCH(1,1) & 2.456 & 1.287 & 0.00\% \\
-Non-Negative NNLS ($|\bm{\ell}_t|$) & 2.565 & 1.450 & \textbf{0.00\%} \\
-Legacy Ridge (clipped $\epsilon=10^{-10}$) & 3.472 & 1.475 & 0.67\% \\
-Log-Link Ridge & 12.19 & 1.561 & \textbf{0.00\%} \\
-Sparse ESN (Log-Readout) & 14.33 & 1.501 & \textbf{0.00\%} \\
+Non-negative NNLS & 2.565 & \textbf{1.450} & 0.00\% \\
+Legacy Ridge (clipped) & 3.472 & 1.475 & 0.67\% \\
+Log-link Ridge & 12.19 & 1.561 & 0.00\% \\
+Sparse ESN (log-readout) & 14.33 & 1.501 & 0.00\% \\
 Legacy Signed NNLS & 66.12 & 1.490 & 2.15\% \\
 Naive Persistence & 2580 & 1.779 & 0.00\% \\
 Legacy OLS & 18552 & 1.475 & 4.18\% \\
@@ -256,7 +265,7 @@ Restricting weights $\mathbf{w} \ge \mathbf{0}$ in standard non-negative least s
 \begin{equation}
 \mathbf{F}_t^+ = |\bm{\ell}_t| \;\oplus\; \Big( |\ell_{t,i}| \cdot |\ell_{t,j}| \Big)_{1 \le i \le j \le k}.
 \end{equation}
-Non-negative NNLS ($|\bm{\ell}_t|$) and the log-readout sparse ESN both eliminate negative variance estimates entirely (0.00\%). However, positivity alone does not imply good probabilistic calibration. Table~\ref{tab:fx_qlike} shows that once tail-sensitive statistics (median across series of mean QLIKE) are evaluated instead of the pooled median, the sparse ESN's ranking changes substantially: its median across series of mean QLIKE (14.33) is roughly six times worse than EWMA, GARCH(1,1) \cite{engle1982autoregressive,bollerslev1986generalized}, or GJR-GARCH(1,1) \cite{glosten1993relation} (2.36--2.46), driven by rare windows where the log-readout collapses toward zero and QLIKE's $y/\hat{y}$ explodes. Descriptively, the ESN beats EWMA on 54.7\% of individual windows and GARCH on 57.0\%, yet the per-series block-bootstrap mean difference remains strictly positive. We conclude that domain-specific econometric models remain the strongest volatility benchmarks; conical reservoir and NNLS readouts are valuable for guaranteeing structural non-negativity without ad hoc floor clipping, not for beating EWMA/GARCH on calibrated loss.
+Non-negative NNLS ($|\bm{\ell}_t|$) and the log-readout sparse ESN both eliminate negative variance estimates entirely (0.00\%). However, positivity alone does not imply good probabilistic calibration. Table~\ref{tab:fx_qlike} shows that once tail-sensitive statistics (median across series of mean QLIKE) are evaluated instead of the pooled median, the sparse ESN's ranking changes substantially: its median across series of mean QLIKE (14.33) is roughly six times worse than EWMA, GARCH(1,1) \cite{engle1982autoregressive,bollerslev1986generalized}, or GJR-GARCH(1,1) \cite{glosten1993relation} (2.36--2.46), driven by rare windows where the log-readout collapses toward zero and QLIKE's $y/\hat{y}$ explodes. Descriptively, the ESN beats EWMA on 54.7\% of individual windows and GARCH on 57.0\%, yet the per-series block-bootstrap mean difference remains strictly positive. We conclude that domain-specific econometric models remain the strongest volatility benchmarks; conical reservoir and NNLS readouts are valuable for guaranteeing structural non-negativity without ad hoc floor clipping, not for beating EWMA/GARCH on calibrated loss. This distinction conceptually parallels the separation between trajectory-level point prediction and statistical property replication discussed by Hramov \emph{et al.} \cite{hramov2025strong}: our reservoir readouts are evaluated here as deterministic point predictors under asymmetric QLIKE loss, not as models of conditional probability distributions, and the window-level win rates above should not be read as evidence of superior probabilistic calibration.
 
 % ======================================================================
 \section{Discussion and Conclusions}
@@ -268,12 +277,13 @@ Our findings provide operational principles for reservoir architecture selection
     \item \textbf{Clean, One-Step Reconstruction ($H=1$):} Deterministic polynomial NG-RC provides unmatched parameter parsimony for clean, low-dimensional attractor reconstruction.
     \item \textbf{Multi-Step Trajectory Continuation ($H \ge 5$):} Polynomial expansions suffer compounding monomial divergence across Lyapunov times; bounded activations ($\tanh$) limit state growth and substantially reduce iterative error amplification up to intermediate horizons ($H \le 15$).
     \item \textbf{Noisy Dynamical Environments:} Recurrent reservoirs ($\mathbf{W}_{\text{res}} \neq \mathbf{0}$) act as adaptive temporal low-pass filters, with a bootstrap-confirmed advantage over static projections under measurement noise.
-    \item \textbf{Outlier Shocks and Regularization:} Trace-based Ridge heuristics must not be paired with quadratic features due to the $\mathcal{O}(M^4)$ over-regularization mechanism (measured log--log slope $3.99$); hyperparameter selection requires causal temporal validation.
+    \item \textbf{Outlier Shocks and Regularization:} Trace-based Ridge heuristics must not be paired with quadratic features due to the $\mathcal{O}(M^4)$ over-regularization mechanism (measured log--log slope $3.93$, Ridge-only); hyperparameter selection requires causal temporal validation.
     \item \textbf{Lower-Bounded Physical Observables:} Linear readouts must be formulated over convex cones to prevent invalid sign artifacts, but structural non-negativity is not sufficient for good calibration.
+    \item \textbf{Scope: Finite-Horizon Predictability, Not Climatic Reconstruction:} All multi-step results here evaluate trajectory continuation up to $H=40$ ($\tau \approx 1.8$ Lyapunov times); they do not establish that the reconstructed dynamics preserve the invariant measure, correlation integral, or global attractor geometry over infinite time. Bounding state growth alone does not enforce dynamical invariants during training \cite{platt2023constraining}. Assessing that stronger notion of long-run fidelity would require global attractor diagnostics such as those of Fumagalli \emph{et al.} \cite{fumagalli2025datadriven} (invariant density, correlation integral, or Wasserstein distance between reconstructed and reference attractors), together with the reservoir conditional-Lyapunov-exponent estimate identified above as the highest-value follow-up experiment.
 \end{enumerate}
 
 \section*{Supplementary Material}
-See the Supplementary Material for secondary empirical validations on the BCIE lending panel and Honduras fuel prices, alongside a reduced-scale generalization check on the R\"ossler attractor.
+See the supplementary material for BCIE multilateral lending validations, Honduras retail petroleum price volatility series, and R\"ossler generalization checks.
 
 \section*{Author Declarations}
 \subsection*{Conflict of Interest}
@@ -283,69 +293,141 @@ The author has no conflicts of interest to disclose.
 \textbf{Norman Reynaldo Sabill{\'o}n Castro:} Conceptualization, Methodology, Software, Formal Analysis, Writing -- Original Draft, Visualization.
 
 \section*{Data Availability Statement}
-The data and Python reproduction pipelines supporting the findings of this study are openly documented and available in the companion repository and Zenodo archive.
+The data that support the findings of this study and the Python reproduction pipelines are available from the corresponding author upon reasonable request. A complete replication repository and Zenodo archive will be made publicly available upon publication.
 
 \begin{thebibliography}{99}
 
 \bibitem{jaeger2001echo}
-H.~Jaeger, ``The `echo state' approach to analysing and training recurrent neural networks-with an erratum note,'' \emph{German National Research Center for Information Technology GMD Technical Report}, vol.~148, p.~34, 2001.
+H.~Jaeger, ``The `echo state' approach to analysing and training recurrent neural networks-with an erratum note,'' \emph{German National Research Center for Information Technology GMD Technical Report}, vol.~148, p.~34, 2001, doi: 10.24406/publica-fhg-291111.
 
 \bibitem{maass2002realtime}
-W.~Maass, T.~Natschl{\"a}ger, and H.~Markram, ``Real-time computing without stable states: A new framework for neural computation based on perturbations,'' \emph{Neural Computation}, vol.~14, no.~11, pp.~2531--2560, 2002.
+W.~Maass, T.~Natschl{\"a}ger, and H.~Markram, ``Real-time computing without stable states: A new framework for neural computation based on perturbations,'' \emph{Neural Computation}, vol.~14, no.~11, pp.~2531--2560, 2002, doi: 10.1162/089976602760407955.
 
 \bibitem{nakajima2021reservoir}
-K.~Nakajima and I.~Fischer, \emph{Reservoir Computing: Theory, Physical Implementations, and Applications}.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2021.
+K.~Nakajima and I.~Fischer, \emph{Reservoir Computing: Theory, Physical Implementations, and Applications}.\hskip 1em plus 0.5em minus 0.4em\relax Springer, 2021, doi: 10.1007/978-981-13-1687-6.
 
 \bibitem{yildiz2012revisiting}
-I.~B. Yildiz, H.~Jaeger, and S.~J. Kiebel, ``Re-visiting the echo state property,'' \emph{Neural Networks}, vol.~35, pp.~1--9, 2012.
+I.~B. Yildiz, H.~Jaeger, and S.~J. Kiebel, ``Re-visiting the echo state property,'' \emph{Neural Networks}, vol.~35, pp.~1--9, 2012, doi: 10.1016/j.neunet.2012.07.005.
 
 \bibitem{pathak2018model}
-J.~Pathak, B.~Hunt, M.~Girvan, Z.~Lu, and E.~Ott, ``Model-free prediction of large spatiotemporally chaotic systems from data: A reservoir computing approach,'' \emph{Physical Review Letters}, vol.~120, no.~2, p.~024102, 2018.
+J.~Pathak, B.~Hunt, M.~Girvan, Z.~Lu, and E.~Ott, ``Model-free prediction of large spatiotemporally chaotic systems from data: A reservoir computing approach,'' \emph{Physical Review Letters}, vol.~120, no.~2, p.~024102, 2018, doi: 10.1103/PhysRevLett.120.024102.
 
 \bibitem{banegas2025ssrc}
 L.~Banegas and F.~Vides, ``Stochastically structured reservoir computers for financial and economic system identification,'' \emph{IFAC-PapersOnLine}, vol.~59, no.~36, pp.~100--105, 2025, doi: 10.1016/j.ifacol.2026.03.018.
 
 \bibitem{gauthier2021next}
-D.~J. Gauthier, E.~Bollt, A.~Griffith, and W.~A. Barbosa, ``Next generation reservoir computing,'' \emph{Nature Communications}, vol.~12, no.~1, p. 5564, 2021.
+D.~J. Gauthier, E.~Bollt, A.~Griffith, and W.~A. Barbosa, ``Next generation reservoir computing,'' \emph{Nature Communications}, vol.~12, no.~1, p. 5564, 2021, doi: 10.1038/s41467-021-25801-2.
 
 \bibitem{bollt2021explaining}
-E.~Bollt, ``On explaining the surprising success of reservoir computing forecaster of chaos? The effect of internal symmetries,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~31, no.~1, p.~013108, 2021.
+E.~Bollt, ``On explaining the surprising success of reservoir computing forecaster of chaos? The effect of internal symmetries,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~31, no.~1, p.~013108, 2021, doi: 10.1063/5.0024890.
 
 \bibitem{dossantos2025instability}
-E.~Roque dos Santos and E.~M. Bollt, ``On the emergence of numerical instabilities in Next Generation Reservoir Computing,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~35, no.~12, p. 123102, 2025.
+E.~Roque dos Santos and E.~M. Bollt, ``On the emergence of numerical instabilities in Next Generation Reservoir Computing,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~35, no.~12, p. 123102, 2025, doi: 10.1063/5.0278709.
 
 \bibitem{zhang2025moredata}
-Y.~Zhang, E.~Roque dos Santos, and S.~P. Cornelius, ``How more data can hurt: Instability and regularization in next-generation reservoir computing,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~35, no.~7, p. 073102, 2025.
+Y.~Zhang, E.~Roque dos Santos, H.~Zhang, and S.~P. Cornelius, ``How more data can hurt: Instability and regularization in next-generation reservoir computing,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~35, no.~7, p. 073102, 2025, doi: 10.1063/5.0262977.
 
 \bibitem{lorenz1963deterministic}
-E.~N. Lorenz, ``Deterministic nonperiodic flow,'' \emph{Journal of the Atmospheric Sciences}, vol.~20, no.~2, pp.~130--141, 1963.
+E.~N. Lorenz, ``Deterministic nonperiodic flow,'' \emph{Journal of the Atmospheric Sciences}, vol.~20, no.~2, pp.~130--141, 1963, doi: 10.1175/1520-0469(1963)020$<$0130:DNF$>$2.0.CO;2.
 
-\bibitem{carroll2022dimension}
-T.~L. Carroll, ``Dimension of next generation reservoir computers,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~32, no.~4, p.~043127, 2022.
+\bibitem{carroll2020dimension}
+T.~L. Carroll, ``Dimension of reservoir computers,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~30, no.~1, p.~013102, 2020, doi: 10.1063/1.5128898.
 
 \bibitem{vlachas2020backpropagation}
-P.~R. Vlachas, J.~Pathak, B.~R. Hunt, T.~P. Sapsis, M.~Girvan, E.~Ott, and P.~Koumoutsakos, ``Backpropagation algorithms and reservoir computing in chaotic systems: A comparative study,'' \emph{Neural Networks}, vol.~126, pp.~191--217, 2020.
+P.~R. Vlachas, J.~Pathak, B.~R. Hunt, T.~P. Sapsis, M.~Girvan, E.~Ott, and P.~Koumoutsakos, ``Backpropagation algorithms and reservoir computing in recurrent neural networks for the forecasting of complex spatiotemporal dynamics,'' \emph{Neural Networks}, vol.~126, pp.~191--217, 2020, doi: 10.1016/j.neunet.2020.02.016.
 
 \bibitem{manjunath2013theory}
-G.~Manjunath and H.~Jaeger, ``Echo state property linked to an input: Exploring a fundamental characteristic of recurrent neural networks,'' \emph{Neural Computation}, vol.~25, no.~3, pp.~671--696, 2013.
+G.~Manjunath and H.~Jaeger, ``Echo state property linked to an input: Exploring a fundamental characteristic of recurrent neural networks,'' \emph{Neural Computation}, vol.~25, no.~3, pp.~671--696, 2013, doi: 10.1162/NECO\_a\_00411.
 
 \bibitem{hoerl1970ridge}
-A.~E. Hoerl and R.~W. Kennard, ``Ridge regression: Biased estimation for nonorthogonal problems,'' \emph{Technometrics}, vol.~12, no.~1, pp.~55--67, 1970.
+A.~E. Hoerl and R.~W. Kennard, ``Ridge regression: Biased estimation for nonorthogonal problems,'' \emph{Technometrics}, vol.~12, no.~1, pp.~55--67, 1970, doi: 10.1080/00401706.1970.10488634.
 
 \bibitem{lawson1974solving}
-C.~L. Lawson and R.~J. Hanson, \emph{Solving Least Squares Problems}.\hskip 1em plus 0.5em minus 0.4em\relax Prentice-Hall, 1974.
+C.~L. Lawson and R.~J. Hanson, \emph{Solving Least Squares Problems}.\hskip 1em plus 0.5em minus 0.4em\relax Prentice-Hall, 1974. (Reissued as SIAM Classics in Applied Mathematics vol.~15, 1995, doi: 10.1137/1.9781611971217; the original 1974 edition predates DOI registration.)
 
 \bibitem{engle1982autoregressive}
-R.~F. Engle, ``Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation,'' \emph{Econometrica}, vol.~50, no.~4, pp.~987--1007, 1982.
+R.~F. Engle, ``Autoregressive conditional heteroscedasticity with estimates of the variance of United Kingdom inflation,'' \emph{Econometrica}, vol.~50, no.~4, pp.~987--1007, 1982, doi: 10.2307/1912773.
 
 \bibitem{bollerslev1986generalized}
-T.~Bollerslev, ``Generalized autoregressive conditional heteroskedasticity,'' \emph{Journal of Econometrics}, vol.~31, no.~3, pp.~307--327, 1986.
+T.~Bollerslev, ``Generalized autoregressive conditional heteroskedasticity,'' \emph{Journal of Econometrics}, vol.~31, no.~3, pp.~307--327, 1986, doi: 10.1016/0304-4076(86)90063-1.
 
 \bibitem{glosten1993relation}
-L.~R. Glosten, R.~Jagannathan, and D.~E. Runkle, ``On the relation between the expected value and the volatility of the nominal excess return on stocks,'' \emph{Journal of Finance}, vol.~48, no.~5, pp.~1779--1801, 1993.
+L.~R. Glosten, R.~Jagannathan, and D.~E. Runkle, ``On the relation between the expected value and the volatility of the nominal excess return on stocks,'' \emph{Journal of Finance}, vol.~48, no.~5, pp.~1779--1801, 1993, doi: 10.1111/j.1540-6261.1993.tb05128.x.
 
 \bibitem{patton2011volatility}
-A.~J. Patton, ``Volatility forecast comparison using imperfect volatility proxies,'' \emph{Journal of Econometrics}, vol.~160, no.~1, pp.~246--256, 2011.
+A.~J. Patton, ``Volatility forecast comparison using imperfect volatility proxies,'' \emph{Journal of Econometrics}, vol.~160, no.~1, pp.~246--256, 2011, doi: 10.1016/j.jeconom.2010.03.034.
+
+\bibitem{grigoryevaortega2018echostate}
+L.~Grigoryeva and J.-P. Ortega, ``Echo state networks are universal,'' \emph{Neural Networks}, vol.~108, pp.~495--508, 2018, doi: 10.1016/j.neunet.2018.08.025.
+
+\bibitem{gonon2023approximation}
+L.~Gonon, L.~Grigoryeva, and J.-P. Ortega, ``Approximation bounds for random neural networks and reservoir systems,'' \emph{The Annals of Applied Probability}, vol.~33, no.~1, pp.~28--69, 2023, doi: 10.1214/22-AAP1806.
+
+\bibitem{yan2024emerging}
+M.~Yan, C.~Huang, P.~Bienstman, P.~Tino, W.~Lin, and J.~Sun, ``Emerging opportunities and challenges for the future of reservoir computing,'' \emph{Nature Communications}, vol.~15, p.~2056, 2024, doi: 10.1038/s41467-024-45187-1.
+
+\bibitem{chepuri2024hybridizing}
+R.~Chepuri, D.~Amzalag, T.~M. Antonsen, and M.~Girvan, ``Hybridizing traditional and next-generation reservoir computing to accurately and efficiently forecast dynamical systems,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~34, no.~6, p.~063114, 2024, doi: 10.1063/5.0206232.
+
+\bibitem{barbosagauthier2022learning}
+W.~A. S. Barbosa and D.~J. Gauthier, ``Learning spatiotemporal chaos using next-generation reservoir computing,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~32, no.~9, p.~093137, 2022, doi: 10.1063/5.0098707.
+
+\bibitem{zhangcornelius2023catch22}
+Y.~Zhang and S.~P. Cornelius, ``Catch-22s of reservoir computing,'' \emph{Physical Review Research}, vol.~5, no.~3, p.~033213, 2023, doi: 10.1103/PhysRevResearch.5.033213.
+
+\bibitem{tikhonovarsenin1977solutions}
+A.~N. Tikhonov and V.~Y. Arsenin, \emph{Solutions of Ill-Posed Problems}.\hskip 1em plus 0.5em minus 0.4em\relax Wiley, 1977. (Predates DOI registration.)
+
+\bibitem{politis1994stationary}
+D.~N. Politis and J.~P. Romano, ``The stationary bootstrap,'' \emph{Journal of the American Statistical Association}, vol.~89, no.~428, pp.~1303--1313, 1994, doi: 10.1080/01621459.1994.10476870.
+
+\bibitem{poongranger2003forecasting}
+S.-H. Poon and C.~W.~J. Granger, ``Forecasting volatility in financial markets: A review,'' \emph{Journal of Economic Literature}, vol.~41, no.~2, pp.~478--539, 2003, doi: 10.1257/002205103765762743.
+
+\bibitem{andersenbollerslev1998answering}
+T.~G. Andersen and T.~Bollerslev, ``Answering the skeptics: Yes, standard volatility models do provide accurate forecasts,'' \emph{International Economic Review}, vol.~39, no.~4, pp.~885--905, 1998, doi: 10.2307/2527343.
+
+\bibitem{cestnik2026ngrc}
+R.~Cestnik and E.~A. Martens, ``Next-generation reservoir computing for dynamical inference,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~36, no.~1, p.~013115, 2026, doi: 10.1063/5.0302319.
+
+\bibitem{gauthier2025locality}
+D.~J. Gauthier, A.~Pomerance, and E.~Bollt, ``Locality blended next-generation reservoir computing for attention accuracy,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~35, no.~7, p.~073148, 2025, doi: 10.1063/5.0273597.
+
+\bibitem{prosperino2025tailored}
+D.~Prosperino, H.~Ma, and C.~R{\"a}th, ``Tailored minimal reservoir computing: On the bidirectional connection between nonlinearities in the model and in data,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~35, no.~9, p.~093105, 2025, doi: 10.1063/5.0272793.
+
+\bibitem{lakmesari2026regime}
+S.~Hadipour Lakmesari, H.~Kantz, and F.~Sorrentino, ``Reservoir computing for forecasting non-autonomous dynamics with hidden regime variations,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~36, no.~8, p.~081103, 2026, doi: 10.1063/5.0345363.
+
+\bibitem{hart2024attractor}
+J.~D. Hart, ``Attractor reconstruction with reservoir computers: The effect of the reservoir's conditional Lyapunov exponents on faithful attractor reconstruction,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~34, no.~4, p.~043123, 2024, doi: 10.1063/5.0196257.
+
+\bibitem{hart2025generic}
+A.~G. Hart, ``Generic and isometric embeddings in reservoir computers,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~35, no.~11, p.~111103, 2025, doi: 10.1063/5.0301957.
+
+\bibitem{suetani2026impact}
+H.~Suetani and U.~Parlitz, ``Impact of weak generalized synchronization on time series forecasting using reservoir computers,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~36, no.~4, p.~043125, 2026, doi: 10.1063/5.0283017.
+
+\bibitem{sedehi2025denoising}
+O.~Sedehi, M.~Yadav, M.~Stender, and S.~Oberst, ``Denoising and reconstruction of nonlinear dynamics using truncated reservoir computing,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~35, no.~9, p.~093103, 2025, doi: 10.1063/5.0273505.
+
+\bibitem{fumagalli2025datadriven}
+L.~Fumagalli, K.~L{\"u}dge, J.~de Wiljes, H.~Haario, and L.~Jaurigue, ``Data-driven performance measures using global properties of attractors for testing black-box surrogate models of chaotic systems,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~35, no.~11, p.~113121, 2025, doi: 10.1063/5.0283424.
+
+\bibitem{platt2023constraining}
+J.~A. Platt, S.~G. Penny, T.~A. Smith, T.-C. Chen, and H.~D.~I. Abarbanel, ``Constraining chaos: Enforcing dynamical invariants in the training of reservoir computers,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~33, no.~10, p.~103107, 2023, doi: 10.1063/5.0156999.
+
+\bibitem{hramov2025strong}
+A.~E. Hramov, N.~Kulagin, A.~N. Pisarchik, and A.~V. Andreev, ``Strong and weak prediction of stochastic dynamics using reservoir computing,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~35, no.~3, p.~033140, 2025, doi: 10.1063/5.0252908.
+
+\bibitem{amann2026nonlinear}
+A.~Amann, K.~L{\"u}dge, U.~Parlitz, and M.~Small, ``Nonlinear dynamics of reservoir computing: Theory, realization, and application,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~36, no.~6, p.~060402, 2026, doi: 10.1063/5.0342148.
+
+\bibitem{inoue2026bootcamp}
+K.~Inoue, T.~Kubota, Q.~H. Tran, N.~Akashi, R.~Terajima, T.~Kabayama, J.~Guan, and K.~Nakajima, ``Reservoir computing bootcamp---From Python/NumPy tutorial for the complete beginners to cutting-edge research topics of reservoir computing,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~36, no.~2, p.~023109, 2026, doi: 10.1063/5.0283386.
+
+\bibitem{schotz2026machine}
+C.~Sch{\"o}tz, A.~White, M.~Gelbrecht, and N.~Boers, ``Machine learning for predicting chaotic systems,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~36, no.~5, p.~053105, 2026, doi: 10.1063/5.0313297.
 
 \end{thebibliography}
 

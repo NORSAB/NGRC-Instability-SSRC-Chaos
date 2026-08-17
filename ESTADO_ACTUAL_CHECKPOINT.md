@@ -1,5 +1,5 @@
 # Estado Actual del Proyecto y Checkpoint de Reanudación
-**Fecha:** 16 de Agosto de 2026  
+**Fecha:** 16 de Agosto de 2026 (revisado y corregido en esta sesión)  
 **Proyecto:** Artículo 4 — Next-Generation Reservoir Computing (NG-RC) & SSRC  
 **Revista Objetivo:** *Chaos: An Interdisciplinary Journal of Nonlinear Science* (AIP Publishing)  
 **Formato Oficial:** REVTeX 4-2 (`\documentclass[aip,cha,reprint,amsmath,amssymb]{revtex4-2}`)  
@@ -7,9 +7,26 @@
 
 ---
 
+## 0. Corrección importante sobre este checkpoint (leer primero)
+
+La versión anterior de este archivo afirmaba "100% verificado" sin haber comparado el PDF renderizado contra el `.tex` fuente. Al verificar visualmente (render página por página con PyMuPDF, no solo `pdflatex` sin errores) se encontraron y corrigieron **4 defectos reales** que sí estaban en los PDFs compilados de `main.tex`/`main_es.tex`:
+
+1. **Tabla I** (`main.tex`/`main_es.tex`, Sección III): `Overfull \hbox` de 156pt — la última columna (`Δ mean [95% CI]`) estaba recortada y sus 10 filas de datos no eran visibles en el PDF, aunque sí existían en el `.tex`.
+2. **Tabla II** (Sección IV): `Overfull \hbox` de 106pt — las columnas "Pooled Median" y "% Neg." se desbordaban **encima del texto de la columna derecha de la página**, produciendo texto ilegible superpuesto.
+3. **Figura 4** (`fig13_qlike_piso_fx.pdf`): la leyenda colapsaba 3 métodos Ridge distintos (`log_ridge`, `ridge_clip`, `softplus_ridge`) bajo la misma etiqueta "Ridge NG-RC", mostrándola repetida 3 veces; además la leyenda se superponía con la etiqueta del eje X.
+4. **Figura 3** (`fig_lyapunov_curve.pdf`): la leyenda (`loc="upper left"`) se superponía directamente sobre las curvas Ridge NG-RC/OLS NG-RC/ESN, tapando texto y marcadores.
+
+**Causa raíz de 1–2:** `\ruledtabular` en REVTeX 4-2 fuerza `tabular*{\linewidth}` con `\extracolsep{\fill}`, así que la caja ya se declara del ancho correcto aunque el contenido no quepa — por eso un `\resizebox` exterior no tiene ningún efecto (mide una caja que ya dice medir `\linewidth`). El arreglo real fue `\scriptsize` + `\setlength{\tabcolsep}{2pt}` + encabezados abreviados (con la aclaración movida al `\caption`).
+
+Las 4 correcciones están aplicadas en `main.tex`, `main_es.tex` y `make_figures_bilingual.py`, los 4 PDFs fueron recompilados, las **19 páginas totales fueron inspeccionadas visualmente** (render a 2.2× con PyMuPDF, no solo ausencia de errores de `pdflatex`), `pytest -v` sigue en 25/25, y `grep -c Overfull` da 0 en los 4 logs de compilación. `git diff --stat` de los cambios propios: `main.tex` (+32/-16), `main_es.tex` (+32/-16), `make_figures_bilingual.py` (+85/-46), más las 9 figuras regeneradas en `figures/` y `figures_es/`. **Ninguno de estos cambios está commiteado todavía** (aparte de un fix previo no relacionado en `supplementary.tex`/`supplementary_es.tex` — Tabla III — que ya estaba sin commitear al iniciar esta sesión).
+
+Con esas correcciones aplicadas y verificadas, el resumen original de abajo (secciones 1–3) es ahora una descripción precisa del estado del manuscrito.
+
+---
+
 ## 1. Resumen Ejecutivo del Estado del Manuscrito
 
-El artículo se encuentra en estado **100% verificado, sincronizado y reproducible**, listo para revisión de estilo y envío editorial:
+El artículo se encuentra en estado **verificado visualmente página por página, sincronizado y reproducible**, listo para revisión de estilo y envío editorial:
 
 1. **Documentos Compilados (4 PDFs en `paper_chaos_aip/`):**
    - `main.pdf` (7 páginas): Manuscrito oficial en inglés en plantilla oficial AIP REVTeX 4-2 reprint.

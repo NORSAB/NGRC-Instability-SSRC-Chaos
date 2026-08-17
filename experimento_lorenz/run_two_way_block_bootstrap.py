@@ -90,7 +90,7 @@ def run_bootstrap_analysis():
     ]
 
     for regime, H in noise_regimes:
-        sub = df[(df["regime"] == regime) & (df["horizon"] == H)]
+        sub = df[(df["regime"] == regime) & (df["horizon"] == H)].sort_values(["window_start", "noise_seed", "seed"])
         unique_windows = np.sort(sub["window_start"].unique())
         unique_noise_seeds = np.sort(sub["noise_seed"].unique())
         unique_seeds = np.sort(sub["seed"].unique())
@@ -98,21 +98,13 @@ def run_bootstrap_analysis():
         n_ns = len(unique_noise_seeds)
         n_s = len(unique_seeds)
 
-        tensor_esn = np.zeros((n_w, n_ns, n_s))
-        tensor_stat = np.zeros((n_w, n_ns, n_s))
-        tensor_ridge = np.zeros((n_w, n_ns, n_s))
+        # Vectorized pivot to 3D tensor: (n_w, n_ns, n_s)
+        piv_3d_esn = sub.pivot_table(index=["window_start", "noise_seed"], columns="seed", values="mase_ssrc_lag").values.reshape(n_w, n_ns, n_s)
+        piv_3d_stat = sub.pivot_table(index=["window_start", "noise_seed"], columns="seed", values="mase_static_lag").values.reshape(n_w, n_ns, n_s)
+        piv_3d_ridge = sub.pivot_table(index=["window_start", "noise_seed"], columns="seed", values="mase_ridge").values.reshape(n_w, n_ns, n_s)
 
-        for w_i, w in enumerate(unique_windows):
-            for ns_i, ns in enumerate(unique_noise_seeds):
-                sub_wns = sub[(sub["window_start"] == w) & (sub["noise_seed"] == ns)]
-                for s_i, sd in enumerate(unique_seeds):
-                    row = sub_wns[sub_wns["seed"] == sd].iloc[0]
-                    tensor_esn[w_i, ns_i, s_i] = row["mase_ssrc_lag"]
-                    tensor_stat[w_i, ns_i, s_i] = row["mase_static_lag"]
-                    tensor_ridge[w_i, ns_i, s_i] = row["mase_ridge"]
-
-        diff_ridge_sample = float(np.mean(tensor_esn - tensor_ridge))
-        diff_stat_sample = float(np.mean(tensor_esn - tensor_stat))
+        diff_ridge_sample = float(np.mean(piv_3d_esn - piv_3d_ridge))
+        diff_stat_sample = float(np.mean(piv_3d_esn - piv_3d_stat))
 
         boot_diff_ridge = []
         boot_diff_stat = []
@@ -122,9 +114,9 @@ def run_bootstrap_analysis():
             ns_idx = rng.choice(n_ns, size=n_ns, replace=True)
             s_idx = rng.choice(n_s, size=n_s, replace=True)
 
-            esn_b = tensor_esn[w_idx[:, None, None], ns_idx[None, :, None], s_idx[None, None, :]]
-            stat_b = tensor_stat[w_idx[:, None, None], ns_idx[None, :, None], s_idx[None, None, :]]
-            ridge_b = tensor_ridge[w_idx[:, None, None], ns_idx[None, :, None], s_idx[None, None, :]]
+            esn_b = piv_3d_esn[w_idx[:, None, None], ns_idx[None, :, None], s_idx[None, None, :]]
+            stat_b = piv_3d_stat[w_idx[:, None, None], ns_idx[None, :, None], s_idx[None, None, :]]
+            ridge_b = piv_3d_ridge[w_idx[:, None, None], ns_idx[None, :, None], s_idx[None, None, :]]
 
             boot_diff_ridge.append(np.mean(esn_b - ridge_b))
             boot_diff_stat.append(np.mean(esn_b - stat_b))
@@ -146,40 +138,30 @@ def run_bootstrap_analysis():
     # 3. Regimenes de Shocks Puntuales: Remuestreo de las 5 UBICACIONES manteniendo pareados ambos signos (+ y -)
     for mag in (15, 50):
         regime = f"shock_{mag}sigma"
-        sub = df[(df["regime"] == regime) & (df["horizon"] == 1)]
+        sub = df[(df["regime"] == regime) & (df["horizon"] == 1)].sort_values(["location", "sign", "seed"])
         unique_locs = np.sort(sub["location"].unique())
         n_locs = len(unique_locs)
         unique_seeds = np.sort(sub["seed"].unique())
         n_s = len(unique_seeds)
 
-        diff_ridge_sample = float(np.mean(sub["mase_ssrc_lag"] - sub["mase_ridge"]))
-        diff_stat_sample = float(np.mean(sub["mase_ssrc_lag"] - sub["mase_static_lag"]))
+        # Tensor de ubicaciones: (n_locs, 2_signs, n_s)
+        piv_shk_esn = sub.pivot_table(index=["location", "sign"], columns="seed", values="mase_ssrc_lag").values.reshape(n_locs, 2, n_s)
+        piv_shk_stat = sub.pivot_table(index=["location", "sign"], columns="seed", values="mase_static_lag").values.reshape(n_locs, 2, n_s)
+        piv_shk_ridge = sub.pivot_table(index=["location", "sign"], columns="seed", values="mase_ridge").values.reshape(n_locs, 2, n_s)
 
-        # Tensor de ubicaciones: (n_locs, 2_signs, n_seeds)
-        tensor_esn_shk = np.zeros((n_locs, 2, n_s))
-        tensor_stat_shk = np.zeros((n_locs, 2, n_s))
-        tensor_ridge_shk = np.zeros((n_locs, 2, n_s))
-
-        for l_i, loc in enumerate(unique_locs):
-            for sgn_i, sgn in enumerate([+1, -1]):
-                sub_ls = sub[(sub["location"] == loc) & (sub["sign"] == sgn)]
-                for s_i, sd in enumerate(unique_seeds):
-                    row = sub_ls[sub_ls["seed"] == sd].iloc[0]
-                    tensor_esn_shk[l_i, sgn_i, s_i] = row["mase_ssrc_lag"]
-                    tensor_stat_shk[l_i, sgn_i, s_i] = row["mase_static_lag"]
-                    tensor_ridge_shk[l_i, sgn_i, s_i] = row["mase_ridge"]
+        diff_ridge_sample = float(np.mean(piv_shk_esn - piv_shk_ridge))
+        diff_stat_sample = float(np.mean(piv_shk_esn - piv_shk_stat))
 
         boot_diff_ridge = []
         boot_diff_stat = []
 
         for _ in range(N_BOOT):
-            # Remuestrear las ubicaciones completas (conservando pareados los signos + y -)
             loc_idx = rng.choice(n_locs, size=n_locs, replace=True)
             s_idx = rng.choice(n_s, size=n_s, replace=True)
 
-            esn_b = tensor_esn_shk[loc_idx[:, None, None], :, s_idx[None, None, :]]
-            stat_b = tensor_stat_shk[loc_idx[:, None, None], :, s_idx[None, None, :]]
-            ridge_b = tensor_ridge_shk[loc_idx[:, None, None], :, s_idx[None, None, :]]
+            esn_b = piv_shk_esn[loc_idx[:, None, None], :, s_idx[None, None, :]]
+            stat_b = piv_shk_stat[loc_idx[:, None, None], :, s_idx[None, None, :]]
+            ridge_b = piv_shk_ridge[loc_idx[:, None, None], :, s_idx[None, None, :]]
 
             boot_diff_ridge.append(np.mean(esn_b - ridge_b))
             boot_diff_stat.append(np.mean(esn_b - stat_b))

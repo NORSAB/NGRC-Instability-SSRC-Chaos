@@ -46,35 +46,35 @@ For each mode, the per-window difference `qlike_mode - qlike_baseline` is comput
 
 | mode | mean diff | 95% CI (bootstrap) | frac. windows mode wins | sign-test p |
 |---|---:|---:|---:|---:|
-| gjr_garch_11 | 0.204 | [0.029, 0.381] | 43.5% | 5.16e-07 |
-| garch_11 | 0.212 | [0.029, 0.413] | 41.6% | 1.27e-10 |
-| nnls_nonneg | 0.457 | [0.265, 0.660] | 40.7% | 6.84e-13 |
-| ridge_clip | 4,634.3 | [321.957, 10,327.0] | 38.7% | 2.01e-18 |
-| ols_clip_legacy | 21,020.6 | [10,777.5, 33,680.2] | 40.3% | 6.53e-14 |
-| nnls_signed_clip_legacy | 19,731.1 | [4,495.4, 43,593.2] | 39.3% | 1.19e-16 |
-| ssrc_log | 1,025.5 | [13.181, 2,804.6] | 54.7% | 2.77e-04 |
-| softplus_ridge | 2,454.1 | [35.136, 7,227.0] | 45.3% | 2.77e-04 |
-| log_ridge | 782.839 | [10.246, 2,314.9] | 54.0% | 2.19e-03 |
-| naive | 14,542.7 | [4,611.6, 27,788.8] | 45.0% | 1.21e-04 |
+| gjr_garch_11 | 0.204 | [0.031, 0.379] | 43.5% | 5.16e-07 |
+| garch_11 | 0.212 | [0.037, 0.404] | 41.6% | 1.27e-10 |
+| nnls_nonneg | 0.457 | [0.271, 0.657] | 40.7% | 6.84e-13 |
+| ridge_clip | 4,634.3 | [189.740, 10,675.7] | 38.7% | 2.01e-18 |
+| ols_clip_legacy | 21,020.6 | [11,187.4, 32,887.2] | 40.3% | 6.53e-14 |
+| nnls_signed_clip_legacy | 19,731.1 | [3,333.2, 48,367.0] | 39.3% | 1.19e-16 |
+| ssrc_log | 1,025.5 | [12.695, 2,803.8] | 54.7% | 2.77e-04 |
+| softplus_ridge | 2,454.1 | [34.972, 7,196.5] | 45.3% | 2.77e-04 |
+| log_ridge | 782.839 | [9.954, 2,310.8] | 54.0% | 2.19e-03 |
+| naive | 14,542.7 | [4,544.1, 27,715.6] | 45.0% | 1.21e-04 |
 
 ### vs. `garch_11`
 
 | mode | mean diff | 95% CI (bootstrap) | frac. windows mode wins | sign-test p |
 |---|---:|---:|---:|---:|
-| ewma_0.94 | -0.212 | [-0.397, -0.036] | 58.4% | 1.27e-10 |
-| gjr_garch_11 | -0.008 | [-0.075, 0.067] | 54.3% | 8.68e-04 |
-| nnls_nonneg | 0.239 | [0.118, 0.394] | 45.9% | 1.66e-03 |
-| ridge_clip | 4,643.4 | [353.363, 10,999.2] | 39.1% | 3.65e-17 |
-| ols_clip_legacy | 21,062.9 | [10,980.2, 33,561.3] | 43.0% | 7.22e-08 |
-| nnls_signed_clip_legacy | 19,770.8 | [4,765.5, 44,187.9] | 40.8% | 1.15e-12 |
-| ssrc_log | 1,027.3 | [13.368, 2,826.4] | 57.0% | 9.64e-08 |
-| softplus_ridge | 2,458.8 | [32.992, 7,221.2] | 49.4% | 6.59e-01 |
-| log_ridge | 784.216 | [10.508, 2,332.7] | 56.8% | 1.70e-07 |
-| naive | 14,572.0 | [4,572.5, 27,217.0] | 47.8% | 9.13e-02 |
+| ewma_0.94 | -0.212 | [-0.402, -0.045] | 58.4% | 1.27e-10 |
+| gjr_garch_11 | -0.008 | [-0.079, 0.064] | 54.3% | 8.68e-04 |
+| nnls_nonneg | 0.239 | [0.120, 0.402] | 45.9% | 1.66e-03 |
+| ridge_clip | 4,643.4 | [169.807, 11,200.2] | 39.1% | 3.65e-17 |
+| ols_clip_legacy | 21,062.9 | [10,852.3, 33,191.8] | 43.0% | 7.22e-08 |
+| nnls_signed_clip_legacy | 19,770.8 | [2,987.0, 49,463.1] | 40.8% | 1.15e-12 |
+| ssrc_log | 1,027.3 | [12.497, 2,804.8] | 57.0% | 9.64e-08 |
+| softplus_ridge | 2,458.8 | [33.153, 7,181.7] | 49.4% | 6.59e-01 |
+| log_ridge | 784.216 | [10.551, 2,314.0] | 56.8% | 1.70e-07 |
+| naive | 14,572.0 | [4,459.2, 27,427.9] | 47.8% | 9.13e-02 |
 
 ### Reading the `ssrc_log` rows above
-- **vs `ewma_0.94`**: mean paired difference = 1,025.5 (95% CI [13.181, 2,804.6]) -- driven almost entirely by tail windows, since `ssrc_log` wins on a per-window basis more often than not (54.7% of windows, sign-test p=2.77e-04). This is the key reconciliation: `ssrc_log` frequently produces a *slightly* better QLIKE than the baseline window-by-window, but when it is wrong, it is wrong catastrophically, and the mean (and any risk-management or capital-allocation use of the forecast) is dominated by those catastrophic windows, not by the typical window.
-- **vs `garch_11`**: mean paired difference = 1,027.3 (95% CI [13.368, 2,826.4]) -- driven almost entirely by tail windows, since `ssrc_log` wins on a per-window basis more often than not (57.0% of windows, sign-test p=9.64e-08). This is the key reconciliation: `ssrc_log` frequently produces a *slightly* better QLIKE than the baseline window-by-window, but when it is wrong, it is wrong catastrophically, and the mean (and any risk-management or capital-allocation use of the forecast) is dominated by those catastrophic windows, not by the typical window.
+- **vs `ewma_0.94`**: mean paired difference = 1,025.5 (95% CI [12.695, 2,803.8]) -- driven almost entirely by tail windows, since `ssrc_log` wins on a per-window basis more often than not (54.7% of windows, sign-test p=2.77e-04). This is the key reconciliation: `ssrc_log` frequently produces a *slightly* better QLIKE than the baseline window-by-window, but when it is wrong, it is wrong catastrophically, and the mean (and any risk-management or capital-allocation use of the forecast) is dominated by those catastrophic windows, not by the typical window.
+- **vs `garch_11`**: mean paired difference = 1,027.3 (95% CI [12.497, 2,804.8]) -- driven almost entirely by tail windows, since `ssrc_log` wins on a per-window basis more often than not (57.0% of windows, sign-test p=9.64e-08). This is the key reconciliation: `ssrc_log` frequently produces a *slightly* better QLIKE than the baseline window-by-window, but when it is wrong, it is wrong catastrophically, and the mean (and any risk-management or capital-allocation use of the forecast) is dominated by those catastrophic windows, not by the typical window.
 
 ## Terminology note (tracked separately, not fixed here)
 This experiment's code refers to the recurrent reservoir model as `ssrc_log` / "SSRC". For the record: the actual implementation in `volatility_models.py::run_ssrc_sequence` is a generic sparse random-weight Echo State Network (ESN) -- a fixed random sparse recurrent reservoir with a trained linear (log-domain, ridge-regularized) readout. It is **not** the specific published Stochastically Structured Reservoir Computer (SSRC) architecture, which additionally requires graph-informed coupling structure and structure-preserving embeddings in the reservoir itself. This is a known, separately-tracked terminology issue to be fixed in the manuscript text describing the model; it is flagged here for the record and is not something this diagnostics script changes or works around.

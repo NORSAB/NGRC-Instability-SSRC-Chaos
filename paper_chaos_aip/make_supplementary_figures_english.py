@@ -5,6 +5,7 @@ directamente los CSV de salida auditados, igual que make_figures_english.py para
 principal -- no reejecuta ningun experimento.
 """
 from pathlib import Path
+import sys
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -14,6 +15,11 @@ import pandas as pd
 
 HERE = Path(__file__).resolve().parent
 BASE = HERE.parent
+FUEL_CODE = BASE / "experimento_combustibles_honduras"
+if str(FUEL_CODE) not in sys.path:
+    sys.path.insert(0, str(FUEL_CODE))
+
+from data_paths import resolve_fuel_repository
 OUT = HERE / "figures"
 OUT.mkdir(exist_ok=True)
 
@@ -24,13 +30,14 @@ plt.rcParams.update({
     "axes.spines.top": False,
     "axes.spines.right": False,
 })
-W_SINGLE = 3.4
-W_DOUBLE = 7.0
+W_SINGLE = 3.37
+W_DOUBLE = 6.69
+MIN_FONT_PT = 8.5
 
 
 def save(fig, name):
-    fig.tight_layout()
-    fig.savefig(OUT / name, bbox_inches="tight")
+    fig.tight_layout(pad=0.4)
+    fig.savefig(OUT / name)
     plt.close(fig)
 
 
@@ -74,9 +81,7 @@ print("[fig12_bcie_causal] saved")
 # ---------------------------------------------------------------------------
 # 2. Honduras weekly fuel prices, 2017-2026, with shock windows
 # ---------------------------------------------------------------------------
-repo_file = Path(r"D:\2026\Tesis2026\Datos_Combustibles_Honduras\repositorio_combustibles_honduras.csv")
-if not repo_file.exists():
-    raise FileNotFoundError(f"Falta {repo_file}")
+repo_file = resolve_fuel_repository()
 df_fuel = pd.read_csv(repo_file, encoding="utf-8-sig")
 df_fuel["FechaInicioISO"] = pd.to_datetime(df_fuel["FechaInicioISO"], errors="coerce")
 df_fuel = df_fuel.sort_values("FechaInicioISO")
@@ -104,7 +109,7 @@ ax.set_title("Weekly fuel prices, Honduras (2017-2026)")
 handles = [plt.Line2D([0], [0], color=c, lw=6) for c in ["#374649", "#982C33", "#3f6c3e", "#134966"]]
 handles += [plt.Rectangle((0, 0), 1, 1, color=EVENTS[n][2], alpha=0.3) for n in EVENTS]
 labels_h = ["Super", "Regular", "Diesel", "Kerosene"] + list(EVENTS.keys())
-ax.legend(handles, labels_h, loc="upper center", bbox_to_anchor=(0.5, -0.18), ncol=4, frameon=False, fontsize=8)
+ax.legend(handles, labels_h, loc="upper center", bbox_to_anchor=(0.5, -0.18), ncol=4, frameon=False, fontsize=MIN_FONT_PT)
 save(fig, "fig7_combustibles_precios.pdf")
 print("[fig7_combustibles_precios] saved")
 

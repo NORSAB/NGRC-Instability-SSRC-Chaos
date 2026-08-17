@@ -12,7 +12,7 @@
 
 \begin{document}
 
-\title{Material Suplementario: Inestabilidad, Amplificación de Shocks y Restricciones de Positividad en Computación por Reservorio de Próxima Generación}
+\title{Material Suplementario: Inestabilidad, Amplificaci\'on de Valores At\'ipicos y Restricciones de Positividad en Computaci\'on por Reservorio de Pr\'oxima Generaci\'on}
 
 \author{Norman Reynaldo Sabill{\'o}n Castro}
 \email{sabillonrey2004@gmail.com}
@@ -29,12 +29,14 @@
 \label{sec:bcie}
 % ======================================================================
 
-El Banco Centroamericano de Integración Económica (BCIE) publica un panel de aprobaciones de préstamos por país miembro (1961--2025). Construimos un nodo sistémico sintético a partir de las aprobaciones agregadas y estimamos un operador de acoplamiento $\mathbf{P}^*$ mediante NNLS por filas bajo una máscara de topología hub-and-spoke, comparando cuatro compresiones del bloque cuadrático de NG-RC (PCA base, contracción Ledoit--Wolf, covarianza con desplazamiento Tikhonov y regresión NNLS directa) frente a un ESN recurrente disperso de referencia, bajo protocolo causal (entrenamiento hasta 2019, evaluación fuera de muestra 2020--2025).
+El Banco Centroamericano de Integración Económica (BCIE) publica un panel de aprobaciones de préstamos por país miembro (1961--2025). Construimos un nodo sistémico sintético a partir de las aprobaciones agregadas y estimamos un operador de acoplamiento $\mathbf{P}^*$ mediante NNLS por filas bajo una máscara de topología hub-and-spoke, comparando cuatro compresiones del bloque cuadrático de NG-RC (PCA base, contracción Ledoit--Wolf \cite{ledoitwolf2004wellconditioned}, covarianza con desplazamiento Tikhonov y regresión NNLS directa) frente a un ESN recurrente disperso de referencia, bajo protocolo causal (entrenamiento hasta 2019, evaluación fuera de muestra 2020--2025). La significancia se evalúa con la prueba de Diebold--Mariano \cite{dieboldmariano1995comparing}.
 
 \begin{table}[h]
 \centering
 \caption{Panel anual del BCIE, comparación con cobertura uniforme (8 entidades comunes, protocolo causal). Los valores $p$ de Diebold--Mariano emplean remuestreo por bloques anuales frente a la referencia ESN; \texttt{no} indica no significancia a $\alpha=0.05$.}
 \label{tab:bcie}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Tabla de comparación de desempeño que reporta el MASE fuera de muestra y los valores $p$ de la prueba de Diebold-Mariano en ocho arquitecturas de pronóstico sobre la cartera de préstamos multilaterales del BCIE. Las arquitecturas no negativas alcanzan el menor MASE puntual (0.8155), pero las diferencias frente a ESN (1.0356) no son estadísticamente significativas ($p \ge 0.50$).
 \begin{ruledtabular}
 \begin{tabular}{lrrc}
 Método & MASE & $N$ & DM vs.\ ESN ($p$) \\
@@ -52,12 +54,14 @@ PCA Base ($k=2$) & 1.3125 & 32 & 0.75 (no) \\
 \end{ruledtabular}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{figures_es/fig12_bcie_causal.pdf}
+\includegraphics[width=\textwidth]{figures_es/fig12_bcie_causal.pdf}
 \caption{Panel anual del BCIE: MASE causal fuera de muestra por lector, comparación en 8 entidades comunes, 2020--2025.}
 \label{fig:bcie}
-\end{figure}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Gráfico de barras horizontal que compara la precisión fuera de muestra (MASE) entre nueve arquitecturas sobre el conjunto de datos de préstamos multilaterales del BCIE. Los lectores no negativos regularizados logran el menor MASE eliminando predicciones de volumen de préstamos negativas.
+\end{figure*}
 
 NNLS directo obtiene la menor estimación puntual, consistente con los hallazgos en FX/cripto y combustibles respecto a la utilidad de las restricciones de no negatividad cuando el objetivo es estructuralmente positivo. No obstante, con solo 6 años fuera de muestra y 8 entidades comunes, ninguna prueba pareada de Diebold--Mariano alcanza significancia estadística ($p \ge 0.50$). Reportamos este resultado como una validación secundaria cualitativamente consistente pero no concluyente.
 
@@ -70,8 +74,10 @@ Evaluamos el pronóstico de volatilidad en 496 observaciones semanales (2017--20
 
 \begin{table}[h]
 \centering
-\caption{Pronóstico de volatilidad de retornos en combustibles de Honduras, comparación fuera de muestra a lo largo de 496 semanas.}
+\caption{Pronóstico de volatilidad de retornos en combustibles de Honduras a lo largo de 496 semanas. Cada método aporta 344 orígenes causales de pronóstico fuera de muestra.}
 \label{tab:fuel}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Tabla comparativa de modelos de volatilidad para series de combustibles en Honduras reportando QLIKE, MASE y porcentajes de predicción negativa. OLS genera 13.7\% de pronósticos negativos y Ridge 0.9\%, mientras que los lectores no negativos eliminan predicciones negativas por completo.
 \begin{ruledtabular}
 \begin{tabular}{lrrr}
 Método & QLIKE & MASE & \% Neg. \\
@@ -80,8 +86,8 @@ NNLS No Negativo & \textbf{0.359} & 0.485 & 0\% \\
 GARCH(1,1) & 0.380 & 0.454 & 0\% \\
 GJR-GARCH(1,1) & 0.392 & 0.442 & 0\% \\
 Persistencia Ingenua & 0.432 & 0.369 & 0\% \\
-OLS Legacy (recortado) & 0.542 & 0.587 & 47\% \\
-Ridge Legacy (recortado) & 0.552 & 0.734 & 3\% \\
+OLS Legacy (recortado) & 0.542 & 0.587 & 13.7\% \\
+Ridge Legacy (recortado) & 0.552 & 0.734 & 0.9\% \\
 Softplus NG-RC & 0.570 & 0.713 & 0\% \\
 EWMA ($\lambda=0.94$) & 0.677 & 0.736 & 0\% \\
 ESN Recurrente (log) & 1.313 & \textbf{0.338} & 0\% \\
@@ -90,12 +96,14 @@ Log-link Ridge & 1.815 & 0.342 & 0\% \\
 \end{ruledtabular}
 \end{table}
 
-\begin{figure}[h]
+\begin{figure*}[t]
 \centering
-\includegraphics[width=\columnwidth]{figures_es/fig7_combustibles_precios.pdf}
+\includegraphics[width=\textwidth]{figures_es/fig7_combustibles_precios.pdf}
 \caption{Precios semanales de combustibles en Honduras, 2017--2026, con ventanas sombreadas para COVID-19, huracanes Eta/Iota, guerra Rusia--Ucrania y crisis en Medio Oriente 2026.}
 \label{fig:fuel_prices}
-\end{figure}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Gráfico de series temporales de precios semanales de combustibles en Honduras (2017--2026) para cuatro productos. Cuatro intervalos sombreados destacan episodios de shock económico global, incluyendo la pandemia de 2020 y la volatilidad energética de 2022.
+\end{figure*}
 
 NNLS no negativo logra el mejor QLIKE (0.359), coincidiendo con FX/cripto. Sin embargo, el ESN recurrente alcanza el mejor MASE (0.338 frente a 0.485 de NNLS), quedando rezagado en QLIKE (1.313). Esto ilustra la tensión estructural entre pérdidas: MASE premia la precisión típica en valores medios, mientras que QLIKE castiga fuertemente las predicciones cercanas a cero.
 
@@ -104,6 +112,8 @@ NNLS no negativo logra el mejor QLIKE (0.359), coincidiendo con FX/cripto. Sin e
 \includegraphics[width=\columnwidth]{figures_es/fig9_mecanismo_falla_nnls.pdf}
 \caption{Mecanismo de falla en lectores NNLS: predicción sin recortar frente a volatilidad realizada para gasolinas Superior y Regular, mostrando por qué pesos no negativos no aseguran no negatividad si los rezagos retienen signo.}
 \label{fig:fuel_failure}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Gráficos de líneas que comparan la volatilidad realizada frente a pronósticos NNLS no recortados para combustibles, ilustrando por qué coeficientes no negativos no evitan varianzas negativas si las características de entrada contienen rezagos con signo.
 \end{figure}
 
 % ======================================================================
@@ -116,6 +126,8 @@ NNLS no negativo logra el mejor QLIKE (0.359), coincidiendo con FX/cripto. Sin e
 \includegraphics[width=\columnwidth]{figures_es/fig_supp_lambda_selection.pdf}
 \caption{Trayectoria de validación temporal anidada para la selección de $\lambda$ en Lorenz63 (\S3 del texto principal), ilustrando el MAE de validación interna y el parámetro seleccionado en cada ventana.}
 \label{fig:lambda_selection}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Gráfico semilogarítmico del MAE mediano fuera de muestra en función del ratio de regularización de traza en Lorenz63. La distribución confirma un mínimo de error estable, validando la regla de selección proporcional a la traza.
 \end{figure}
 
 % ======================================================================
@@ -123,7 +135,7 @@ NNLS no negativo logra el mejor QLIKE (0.359), coincidiendo con FX/cripto. Sin e
 \label{sec:rossler}
 % ======================================================================
 
-Evaluamos los tres mecanismos de Lorenz63 en el atractor de R\"ossler:
+Evaluamos los tres mecanismos de Lorenz63 en el atractor de R\"ossler \cite{rossler1976equation}:
 \begin{equation}
 \dot x = -y - z, \quad \dot y = x + ay, \quad \dot z = b + z(x-c),
 \end{equation}
@@ -133,15 +145,17 @@ con parámetros estándar $a=b=0.2$, $c=5.7$ y submuestreo $\Delta t_{\text{feat
 \centering
 \caption{Verificación descriptiva en R\"ossler: réplica cualitativa de los tres mecanismos de Lorenz63.}
 \label{tab:rossler}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Tabla de evaluación mecanicista que compara MASE limpio y con shock, ratios de amplificación y horizontes de retención de pronóstico en Lorenz63 y Rössler, confirmando la réplica direccional de los tres fenómenos dinámicos.
 \begin{ruledtabular}
-\begin{tabular}{lll}
+\begin{tabular}{p{3.2cm}cc}
 Hallazgo & Lorenz63 & R\"ossler \\
 \midrule
-Pendiente log--log $M^4$ & 3.99 & 3.79 \\
-MASE mediano multipaso $H{=}10$ & & \\
-\quad Estático / ESN (acotado) & 0.43 / 0.74 & 0.26 / 0.58 \\
-\quad Ridge Legacy / OLS (no restringido) & 2.54 / 2.50 & 4.39 / 2.75 \\
-Tasa de victoria de filtrado por semilla & 100\% (todas) & 53\%--67\% (las 5 semillas $>$ 50\%) \\
+Pendiente log--log $M^4$ (solo Ridge) & 3.93 & 3.79 \\
+MASE mediano $H{=}10$ & & \\
+\quad Estático / ESN & 0.43 / 0.74 & 0.26 / 0.58 \\
+\quad Ridge Legacy / OLS & 2.54 / 2.50 & 4.39 / 2.75 \\
+Victoria filtrado de ruido & 100\% (todas) & 53\%--67\% \\
 \end{tabular}
 \end{ruledtabular}
 \end{table}
@@ -151,11 +165,26 @@ Tasa de victoria de filtrado por semilla & 100\% (todas) & 53\%--67\% (las 5 sem
 \includegraphics[width=\columnwidth]{figures_es/fig_rossler_m4.pdf}
 \caption{Mediana de $\lambda \propto \operatorname{tr}(\mathbf{F}^\top\mathbf{F})$ vs magnitud del shock $M$ en R\"ossler, escala log--log. La pendiente ajustada (3.79) confirma la generalidad del Teorema 1.}
 \label{fig:rossler_m4}
+\vspace{2pt}
+\noindent\textbf{Alt Text:} Gráfico log-log del parámetro de regularización proporcional a la traza frente a la amplitud del shock en el atractor de Rössler. La pendiente empírica de 3.79 respalda la ley de escalamiento de orden cuatro derivada teóricamente.
 \end{figure}
 
 A $H=10$, OLS sin regularizar diverge a MASE superior a $10^{15}$ bajo retroalimentación iterada en R\"ossler, ilustrando con nitidez la explosión de monomios no acotados.
 
 \section*{Disponibilidad de Datos y Código}
-Los datos y pipelines en Python que respaldan este suplemento están disponibles en el repositorio complementario y archivo de Zenodo.
+Los datos que respaldan los hallazgos de este estudio y los canales de reproducci\'on en Python est\'an disponibles a trav\'es del autor de correspondencia previa solicitud razonable. El repositorio de replicaci\'on completo y el archivo en Zenodo estar\'an disponibles p\'ublicamente tras la publicaci\'on.
+
+\begin{thebibliography}{9}
+
+\bibitem{ledoitwolf2004wellconditioned}
+O.~Ledoit and M.~Wolf, ``A well-conditioned estimator for large-dimensional covariance matrices,'' \emph{Journal of Multivariate Analysis}, vol.~88, no.~2, pp.~365--411, 2004, doi: 10.1016/S0047-259X(03)00096-4.
+
+\bibitem{dieboldmariano1995comparing}
+F.~X. Diebold and R.~S. Mariano, ``Comparing predictive accuracy,'' \emph{Journal of Business \& Economic Statistics}, vol.~13, no.~3, pp.~253--263, 1995, doi: 10.1080/07350015.1995.10524599.
+
+\bibitem{rossler1976equation}
+O.~E. R{\"o}ssler, ``An equation for continuous chaos,'' \emph{Physics Letters A}, vol.~57, no.~5, pp.~397--398, 1976, doi: 10.1016/0375-9601(76)90101-8.
+
+\end{thebibliography}
 
 \end{document}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.3.12)  16 AUG 2026 16:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (TeX Live 2025) (preloaded format=pdflatex 2026.3.12)  17 AUG 2026 07:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -394,61 +394,51 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figures/fig12_bcie_causal.pdf, id=30, 499.76901pt x 205.2098pt>
+<figures/fig12_bcie_causal.pdf, id=32, 483.4863pt x 216.81pt>
 File: figures/fig12_bcie_causal.pdf Graphic file (type pdf)
 <use figures/fig12_bcie_causal.pdf>
-Package pdftex.def Info: figures/fig12_bcie_causal.pdf  used on input line 57.
-(pdftex.def)             Requested size: 246.0pt x 101.00769pt.
+Package pdftex.def Info: figures/fig12_bcie_causal.pdf  used on input line 59.
+(pdftex.def)             Requested size: 510.0pt x 228.70592pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figures/fig7_combustibles_precios.pdf, id=31, 499.42587pt x 218.64296pt>
+<figures/fig7_combustibles_precios.pdf, id=33, 483.4863pt x 231.26399pt>
 File: figures/fig7_combustibles_precios.pdf Graphic file (type pdf)
 <use figures/fig7_combustibles_precios.pdf>
-Package pdftex.def Info: figures/fig7_combustibles_precios.pdf  used on input line 95.
-(pdftex.def)             Requested size: 246.0pt x 107.69646pt.
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<figures/fig9_mecanismo_falla_nnls.pdf, id=32, 234.67361pt x 193.54892pt>
+Package pdftex.def Info: figures/fig7_combustibles_precios.pdf  used on input line 101.
+(pdftex.def)             Requested size: 510.0pt x 243.95297pt.
+<figures/fig9_mecanismo_falla_nnls.pdf, id=34, 243.5499pt x 202.356pt>
 File: figures/fig9_mecanismo_falla_nnls.pdf Graphic file (type pdf)
 <use figures/fig9_mecanismo_falla_nnls.pdf>
-Package pdftex.def Info: figures/fig9_mecanismo_falla_nnls.pdf  used on input line 104.
-(pdftex.def)             Requested size: 246.0pt x 202.88976pt.
+Package pdftex.def Info: figures/fig9_mecanismo_falla_nnls.pdf  used on input line 112.
+(pdftex.def)             Requested size: 246.0pt x 204.39337pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<figures/fig_supp_lambda_selection.pdf, id=33, 240.29524pt x 192.81754pt>
+<figures/fig_supp_lambda_selection.pdf, id=35, 243.5499pt x 209.58301pt>
 File: figures/fig_supp_lambda_selection.pdf Graphic file (type pdf)
 <use figures/fig_supp_lambda_selection.pdf>
-Package pdftex.def Info: figures/fig_supp_lambda_selection.pdf  used on input line 116.
-(pdftex.def)             Requested size: 246.0pt x 197.40385pt.
-[1{c:/ProgramData/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/ProgramData/TinyTeX/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc} <./figures/fig12_bcie_causal.pdf>]
-
-LaTeX Warning: A float is stuck (cannot be placed); try class option [floatfix] on input line 120.
-
+Package pdftex.def Info: figures/fig_supp_lambda_selection.pdf  used on input line 126.
+(pdftex.def)             Requested size: 246.0pt x 211.69315pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-
-Overfull \hbox (111.16518pt too wide) in alignment at lines 137--145
- [] [] [] 
+[1{c:/ProgramData/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{c:/ProgramData/TinyTeX/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}]
+Underfull \hbox (badness 10000) in paragraph at lines 154--154
+[]$\OML/cmm/m/it/9 M[]$ \T1/cmr/m/n/9 log--log slope
  []
 
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-<figures/fig_rossler_m4.pdf, id=114, 240.82967pt x 197.90762pt>
+<figures/fig_rossler_m4.pdf, id=67, 243.5499pt x 202.356pt>
 File: figures/fig_rossler_m4.pdf Graphic file (type pdf)
 <use figures/fig_rossler_m4.pdf>
-Package pdftex.def Info: figures/fig_rossler_m4.pdf  used on input line 151.
-(pdftex.def)             Requested size: 246.0pt x 202.156pt.
+Package pdftex.def Info: figures/fig_rossler_m4.pdf  used on input line 165.
+(pdftex.def)             Requested size: 246.0pt x 204.39337pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
+[2 <./figures/fig12_bcie_causal.pdf>]
 No file supplementary.bbl.
-No file supplementary.bbl.
-[2 <./figures/fig7_combustibles_precios.pdf> <./figures/fig9_mecanismo_falla_nnls.pdf> <./figures/fig_supp_lambda_selection.pdf>] [3 <./figures/fig_rossler_m4.pdf>] (./supplementary.aux)
+[3 <./figures/fig7_combustibles_precios.pdf>] [4 <./figures/fig9_mecanismo_falla_nnls.pdf> <./figures/fig_supp_lambda_selection.pdf>] [5 <./figures/fig_rossler_m4.pdf>] (./supplementary.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-29>
@@ -457,18 +447,18 @@ Package rerunfilecheck Info: File `supplementary.out' has not changed.
 (rerunfilecheck)             Checksum: 653152653360CCB32344645E2D6D0D63;2256.
  ) 
 Here is how much of TeX's memory you used:
- 12258 strings out of 469460
- 180902 string characters out of 5467890
- 628086 words of memory out of 5000000
- 40736 multiletter control sequences out of 15000+600000
- 651340 words of font info for 100 fonts, out of 8000000 for 9000
+ 12281 strings out of 469460
+ 181488 string characters out of 5467890
+ 631405 words of memory out of 5000000
+ 40753 multiletter control sequences out of 15000+600000
+ 652026 words of font info for 101 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 75i,9n,79p,825b,530s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfss1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfsx0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb>
-Output written on supplementary.pdf (3 pages, 422967 bytes).
+ 75i,8n,79p,825b,530s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfbx1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0600.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0700.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0800.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfss1000.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfsx0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti0800.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sfti0900.pfb><c:/ProgramData/TinyTeX/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb>
+Output written on supplementary.pdf (5 pages, 479833 bytes).
 PDF statistics:
- 462 PDF objects out of 1000 (max. 8388607)
- 163 compressed objects within 2 object streams
- 19 named destinations out of 1000 (max. 500000)
+ 487 PDF objects out of 1000 (max. 8388607)
+ 181 compressed objects within 2 object streams
+ 24 named destinations out of 1000 (max. 500000)
  74 words of extra memory for PDF output out of 10000 (max. 10000000)
 

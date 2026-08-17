@@ -35,10 +35,11 @@ from modelos_volatilidad import (
     predict_ssrc_log,
     qlike,
 )
+from data_paths import resolve_fuel_repository
 
 warnings.filterwarnings("ignore")
 
-REPO = Path(r"D:\2026\Tesis2026\Datos_Combustibles_Honduras\repositorio_combustibles_honduras.csv")
+REPO = resolve_fuel_repository()
 OUT = Path(__file__).resolve().parent / "output"
 FUELS = ["Súper", "Regular", "Diesel", "Kerosene"]
 K = 3

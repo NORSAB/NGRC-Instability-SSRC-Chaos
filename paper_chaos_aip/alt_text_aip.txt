@@ -1,0 +1,43 @@
+# AIP CHAOS ALT-TEXT METADATA SUBMISSION FILE
+
+Fig 1 (fig1_ridge_scaling):
+Log-log scatter plot of optimal Ridge regularization parameter \lambda^* against shock magnitude M \in \{5, 10, 15, 20, 30\}\sigma. Shows an empirical power-law slope of approximately 3.93, corroborating the theoretical bound of O(M^4) for out-of-manifold perturbations.
+
+Fig 2 (fig2_shock_geometry):
+Two-dimensional (x, z) phase portrait of the Lorenz63 chaotic attractor. The nominal trajectory is shown in blue, and an exogenous +15\sigma perturbation at x \approx 120.6, z \approx 20.5 forces the trajectory out of the manifold into transient non-ergodic space.
+
+Fig 3 (fig3_horizon_decay):
+Semi-log plot of multi-step Mean Absolute Scaled Error (MASE) across forecasting horizons \tau \in [0, 1.8] (H = 1 to 40) for Lorenz63 under +15\sigma shocks. Regularized readouts (L1, SCAD, Elastic Net) retain forecast accuracy significantly longer than OLS and Ridge.
+
+Fig 4 (fig4_floor_sensitivity):
+Log-log plot of median QLIKE loss versus numerical positivity floor \epsilon \in [10^{-12}, 10^{-6}] across nine financial return series. Ridge exhibits extreme degradation as \epsilon \to 0, whereas structurally non-negative NNLS remains constant at 1.4498 for \epsilon \le 10^{-8} and shifts slightly to 1.2244 at \epsilon = 10^{-6}.
+
+Fig S1 (figS1_bcie_mase):
+Horizontal bar chart comparing out-of-sample forecasting accuracy (MASE) across nine statistical, reservoir, and penalized regression architectures on the BCIE multilateral loan dataset. Regularized non-negative readouts achieve the lowest MASE while eliminating economically invalid negative loan volume predictions.
+
+Fig S2 (figS2_fuel_prices):
+Time series plot of weekly retail fuel prices in Honduras (2017–2026) for Super gasoline, Regular gasoline, Diesel, and Kerosene. Four shaded intervals highlight major global economic shock episodes, including the 2020 pandemic crash and 2022 international energy price volatility.
+
+Fig S3 (figS3_fuel_volatility_may2020):
+Bar chart comparing realized daily volatility against out-of-sample forecasts for May 11, 2020, during the negative oil pricing shock. Unconstrained linear readouts produce unphysical negative volatility values, while non-negative regularized methods successfully preserve strict variance positivity.
+
+Fig S4 (figS4_ratio_sensitivity):
+Semi-log plot illustrating median out-of-sample MAE as a function of trace regularization ratio candidates on the Lorenz63 benchmark. The distribution confirms a stable minimum error region, validating the automatic trace-proportional hyperparameter selection rule under varying shock intensities.
+
+Fig S5 (figS5_rossler_scaling):
+Log-log plot of optimal trace-proportional regularization parameter \lambda against shock amplitude M for the Rössler chaotic attractor. The empirical slope of 3.79 closely aligns with the O(M^4) theoretical scaling law derived for out-of-manifold state disturbances.
+
+Table I (table1_ablation):
+Ablation study reporting clean MASE, shocked MASE under +15\sigma perturbations, pairwise win rates, and 95% bootstrap confidence intervals across ten readout configurations on the Lorenz63 system. Penalized methods consistently outperform unregularized OLS and standard Ridge regression.
+
+Table II (table2_volatility):
+Empirical volatility forecasting benchmark reporting median QLIKE loss and the percentage of negative variance estimates across nine foreign exchange and cryptocurrency time series. Non-negative penalized readouts maintain zero invalid forecasts and minimize divergence compared to unconstrained models.
+
+Table S1 (tableS1_bcie_comparison):
+Performance comparison table reporting out-of-sample MASE and Diebold-Mariano test p-values relative to baseline models across eight financial forecasting architectures on the BCIE multilateral lending portfolio. Regularized and non-negative configurations achieve statistically significant forecast gains.
+
+Table S2 (tableS2_fuel_comparison):
+Comparative evaluation table of volatility models for Honduras retail fuel price series reporting QLIKE, MASE, and negative prediction percentages. Unregularized OLS produces 13.7% negative forecasts and Ridge produces 0.9%, whereas non-negative readouts eliminate negative predictions entirely.
+
+Table S3 (tableS3_mechanistic_comparison):
+Mechanistic evaluation table comparing clean and shocked MASE, shock amplification ratios, and forecast retention horizons across six candidate readout mechanisms on Lorenz63 and Rössler attractors. Demonstrates structural stability gains achieved through targeted L1 and sparsity penalties.

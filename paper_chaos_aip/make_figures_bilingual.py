@@ -8,6 +8,7 @@ Garantiza que:
 3. Todas las figuras esten disponibles tanto en figures/ como en figures_es/.
 """
 from pathlib import Path
+import sys
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -17,6 +18,16 @@ import pandas as pd
 
 HERE = Path(__file__).resolve().parent
 BASE = HERE.parent
+FUEL_CODE = BASE / "experimento_combustibles_honduras"
+if str(FUEL_CODE) not in sys.path:
+    sys.path.insert(0, str(FUEL_CODE))
+
+from data_paths import resolve_fuel_repository
+
+try:
+    from .figure_calculations import ridge_trace_scaling
+except ImportError:
+    from figure_calculations import ridge_trace_scaling
 
 OUT_EN = HERE / "figures"
 OUT_ES = HERE / "figures_es"
@@ -38,22 +49,20 @@ plt.rcParams.update({
     "font.family": "serif",
 })
 
-W_SINGLE = 3.4   # Ancho columna individual AIP (pulgadas)
-W_DOUBLE = 7.0   # Ancho doble columna AIP (pulgadas)
+W_SINGLE = 3.37  # Maximo AIP para una columna (pulgadas)
+W_DOUBLE = 6.69  # Maximo AIP para dos columnas (pulgadas)
+MIN_FONT_PT = 8.5
 
 
 def save_bilingual(fig_en, fig_es, filename_base):
-    # Guardar version en ingles (PDF y PNG)
-    fig_en.tight_layout()
-    fig_en.savefig(OUT_EN / f"{filename_base}.pdf", bbox_inches="tight", dpi=600)
-    fig_en.savefig(OUT_EN / f"{filename_base}.png", bbox_inches="tight", dpi=600)
-    plt.close(fig_en)
-
-    # Guardar version en espanol (PDF y PNG)
-    fig_es.tight_layout()
-    fig_es.savefig(OUT_ES / f"{filename_base}.pdf", bbox_inches="tight", dpi=600)
-    fig_es.savefig(OUT_ES / f"{filename_base}.png", bbox_inches="tight", dpi=600)
-    plt.close(fig_es)
+    # El lienzo se conserva a su ancho AIP exacto. Un bounding box ajustado
+    # puede expandir el PDF por leyendas externas y provocar una reduccion
+    # tipografica posterior al insertarlo en LaTeX.
+    for fig, out_dir in ((fig_en, OUT_EN), (fig_es, OUT_ES)):
+        fig.tight_layout(pad=0.4)
+        fig.savefig(out_dir / f"{filename_base}.pdf", dpi=600)
+        fig.savefig(out_dir / f"{filename_base}.png", dpi=600)
+        plt.close(fig)
     print(f"  [OK] {filename_base}.pdf (EN & ES) generado a 600 DPI.")
 
 
@@ -66,39 +75,35 @@ grid_file = BASE / "experimento_lorenz/output/oos_grid_shocks.csv"
 if not grid_file.exists():
     raise FileNotFoundError(f"Falta archivo requerido: {grid_file}")
 grid = pd.read_csv(grid_file)
-grid_shock = grid.dropna(subset=["lambda_traza_legacy"])
-grid_shock = grid_shock[grid_shock["ventana_incluye_shock"]]
-med_by_mag = grid_shock.groupby("magnitud_sigma")["lambda_traza_legacy"].median().sort_index()
-M_vals = med_by_mag.index.values.astype(float)
-lam_vals = med_by_mag.values.astype(float)
-
-n_fit = min(3, len(M_vals))
-fit_idx = np.argsort(M_vals)[-n_fit:]
-slope, intercept = np.polyfit(np.log(M_vals[fit_idx]), np.log(lam_vals[fit_idx]), 1)
-fit_M = np.array([M_vals[fit_idx].min(), M_vals[fit_idx].max()])
+ridge_scaling = ridge_trace_scaling(grid)
+M_vals = ridge_scaling.magnitudes
+lam_vals = ridge_scaling.lambdas
+slope = ridge_scaling.slope
+intercept = ridge_scaling.intercept
+fit_M = np.array([M_vals[-3:].min(), M_vals[-3:].max()])
 fit_line = np.exp(intercept) * fit_M ** slope
 
 # Version Ingles
-fig_en, ax = plt.subplots(figsize=(W_SINGLE * 1.5, 2.9))
-ax.plot(M_vals, lam_vals, marker="o", ms=4.5, lw=1.5, color="#4C72B0", label=r"Median $\lambda$ (shock window)")
+fig_en, ax = plt.subplots(figsize=(W_SINGLE, 2.9))
+ax.plot(M_vals, lam_vals, marker="o", ms=4.5, lw=1.5, color="#4C72B0", label=r"Ridge median $\lambda$")
 ax.plot(fit_M, fit_line, ls="--", color="#C44E52", lw=1.5, label=fr"Power-law fit, slope $\approx {slope:.2f}$")
 ax.set_xscale("log")
 ax.set_yscale("log")
 ax.set_xlabel(r"Shock magnitude $M$ ($\sigma$)")
-ax.set_ylabel(r"Trace-proportional $\lambda = \gamma\,\mathrm{tr}(F^\top F)/D$", fontsize=8.5)
-ax.set_title("Quartic trace inflation under localized outlier shocks", fontsize=9.5, pad=8)
-ax.legend(loc="upper left", frameon=False, fontsize=8.5)
+ax.set_ylabel(r"Trace-proportional $\lambda$")
+ax.set_title("Quartic trace inflation", fontsize=9.5, pad=8)
+ax.legend(loc="upper left", frameon=False, fontsize=MIN_FONT_PT)
 
 # Version Espanol
-fig_es, ax = plt.subplots(figsize=(W_SINGLE * 1.5, 2.9))
-ax.plot(M_vals, lam_vals, marker="o", ms=4.5, lw=1.5, color="#4C72B0", label=r"Mediana $\lambda$ (ventana con shock)")
+fig_es, ax = plt.subplots(figsize=(W_SINGLE, 2.9))
+ax.plot(M_vals, lam_vals, marker="o", ms=4.5, lw=1.5, color="#4C72B0", label=r"Mediana Ridge de $\lambda$")
 ax.plot(fit_M, fit_line, ls="--", color="#C44E52", lw=1.5, label=fr"Ajuste ley potencia, pend. $\approx {slope:.2f}$")
 ax.set_xscale("log")
 ax.set_yscale("log")
 ax.set_xlabel(r"Magnitud del shock $M$ ($\sigma$)")
-ax.set_ylabel(r"$\lambda = \gamma\,\mathrm{tr}(F^\top F)/D$ proporcional a la traza", fontsize=8.5)
-ax.set_title("Inflación cuártica de traza ante shocks exógenos", fontsize=9.5, pad=8)
-ax.legend(loc="upper left", frameon=False, fontsize=8.5)
+ax.set_ylabel(r"$\lambda$ proporcional a la traza")
+ax.set_title("Inflación cuártica de traza", fontsize=9.5, pad=8)
+ax.legend(loc="upper left", frameon=False, fontsize=MIN_FONT_PT)
 
 save_bilingual(fig_en, fig_es, "fig5_ridge_fragilidad")
 
@@ -155,30 +160,34 @@ if not lyap_csv.exists():
 df_lyap = pd.read_csv(lyap_csv)
 
 # Version Ingles
-fig_en, ax = plt.subplots(figsize=(W_SINGLE * 1.5, 3.0))
-ax.plot(df_lyap["tau_lyapunov"], df_lyap["static_lag_median"], marker="o", ms=4, lw=1.5, color="#55A868", label="Static tanh ($W_{\\mathrm{res}}=0$)")
-ax.plot(df_lyap["tau_lyapunov"], df_lyap["esn_lag_median"], marker="s", ms=4, lw=1.5, color="#4C72B0", label="Recurrent ESN-lag")
+fig_en, ax = plt.subplots(figsize=(W_SINGLE, 4.0))
+ax.plot(df_lyap["tau_lyapunov"], df_lyap["static_lag_median"], marker="o", ms=4, lw=1.5, color="#55A868", label="Static tanh")
+ax.plot(df_lyap["tau_lyapunov"], df_lyap["esn_lag_median"], marker="s", ms=4, lw=1.5, color="#4C72B0", label="Recurrent ESN")
 ax.plot(df_lyap["tau_lyapunov"], df_lyap["ridge_median"], marker="^", ms=4, lw=1.5, color="#C44E52", label="Ridge NG-RC")
 ax.plot(df_lyap["tau_lyapunov"], df_lyap["ols_median"], marker="v", ms=4, lw=1.2, ls="--", color="#DD8452", label="OLS NG-RC")
-ax.axhline(1.0, color="#8C8C8C", ls=":", lw=1, label="Naive baseline (MASE=1)")
+ax.axhline(1.0, color="#8C8C8C", ls=":", lw=1, label="Naive (MASE=1)")
 ax.set_yscale("log")
-ax.set_xlabel(r"Forecast horizon $\tau$ (Lyapunov times, $\lambda_{\max} \approx 0.91$)")
+ax.set_xlabel("Forecast horizon $\\tau$\n" r"(Lyapunov times; $\lambda_{\max} \approx 0.91$)")
 ax.set_ylabel("Median OOS MASE")
-ax.set_title("Lorenz63: Iterated Multistep Stability", fontsize=9.5)
-ax.legend(loc="upper left", frameon=False, fontsize=8.5)
+ax.set_title("Lorenz63: Multistep Stability", fontsize=9.5)
+ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.32), ncol=2,
+          frameon=False, fontsize=MIN_FONT_PT, columnspacing=0.8,
+          handlelength=1.5, handletextpad=0.4)
 
 # Version Espanol
-fig_es, ax = plt.subplots(figsize=(W_SINGLE * 1.5, 3.0))
-ax.plot(df_lyap["tau_lyapunov"], df_lyap["static_lag_median"], marker="o", ms=4, lw=1.5, color="#55A868", label="tanh estática ($W_{\\mathrm{res}}=0$)")
+fig_es, ax = plt.subplots(figsize=(W_SINGLE, 4.0))
+ax.plot(df_lyap["tau_lyapunov"], df_lyap["static_lag_median"], marker="o", ms=4, lw=1.5, color="#55A868", label="tanh estática")
 ax.plot(df_lyap["tau_lyapunov"], df_lyap["esn_lag_median"], marker="s", ms=4, lw=1.5, color="#4C72B0", label="ESN recurrente")
 ax.plot(df_lyap["tau_lyapunov"], df_lyap["ridge_median"], marker="^", ms=4, lw=1.5, color="#C44E52", label="Ridge NG-RC")
 ax.plot(df_lyap["tau_lyapunov"], df_lyap["ols_median"], marker="v", ms=4, lw=1.2, ls="--", color="#DD8452", label="OLS NG-RC")
-ax.axhline(1.0, color="#8C8C8C", ls=":", lw=1, label="Referencia ingenua (MASE=1)")
+ax.axhline(1.0, color="#8C8C8C", ls=":", lw=1, label="Ingenua (MASE=1)")
 ax.set_yscale("log")
-ax.set_xlabel(r"Horizonte de pronóstico $\tau$ (tiempos de Lyapunov, $\lambda_{\max} \approx 0.91$)")
+ax.set_xlabel("Horizonte de pronóstico $\\tau$\n" r"(tiempos de Lyapunov; $\lambda_{\max} \approx 0.91$)")
 ax.set_ylabel("MASE OOS Mediano")
-ax.set_title("Lorenz63: Estabilidad de Pronóstico Multipaso", fontsize=9.5)
-ax.legend(loc="upper left", frameon=False, fontsize=8.5)
+ax.set_title("Lorenz63: Estabilidad Multipaso", fontsize=9.5)
+ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.32), ncol=2,
+          frameon=False, fontsize=MIN_FONT_PT, columnspacing=0.8,
+          handlelength=1.5, handletextpad=0.4)
 
 save_bilingual(fig_en, fig_es, "fig_lyapunov_curve")
 
@@ -199,33 +208,79 @@ floor_cols = {
 med_by_mode = df_uni.groupby("mode")[list(floor_cols.keys())].median()
 floors = list(floor_cols.values())
 
+# Cada modo representa un metodo distinto y conserva etiqueta y color unicos.
+labels_en = {
+    "ewma_0.94": "EWMA (.94)",
+    "garch_11": "GARCH(1,1)",
+    "gjr_garch_11": "GJR-GARCH(1,1)",
+    "naive": "Naive",
+    "nnls_nonneg": "NNLS non-neg.",
+    "nnls_signed_clip_legacy": "NNLS signed",
+    "ols_clip_legacy": "OLS legacy",
+    "ridge_clip": "Ridge legacy",
+    "log_ridge": "Log-Ridge",
+    "softplus_ridge": "Softplus",
+    "ssrc_log": "ESN log",
+}
+labels_es = {
+    "ewma_0.94": "EWMA (.94)",
+    "garch_11": "GARCH(1,1)",
+    "gjr_garch_11": "GJR-GARCH(1,1)",
+    "naive": "Ingenua",
+    "nnls_nonneg": "NNLS no neg.",
+    "nnls_signed_clip_legacy": "NNLS con signo",
+    "ols_clip_legacy": "OLS legado",
+    "ridge_clip": "Ridge legado",
+    "log_ridge": "Ridge log",
+    "softplus_ridge": "Softplus",
+    "ssrc_log": "ESN log",
+}
+colors = {
+    "ewma_0.94": "#8C8C8C",
+    "garch_11": "#B0B0B0",
+    "gjr_garch_11": "#6E6E6E",
+    "naive": "#D0D0D0",
+    "nnls_nonneg": "#55A868",
+    "nnls_signed_clip_legacy": "#B07AA1",
+    "ols_clip_legacy": "#E187A6",
+    "ridge_clip": "#C44E52",
+    "log_ridge": "#DD8452",
+    "softplus_ridge": "#937860",
+    "ssrc_log": "#4C72B0",
+}
+highlight = {"nnls_nonneg", "ridge_clip", "ssrc_log"}
+
+
+def _plot(ax, labels_map):
+    for m, row in med_by_mode.iterrows():
+        lw = 1.8 if m in highlight else 1.1
+        marker = "s" if m == "nnls_nonneg" else "o"
+        ax.plot(floors, row.values, marker=marker, ms=4, lw=lw, color=colors[m], label=labels_map[m])
+
+
 # Version Ingles
-fig_en, ax = plt.subplots(figsize=(W_SINGLE * 1.55, 3.2))
-for m, row in med_by_mode.iterrows():
-    label = "Ridge NG-RC" if "ridge" in m else ("Non-negative NNLS" if "nonneg" in m else ("Sparse ESN (log)" if "ssrc" in m else m))
-    color = "#C44E52" if "ridge" in m else ("#55A868" if "nonneg" in m else ("#4C72B0" if "ssrc" in m else "#8C8C8C"))
-    lw = 1.8 if "nonneg" in m or "ridge" in m else 1.2
-    ax.plot(floors, row.values, marker="s" if "nonneg" in m else "o", ms=4, lw=lw, color=color, label=label)
+fig_en, ax = plt.subplots(figsize=(W_SINGLE, 5.0))
+_plot(ax, labels_en)
 ax.set_xscale("log")
 ax.set_yscale("log")
-ax.set_xlabel(r"Positivity floor $\epsilon$ used by QLIKE")
+ax.set_xlabel(r"QLIKE positivity floor $\epsilon$")
 ax.set_ylabel("Median QLIKE")
-ax.set_title("Sensitivity of QLIKE to Numerical Floor (FX/crypto)", fontsize=9.5)
-ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=2, frameon=False, fontsize=8.5)
+ax.set_title("QLIKE Sensitivity to Positivity Floor", fontsize=9.5)
+ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.30), ncol=2,
+          frameon=False, fontsize=MIN_FONT_PT, columnspacing=0.45,
+          handlelength=1.3, handletextpad=0.35)
 
 # Version Espanol
-fig_es, ax = plt.subplots(figsize=(W_SINGLE * 1.55, 3.2))
-for m, row in med_by_mode.iterrows():
-    label = "Ridge NG-RC" if "ridge" in m else ("NNLS No Negativo" if "nonneg" in m else ("ESN Disperso (log)" if "ssrc" in m else m))
-    color = "#C44E52" if "ridge" in m else ("#55A868" if "nonneg" in m else ("#4C72B0" if "ssrc" in m else "#8C8C8C"))
-    lw = 1.8 if "nonneg" in m or "ridge" in m else 1.2
-    ax.plot(floors, row.values, marker="s" if "nonneg" in m else "o", ms=4, lw=lw, color=color, label=label)
+fig_es, ax = plt.subplots(figsize=(W_SINGLE, 5.0))
+_plot(ax, labels_es)
 ax.set_xscale("log")
 ax.set_yscale("log")
-ax.set_xlabel(r"Piso numérico $\epsilon$ empleado en QLIKE")
+ax.set_xlabel(r"Piso positivo $\epsilon$ de QLIKE")
 ax.set_ylabel("QLIKE Mediana")
-ax.set_title("Sensibilidad de QLIKE al Piso Numérico (FX/cripto)", fontsize=9.5)
-ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=2, frameon=False, fontsize=8.5)
+ax.set_title("Sensibilidad de QLIKE al Piso Positivo", fontsize=9.5)
+ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.30), ncol=2,
+          frameon=False, fontsize=MIN_FONT_PT, columnspacing=0.45,
+          handlelength=1.3, handletextpad=0.35)
 
 save_bilingual(fig_en, fig_es, "fig13_qlike_piso_fx")
 
@@ -278,7 +333,7 @@ if bcie_file.exists():
 # =========================================================================
 # 6. FIGURA: Precios Semanales de Combustibles Honduras - fig7_combustibles_precios
 # =========================================================================
-repo_file = Path(r"D:\2026\Tesis2026\Datos_Combustibles_Honduras\repositorio_combustibles_honduras.csv")
+repo_file = resolve_fuel_repository()
 if repo_file.exists():
     df_fuel = pd.read_csv(repo_file, encoding="utf-8-sig")
     df_fuel["FechaInicioISO"] = pd.to_datetime(df_fuel["FechaInicioISO"], errors="coerce")
@@ -312,7 +367,7 @@ if repo_file.exists():
     handles = [plt.Line2D([0], [0], color=c, lw=5) for c in ["#374649", "#982C33", "#3f6c3e", "#134966"]]
     handles += [plt.Rectangle((0, 0), 1, 1, color=EVENTS_EN[n][2], alpha=0.3) for n in EVENTS_EN]
     labels_h_en = ["Super", "Regular", "Diesel", "Kerosene"] + list(EVENTS_EN.keys())
-    ax.legend(handles, labels_h_en, loc="upper center", bbox_to_anchor=(0.5, -0.18), ncol=4, frameon=False, fontsize=8.5)
+    ax.legend(handles, labels_h_en, loc="upper center", bbox_to_anchor=(0.5, -0.18), ncol=4, frameon=False, fontsize=MIN_FONT_PT)
 
     # Version Espanol
     fig_es, ax = plt.subplots(figsize=(W_DOUBLE, 3.2))
@@ -329,7 +384,7 @@ if repo_file.exists():
     handles = [plt.Line2D([0], [0], color=c, lw=5) for c in ["#374649", "#982C33", "#3f6c3e", "#134966"]]
     handles += [plt.Rectangle((0, 0), 1, 1, color=EVENTS_ES[n][2], alpha=0.3) for n in EVENTS_ES]
     labels_h_es = ["Súper", "Regular", "Diésel", "Kerosene"] + list(EVENTS_ES.keys())
-    ax.legend(handles, labels_h_es, loc="upper center", bbox_to_anchor=(0.5, -0.18), ncol=4, frameon=False, fontsize=8.5)
+    ax.legend(handles, labels_h_es, loc="upper center", bbox_to_anchor=(0.5, -0.18), ncol=4, frameon=False, fontsize=MIN_FONT_PT)
 
     save_bilingual(fig_en, fig_es, "fig7_combustibles_precios")
 
@@ -357,7 +412,7 @@ if neg_file.exists():
     ax.set_xticklabels(["Super" if f == "S\u00faper" else f for f in fuels_order])
     ax.set_ylabel("Realized volatility")
     ax.set_title("Week 2020-05-11: NNLS failure", fontsize=9.5)
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=1, frameon=False, fontsize=8.5)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=1, frameon=False, fontsize=MIN_FONT_PT)
 
     # Version Espanol
     fig_es, ax = plt.subplots(figsize=(W_SINGLE, 2.9))
@@ -368,7 +423,7 @@ if neg_file.exists():
     ax.set_xticklabels(["Súper" if f == "S\u00faper" else f for f in fuels_order])
     ax.set_ylabel("Volatilidad realizada")
     ax.set_title("Semana 2020-05-11: falla de NNLS", fontsize=9.5)
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=1, frameon=False, fontsize=8.5)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=1, frameon=False, fontsize=MIN_FONT_PT)
 
     save_bilingual(fig_en, fig_es, "fig9_mecanismo_falla_nnls")
 
@@ -392,7 +447,7 @@ if lam_file.exists():
     ax.set_xlabel(r"Regularization ratio $\lambda / \lambda_{\mathrm{scale}}$")
     ax.set_ylabel("Median OOS MAE")
     ax.set_title("Lorenz63: Nested Temporal Selection", fontsize=9.5)
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=1, frameon=False, fontsize=8.5)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=1, frameon=False, fontsize=MIN_FONT_PT)
 
     # Version Espanol
     fig_es, ax = plt.subplots(figsize=(W_SINGLE, 2.9))
@@ -404,7 +459,7 @@ if lam_file.exists():
     ax.set_xlabel(r"Razón de regularización $\lambda / \lambda_{\mathrm{escala}}$")
     ax.set_ylabel("MAE OOS mediano")
     ax.set_title("Lorenz63: Selección Temporal Anidada", fontsize=9.5)
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=1, frameon=False, fontsize=8.5)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=1, frameon=False, fontsize=MIN_FONT_PT)
 
     save_bilingual(fig_en, fig_es, "fig_supp_lambda_selection")
 

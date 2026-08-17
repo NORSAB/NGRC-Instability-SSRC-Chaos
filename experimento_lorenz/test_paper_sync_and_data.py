@@ -57,8 +57,8 @@ class TestLaTeXBilingualParity:
         main_es = (CHAOS_DIR / "main_es.tex").read_text(encoding="utf-8")
 
         key_numbers = [
-            "0.0292", "0.0154", "0.2397", "0.2406", "0.242",
-            "0.3633", "0.3983", "0.927", "1.131",
+            "0.0292", "0.0154", "0.2391", "0.2406", "0.242",
+            "0.3628", "0.3987", "0.927", "1.131",
             "2.359", "2.383", "2.456", "2.565", "3.472", "14.33"
         ]
         for num in key_numbers:
@@ -121,3 +121,31 @@ class TestTableReproductionFromCSVs:
 
         esn = df[df["mode"] == "ssrc_log"].iloc[0]
         assert np.isclose(esn["median_of_per_series_means"], 14.33, atol=0.05)
+
+    def test_lorenz_table1_values_match_csv(self):
+        """Guarda contra el drift silencioso detectado por auditoria externa (Codex, 16-ago-2026):
+        Table I en main.tex tenía medianas ESN-lag/Ridge/OLS desincronizadas de
+        lorenz_rigorous_summary.csv por ~0.0005-0.001 en la 3a-4a cifra decimal.
+        Esta prueba usa el CSV auditado como fuente canonica unica y falla si
+        alguien vuelve a copiar valores a mano sin regenerar la tabla."""
+        csv_p = BASE / "experimento_lorenz/output/lorenz_rigorous_summary.csv"
+        assert csv_p.exists(), "Falta lorenz_rigorous_summary.csv"
+        df = pd.read_csv(csv_p)
+
+        main_en = (CHAOS_DIR / "main.tex").read_text(encoding="utf-8")
+        main_es = (CHAOS_DIR / "main_es.tex").read_text(encoding="utf-8")
+
+        for _, r in df.iterrows():
+            for col, ndig in [
+                ("ssrc_lag_median", 4), ("static_lag_median", 4),
+                ("ridge_median", 4), ("ols_median", 4),
+            ]:
+                expected = f"{r[col]:.{ndig}f}"
+                assert expected in main_en, (
+                    f"{r['regime']} H={r['horizon']} col={col}: "
+                    f"{expected} (del CSV vigente) no aparece en main.tex - Table I desincronizada"
+                )
+                assert expected in main_es, (
+                    f"{r['regime']} H={r['horizon']} col={col}: "
+                    f"{expected} (del CSV vigente) no aparece en main_es.tex - Table I desincronizada"
+                )
