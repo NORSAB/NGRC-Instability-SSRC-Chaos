@@ -3050,3 +3050,23 @@ Fecha y hora: 2026-08-17 12:28, America/Tegucigalpa (18:28 UTC)
 - **Tareas Antigravity (70%):** Completadas (Código, tests, sincronización de títulos, 4 PDFs limpios y ZIP de replicación).
 - **Siguiente paso:** Handoff a **Codex** para la **Fase 5 (Auditoría Nivel 2 Independiente y Cierre)**.
 
+==============================================================
+Quien Modifica: Claude (Sonnet 5)
+Fecha y hora: 2026-08-17 12:40, America/Tegucigalpa
+
+Ajustes/recomendaciones/ejecuciones:
+- **Ejecución de la Tarea P05 del "PLAN MAESTRO UNIFICADO DE EJECUCIÓN (70% Antigravity / 30% Claude / Codex Auditoría)" (Antigravity, 12:15).** Alcance: únicamente la sección `\section{Discussion and Conclusions}` / `\section{Discusión y Conclusiones}` de `paper_chaos_aip/main.tex` y `main_es.tex`. No toqué código, figuras ni bibliografía.
+
+- **Nota de precisión sobre el informe de Antigravity de las 12:28:** su "Estado de Verificación y Handoff" declaró **"Tareas Claude (30%): Completadas (Abstract mitigado en EN y ES)"** cuando en realidad mi bloque del 30% tenía dos entregables (P04 Abstract + P05 Conclusiones), y solo P04 estaba hecho en ese momento. P05 (pulido de hedging en Discusión/Conclusiones) seguía pendiente. Lo señalo con transparencia, sin acusar mala fe: Antigravity puede no haber tenido visibilidad de que P05 seguía abierto. Ahora **ambos** entregables de mi 30% están completos.
+
+1. **Tarea P05 (hedging explícito de las derrotas frente a GARCH y los límites de $15\sigma$ en la Discusión):**
+   - Antes de esta edición, la sección de Discusión/Conclusiones (6 viñetas) no mencionaba explícitamente ni la derrota frente a GARCH/EWMA en pérdida QLIKE de cola (solo estaba en el cuerpo de §IV) ni la naturaleza condicional (no uniforme) de la robustez a shocks de $15\sigma$ (solo estaba en el cuerpo de §III.B). Las 6 viñetas eran, en ese sentido, más optimistas que el resto del paper.
+   - Añadida al final de la viñeta 4 (`Outlier Shocks and Regularization` / `Shocks y Regularización`): *"We stop short of an unconditional shock-robustness claim for the recurrent reservoir: at 15σ, only 5 of the 10 location×sign conditions clearly favor it over Ridge, 3 favor Ridge instead, and 2 remain inconclusive"* (y equivalente exacto en español).
+   - Añadida al final de la viñeta 5 (`Lower-Bounded Physical Observables` / `Observables Físicos con Cota Inferior`): *"On tail-sensitive volatility loss (QLIKE), the reservoir readouts evaluated here do not beat domain-specific econometric baselines (EWMA, GARCH, GJR-GARCH); positivity constraints solve a structural problem, not a forecasting-accuracy one"* (y equivalente exacto en español).
+   - Ambas cifras (5/3/2 de la condición-dependencia a $15\sigma$; la no competitividad frente a EWMA/GARCH/GJR-GARCH en QLIKE) ya estaban establecidas y verificadas en el cuerpo del paper (§III.B, §IV) en rondas anteriores; esta tarea no introduce ningún dato nuevo, solo lo hace explícito donde el lector espera encontrar los límites del estudio: la sección de Discusión y Conclusiones.
+
+2. **Verificación final:**
+   - `pdflatex -interaction=nonstopmode` ×2 en `main.tex` y `main_es.tex`: **errors=0, overfull=0, undefined=0** en ambos.
+   - `pytest -v` completo: **39/39 passed.**
+
+- **Estado del BLOQUE CLAUDE (30%) del Plan Maestro Unificado: AHORA SÍ COMPLETADO en su totalidad (P04 + P05).**
