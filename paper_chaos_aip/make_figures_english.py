@@ -17,12 +17,7 @@ OUT.mkdir(exist_ok=True)
 
 sys.path.insert(0, str(BASE / "experimento_lorenz"))
 # lorenz_rhs y las constantes de integracion vienen del script de la ablacion de 30
-# semillas: es el unico modulo Lorenz de experimento_lorenz/ protegido por
-# `if __name__ == "__main__":`, por lo que importarlo NO dispara la corrida completa.
-# Su propia funcion simulate_lorenz() solo devuelve la componente x (no sirve para el
-# grafico x-z del atractor), asi que aqui reusamos su lorenz_rhs() ya auditado (misma
-# fisica, mismas constantes SIGMA/RHO/BETA) dentro de un integrador RK4 estandar de 4
-# etapas, sin el bug de reciclar k4 entre iteraciones que tenia la copia anterior.
+# Reutilización de constantes físicas e integrador canónico RK4.
 from run_lorenz_30_seeds_ablation import (
     DT_INTEGRATE as LORENZ_DT,
     N_BURNIN_INTEGRATE as LORENZ_N_BURNIN,
@@ -52,25 +47,21 @@ def save(fig, name):
 # 1. Figure 1 (main.tex): Quartic trace inflation under localized outlier shocks.
 #    M (shock magnitude, sigma units) on x vs. the trace-proportional heuristic
 #    lambda = gamma * tr(F^T F) / D on y, both log-scale, with a power-law fit in the
-#    asymptotic/large-M regime. Replaces the previous mislabeled lambda-ratio plot.
+# 1. Figure 1: Quartic trace inflation under localized outlier shocks.
 grid_file = BASE / "experimento_lorenz/output/oos_grid_shocks.csv"
 if not grid_file.exists():
     raise FileNotFoundError(
         f"Missing required source file for Figure 1 (M^4 trace inflation): {grid_file}"
     )
 grid = pd.read_csv(grid_file)
-# lambda_traza_legacy solo esta poblado para el lector ridge; y solo revela la
-# inflacion de traza inducida por el shock en las ventanas que efectivamente lo
-# contienen (ventana_incluye_shock). Las ventanas en calma reflejan la traza de fondo
-# del atractor, no el efecto de shock que describe el Teorema 1, y su mediana es
-# plana en M (no es un error: se comprobo explicitamente antes de filtrar).
+# Filtrar ventanas que contienen el shock para evaluar la traza empírica
 grid_shock = grid.dropna(subset=["lambda_traza_legacy"])
 grid_shock = grid_shock[grid_shock["ventana_incluye_shock"]]
 med_by_mag = grid_shock.groupby("magnitud_sigma")["lambda_traza_legacy"].median().sort_index()
 M_vals = med_by_mag.index.values.astype(float)
 lam_vals = med_by_mag.values.astype(float)
 
-n_fit = min(3, len(M_vals))  # top magnitudes: regimen asintotico donde domina la ley de potencias
+n_fit = min(3, len(M_vals))  # Régimen asintótico para ajuste de ley de potencia
 fit_idx = np.argsort(M_vals)[-n_fit:]
 slope, intercept = np.polyfit(np.log(M_vals[fit_idx]), np.log(lam_vals[fit_idx]), 1)
 print(f"[fig5_ridge_fragilidad] Fitted log-log slope over top {n_fit} magnitudes: {slope:.4f}")
@@ -91,10 +82,7 @@ ax.legend(loc="upper left", frameon=False, fontsize=8)
 save(fig, "fig5_ridge_fragilidad.pdf")
 
 
-# 1b. Supplementary: the previous plot (nested temporal lambda-selection sensitivity),
-#     preserved under a new filename since main.tex no longer points here. Legitimate
-#     content, just mislabeled as "Figure 1" before -- kept intact for later use in
-#     supplementary material with a correct caption.
+# 1b. Supplementary: Sensibilidad a la selección temporal anidada de lambda
 lam_file = BASE / "experimento_lorenz/output/sensibilidad_lambda_lorenz.csv"
 if not lam_file.exists():
     raise FileNotFoundError(
@@ -116,10 +104,7 @@ ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.22), ncol=1, frameon=False
 save(fig, "fig_supp_lambda_selection.pdf")
 
 
-# 2. Atractor de Lorenz y shock sintetico.
-#    RK4 estandar de 4 etapas usando el lorenz_rhs() auditado importado arriba;
-#    k4 se recalcula siempre a partir del estado y k3 de la iteracion actual
-#    (bug previo: reusaba el k4 de la iteracion anterior desde la 2a vuelta en adelante).
+# 2. Atractor de Lorenz y shock sintético (integrador RK4).
 n_feature_points = 3000
 rng = np.random.RandomState(LORENZ_SEED)
 state = np.array([1.0, 1.0, 1.0]) + rng.normal(0, 0.1, 3)

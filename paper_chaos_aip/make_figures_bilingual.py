@@ -86,7 +86,7 @@ fit_line = np.exp(intercept) * fit_M ** slope
 # Version Ingles
 fig_en, ax = plt.subplots(figsize=(W_SINGLE, 2.9))
 ax.plot(M_vals, lam_vals, marker="o", ms=4.5, lw=1.5, color="#4C72B0", label=r"Ridge median $\lambda$")
-ax.plot(fit_M, fit_line, ls="--", color="#C44E52", lw=1.5, label=fr"Power-law fit, slope $\approx {slope:.2f}$")
+ax.plot(fit_M, fit_line, ls="--", color="#C44E52", lw=1.5, label=fr"Power-law fit," + "\n" + fr"slope $\approx {slope:.2f}$")
 ax.set_xscale("log")
 ax.set_yscale("log")
 ax.set_xlabel(r"Shock magnitude $M$ ($\sigma$)")
@@ -97,7 +97,7 @@ ax.legend(loc="upper left", frameon=False, fontsize=MIN_FONT_PT)
 # Version Espanol
 fig_es, ax = plt.subplots(figsize=(W_SINGLE, 2.9))
 ax.plot(M_vals, lam_vals, marker="o", ms=4.5, lw=1.5, color="#4C72B0", label=r"Mediana Ridge de $\lambda$")
-ax.plot(fit_M, fit_line, ls="--", color="#C44E52", lw=1.5, label=fr"Ajuste ley potencia, pend. $\approx {slope:.2f}$")
+ax.plot(fit_M, fit_line, ls="--", color="#C44E52", lw=1.5, label=fr"Ajuste ley potencia," + "\n" + fr"pend. $\approx {slope:.2f}$")
 ax.set_xscale("log")
 ax.set_yscale("log")
 ax.set_xlabel(r"Magnitud del shock $M$ ($\sigma$)")

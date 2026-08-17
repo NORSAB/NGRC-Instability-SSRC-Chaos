@@ -21,7 +21,7 @@ from src.models.reservoir import make_reservoir, run_reservoir
 from src.models.optimization import build_topology_mask, estimate_coupling_matrix
 from src.models.metric_tools import evaluate_metrics_oos, evaluate_frobenius_oos
 
-# LAM=0.86: re-seleccionada por la grilla completa bajo el estimador paper_eq (fix C1)
+# Hiperparámetros de calibración empírica
 W, LAM, DIM, RHO, DENS = 3, 0.86, 50, 0.95, 0.05
 OUT = os.path.join(os.getcwd(), "output_2025")
 res = {}
@@ -32,7 +32,7 @@ ents_all = sorted(df[ENTITY_COL].dropna().unique().tolist())
 alpha = build_alpha_by_entity(df, ents_all, W, LAM)
 cand = [e for e in HIERARCHICAL_ORDER if e in alpha]
 
-# Fix C1: series crudas hub-sin-k, incrustadas con el MISMO embedding (por semilla/variante)
+# Series crudas LOO para el nodo central re-incrustadas por variante
 _hub_raw = df[df[ENTITY_COL] == SYNTHETIC_HUB_NAME].groupby(TIME_COL)[FEATURE_COLS].sum()
 _lf = []
 for _k in [e for e in cand if e != SYNTHETIC_HUB_NAME]:

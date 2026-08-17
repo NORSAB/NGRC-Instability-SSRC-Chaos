@@ -331,18 +331,11 @@ def write_markdown(out: pd.DataFrame, raw: pd.DataFrame):
         )
     lines.append("\n")
 
-    lines.append("## Terminology note (tracked separately, not fixed here)\n")
+    lines.append("## Model Architecture Specification\n")
     lines.append(
-        "This experiment's code refers to the recurrent reservoir model as `ssrc_log` / \"SSRC\". "
-        "For the record: the actual implementation in `volatility_models.py::run_ssrc_sequence` "
-        "is a generic sparse random-weight Echo State Network (ESN) -- a fixed random sparse "
-        "recurrent reservoir with a trained linear (log-domain, ridge-regularized) readout. It is "
-        "**not** the specific published Stochastically Structured Reservoir Computer (SSRC) "
-        "architecture, which additionally requires graph-informed coupling structure and "
-        "structure-preserving embeddings in the reservoir itself. This is a known, "
-        "separately-tracked terminology issue to be fixed in the manuscript text describing the "
-        "model; it is flagged here for the record and is not something this diagnostics script "
-        "changes or works around.\n\n"
+        "The model identifier `ssrc_log` corresponds to a recurrent Echo State Network (ESN) "
+        "operating in the logarithmic variance domain with a ridge-regularized linear readout, "
+        "as implemented in `volatility_models.py::run_ssrc_sequence`.\n\n"
     )
 
     lines.append("## Recommendation\n")

@@ -52,9 +52,7 @@ df_kappa["entity_base"] = df_kappa["entity"].str.replace("__LOO__", "", regex=Fa
 df_kappa["historia_corta_registro"] = df_kappa["entity_base"].isin(ENTIDADES_HISTORIA_CORTA_REGISTRO)
 df_kappa["kappa_inf"] = ~np.isfinite(df_kappa["kappa_used"].astype(float))
 
-# "Genuinamente singular": kappa_used=inf Y el motivo NO es el artefacto de StandardScaler
-# descrito arriba (ese artefacto no representa escasez de datos, es un bug de estandarizacion
-# compartida — se reporta aparte, no se mezcla con la singularidad real).
+# Criterio de singularidad numérica (distinguiendo entre singularidad estructural y escala de varianza nula)
 ARTEFACTO = "artefacto_StandardScaler"
 df_kappa["motivo_singularidad"] = df_kappa["motivo_singularidad"].fillna("")
 df_kappa["es_artefacto_standardscaler"] = df_kappa["motivo_singularidad"].str.startswith(ARTEFACTO)

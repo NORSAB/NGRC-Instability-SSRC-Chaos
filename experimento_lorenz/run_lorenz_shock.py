@@ -35,11 +35,7 @@ warnings.filterwarnings("ignore")
 
 SIGMA, RHO, BETA = 10.0, 28.0, 8.0 / 3.0
 DT_INTEGRATE = 0.01       # paso fino de RK4 (precision numerica)
-SKIP = 5                  # FIX 2026-08-12: se muestrean las features NG-RC cada SKIP pasos
-                          # de integracion (dt_feature = 0.05, igual a Gauthier et al. 2021).
-                          # Sin esto, puntos consecutivos de un flujo suave son casi identicos
-                          # y el bloque NG-RC sale cuasi-colineal por sobremuestreo (kappa~1e9
-                          # incluso sin shock, ver HALLAZGO_lorenz.md version anterior).
+SKIP = 5                  # Submuestreo temporal: dt_feature = SKIP * dt_integrate = 0.05 (Gauthier et al. 2021)
 N_BURNIN_INTEGRATE = 5000
 N_FEATURE_POINTS = 30000
 N_STEPS_INTEGRATE = N_FEATURE_POINTS * SKIP
@@ -181,9 +177,8 @@ with open("output/resumen_lorenz.md", "w", encoding="utf-8") as f:
     f.write(kappa_summary.to_markdown(index=False))
     f.write("\n\n## MASE OOS por escenario/metodo\n\n")
     f.write(oos_summary.to_markdown(index=False))
-    f.write("\n\nRidge y el readout del SSRC seleccionan lambda mediante un holdout "
-            "temporal interno. La heuristica 0.1*traza(X'X)/D queda solo como "
-            "columna de auditoria y no determina el ajuste.\n")
+    f.write("\n\nRidge y el readout del SSRC seleccionan lambda mediante validación temporal interna. "
+            "La heurística 0.1*traza(X'X)/D se incluye como referencia analítica.\n")
 
 print("\n==== kappa por escenario ====")
 print(kappa_summary.to_string(index=False))

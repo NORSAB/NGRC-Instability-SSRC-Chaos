@@ -45,8 +45,7 @@ alpha_data = build_alpha_by_entity(df, ents_all, W_STAR, LAM_STAR)
 active = [e for e in HIERARCHICAL_ORDER if e in alpha_data]
 print(f"Entidades activas: {len(active)}")
 
-# Fix C1: series CRUDAS hub-sin-k, para re-incrustarlas con el embedding de CADA variante
-# (la resta es exacta a nivel crudo; la no-linealidad vive en la incrustacion de cada variante).
+# Construcción de series agregadas crudas LOO del nodo central para cada variante
 hub_raw = df[df[ENTITY_COL] == SYNTHETIC_HUB_NAME].groupby(TIME_COL)[FEATURE_COLS].sum()
 _frames = []
 for _k in [e for e in active if e != SYNTHETIC_HUB_NAME]:
@@ -84,7 +83,7 @@ def evaluate_embedding(z_builder, label):
     ents = [e for e in active if e in z]
     if SYNTHETIC_HUB_NAME not in ents:
         print(f"  {label}: hub no disponible"); return None
-    # Fix C1: hub-sin-k re-incrustado con el MISMO embedding de esta variante
+    # Incrustación LOO del nodo central para la variante actual
     hub_loo = {}
     for ent in ents:
         if ent == SYNTHETIC_HUB_NAME:

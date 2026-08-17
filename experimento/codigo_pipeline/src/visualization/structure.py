@@ -42,7 +42,7 @@ def plot_structure_matrix(p_matrix_active, active_ents, best_w, best_lam, output
     plt.grid(which="major", color="w", linestyle="-", linewidth=0.2, alpha=0.1)
     plt.tick_params(axis=u'both', which=u'both', length=0)
 
-    # ── MEJORA-8: Anotar valores P* > 0.3 en las celdas ──
+    # Anotación de coeficientes significativos en celdas
     for i in range(full_dim):
         for j in range(full_dim):
             val = p_matrix_full[i, j]

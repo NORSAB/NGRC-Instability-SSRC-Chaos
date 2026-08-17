@@ -123,11 +123,9 @@ class TestTableReproductionFromCSVs:
         assert np.isclose(esn["median_of_per_series_means"], 14.33, atol=0.05)
 
     def test_lorenz_table1_values_match_csv(self):
-        """Guarda contra el drift silencioso detectado por auditoria externa (Codex, 16-ago-2026):
-        Table I en main.tex tenía medianas ESN-lag/Ridge/OLS desincronizadas de
-        lorenz_rigorous_summary.csv por ~0.0005-0.001 en la 3a-4a cifra decimal.
-        Esta prueba usa el CSV auditado como fuente canonica unica y falla si
-        alguien vuelve a copiar valores a mano sin regenerar la tabla."""
+        """Verifica la sincronización exacta entre Table I (main.tex / main_es.tex)
+        y lorenz_rigorous_summary.csv en todas las cifras decimales.
+        Usa el CSV canónico como única fuente de verdad."""
         csv_p = BASE / "experimento_lorenz/output/lorenz_rigorous_summary.csv"
         assert csv_p.exists(), "Falta lorenz_rigorous_summary.csv"
         df = pd.read_csv(csv_p)

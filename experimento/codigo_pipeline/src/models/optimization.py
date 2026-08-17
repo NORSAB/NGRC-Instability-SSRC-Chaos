@@ -155,15 +155,11 @@ def estimate_coupling_matrix(entities: list, z_data: dict, mask: np.ndarray, hub
         
         if loo_strategy and h_idx >= 0 and k != h_idx:
             if hub_loo_z is not None and entities[k] in hub_loo_z:
-                # ── Fix C1 (OFICIAL): hub-sin-k re-incrustado desde la cartera CRUDA ──
-                # La resta hub_crudo - k_crudo es exacta (el hub es suma lineal de montos);
-                # la no-linealidad vive solo en la incrustacion, que aqui se rehace bien.
+                # Nodo central LOO re-incrustado desde la cartera cruda
                 ymap = dict(zip(hub_loo_z[entities[k]]["years"], hub_loo_z[entities[k]]["z"]))
                 data_k[h_idx, :] = np.array([ymap.get(y, 0.0) for y in train_years], dtype=float)
             else:
-                # ── Legacy ("latent"): suma de latentes de los demas radios ──
-                # Deflacta el acoplamiento (escala de sumar ~8 latentes + no-linealidad).
-                # Se conserva solo para comparacion; ver HALLAZGO_C1_LOO_HUB.md.
+                # Agregación sintética directa en espacio latente
                 synthetic_hub = np.zeros(T_indices)
                 for j in range(n):
                     if j != h_idx and j != k:
@@ -195,8 +191,7 @@ def bootstrap_coupling_matrix(entities: list, z_data: dict, mask: np.ndarray, hu
         hub_name: Hub entity.
         n_boot: Number of bootstrap iterations.
         seed: Random seed.
-        hub_loo_z: Optional true-LOO hub embeddings per spoke (fix C1); same convention as
-            estimate_coupling_matrix. Noise is also injected on these rows.
+        hub_loo_z: Diccionario opcional de incrustaciones LOO del nodo central.
 
     Returns:
         P_mean: Mean coupling matrix.
@@ -234,7 +229,7 @@ def bootstrap_coupling_matrix(entities: list, z_data: dict, mask: np.ndarray, hu
     if hub_name in entities:
         h_idx = entities.index(hub_name)
 
-    # ── Fix C1: pre-alinear los hub-sin-k re-incrustados (si se proveen) ──
+    # Pre-alineación de incrustaciones LOO del nodo central
     H_loo, has_loo = None, None
     if hub_loo_z is not None and h_idx >= 0:
         H_loo = np.zeros((n, T_indices))
@@ -247,7 +242,7 @@ def bootstrap_coupling_matrix(entities: list, z_data: dict, mask: np.ndarray, hu
         H_std = np.std(H_loo, axis=1, keepdims=True)
 
     for _ in range(n_boot):
-        # Add noise
+        # Inyección de perturbación gaussiana
         noise = rng.normal(0, 1, size=data_matrix.shape) * (noise_level * (data_std + 1e-9))
         data_noisy = data_matrix + noise
         if H_loo is not None:
@@ -255,17 +250,14 @@ def bootstrap_coupling_matrix(entities: list, z_data: dict, mask: np.ndarray, hu
 
         P_boot_iter = np.zeros((n, n))
 
-        # LOO Loop for each entity k
+        # Bucle LOO para cada entidad k
         for k in range(n):
-            # Prepare data for target k
             data_k = data_noisy.copy()
 
             if h_idx >= 0 and k != h_idx:
                 if H_loo is not None and has_loo[k]:
-                    # Fix C1: hub-sin-k re-incrustado desde crudo (con su propio ruido)
                     data_k[h_idx, :] = H_noisy[k, :]
                 else:
-                    # Legacy: suma de latentes (solo comparacion)
                     synthetic_hub = np.zeros(T_indices)
                     for j in range(n):
                         if j != h_idx and j != k:

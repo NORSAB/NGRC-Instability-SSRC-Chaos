@@ -1,4 +1,4 @@
-"""Regression tests for the scientific and data fixes assigned to Codex."""
+"""Regression tests for scientific formulation, data invariants, and theorem premises."""
 
 from pathlib import Path
 

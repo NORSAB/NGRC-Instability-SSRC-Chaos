@@ -38,7 +38,7 @@ def plot_hub_readout(hub_data, pred_hub, output_path):
         if i == 0: ax.legend()
         ax.grid(True, alpha=0.3)
         
-        # ── MEJORA-4: Anotar R² y RMSE dentro de cada panel ──
+        # Anotación de métricas de ajuste R y RMSE dentro de cada panel
         r_val = np.corrcoef(series_obs[i], series_pred[i])[0, 1]
         rmse_val = np.sqrt(np.mean((series_obs[i] - series_pred[i])**2))
         ax.text(0.03, 0.95, f"R = {r_val:.3f}\nRMSE = {rmse_val:.4f}", 

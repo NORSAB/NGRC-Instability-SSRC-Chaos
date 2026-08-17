@@ -34,7 +34,7 @@ def evaluate_frobenius_oos(p_matrix: np.ndarray, entities: list, z_data: dict,
         (frobenius_error, coverage): Tuple of (relative error, number of valid transitions)
     """
     state_maps = {e: dict(zip(z_data[e]["years"], z_data[e]["z"])) for e in entities}
-    loo_maps = _hub_loo_maps(hub_loo_z)  # fix C1: hub-sin-k por fila objetivo
+    loo_maps = _hub_loo_maps(hub_loo_z)
     N = len(entities)
 
     total_num = 0.0  # Numerator: sum of ||y - yhat||
@@ -65,8 +65,7 @@ def evaluate_frobenius_oos(p_matrix: np.ndarray, entities: list, z_data: dict,
             xrow = []
             for j in cols:
                 ej = entities[j]
-                # Fix C1: si la fila k se estimo contra el hub-sin-k re-incrustado,
-                # la evaluacion debe usar el MISMO regresor (coherencia train/eval).
+                # Usar representación LOO correspondiente si el regresor es el nodo central
                 if hub_name is not None and ej == hub_name and target_ent in loo_maps:
                     if source_year not in loo_maps[target_ent]:
                         ok = False
@@ -125,19 +124,14 @@ def evaluate_metrics_oos(p_matrix: np.ndarray, entities: list, z_data: dict,
     naive_mae_sum = 0.0
     naive_count = 0
     
-    # ── MEJORA-2: Per-entity tracking ──
-    # NOTA 2026-08-12 (Articulo_4, analisis_kappa_entidad.py / comparacion_cobertura_pareja.py):
-    # se agrega "years" (el t de cada observacion OOS) para poder EMPAREJAR por (entidad, anio)
-    # los errores de pronostico entre variantes distintas (necesario para Diebold-Mariano, que
-    # exige pares del MISMO punto muestral). Cambio aditivo, no rompe el contrato existente.
+    # Registro por entidad y métricas de dirección
     entity_errors = {e: {"abs_errors": [], "sq_errors": [], "y_true": [], "y_pred": [], "years": []} for e in entities}
     
-    # ── MEJORA-3: Trend accuracy ──
     trend_correct = 0
     trend_total = 0
     
     state_maps = {e: dict(zip(z_data[e]["years"], z_data[e]["z"])) for e in entities}
-    loo_maps = _hub_loo_maps(hub_loo_z)  # fix C1: hub-sin-k por fila objetivo
+    loo_maps = _hub_loo_maps(hub_loo_z)
 
     count = 0
     for i, target_ent in enumerate(entities):
@@ -155,8 +149,7 @@ def evaluate_metrics_oos(p_matrix: np.ndarray, entities: list, z_data: dict,
             prev_t = t - 1
             if prev_t not in state_maps[target_ent]: continue
 
-            # Fix C1: para la fila k, el regresor del hub es el hub-sin-k re-incrustado
-            # (el mismo con el que se estimo el coeficiente).
+            # Regresor del nodo central según asignación LOO
             row_vals = []
             for j in source_indices:
                 ej = entities[j]

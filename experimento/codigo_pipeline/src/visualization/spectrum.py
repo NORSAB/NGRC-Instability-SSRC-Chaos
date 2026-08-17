@@ -83,7 +83,7 @@ def plot_eigenvalue_spectrum(pres_matrix, output_path):
         axins.tick_params(labelsize=6)
         axins.grid(True, alpha=0.2)
     else:
-        # ── MEJORA-6: Anotación con estadísticas del espectro ──
+        # Anotación de estadísticas espectrales
         n_complex = np.sum(np.abs(eigenvals.imag) > 1e-10) // 2
         ax.text(0.05, 0.05, 
                 f"System Stable: All eigenvalues within unit circle.\n"

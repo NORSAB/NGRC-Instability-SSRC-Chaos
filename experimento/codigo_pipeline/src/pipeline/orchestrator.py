@@ -1,11 +1,7 @@
 """
-Pipeline Orchestrator — v6 Corregido
-=====================================
-Cambios vs. versión actual:
-  FIX-3: PCA transformers almacenados → inverse_transform en forecast
-  FIX-4: Exportar métricas numéricas a CSV (MASE, NRMSE, R², ρ)
-  FIX-5: Forecast exportado como CSV para Table del paper
-  MEJORA-1: Diagnóstico enriquecido con print de métricas clave
+Pipeline Orchestrator for TCROC and Reservoir Computing.
+Executes data ingestion, grid search, final model fitting, readout evaluation,
+multi-step forecasting, and bootstrap validation.
 """
 import os
 import json
@@ -55,7 +51,7 @@ class MLOpsPipeline:
         self.z_final = None
         self.p_matrix_active = None
         self.active_ents = None
-        # ── FIX-3: Almacenar PCA transformers por entidad ──
+        # Almacenar transformadores PCA y escaladores por entidad
         self.pca_transformers = {}
         self.scalers = {}
 
@@ -108,12 +104,10 @@ class MLOpsPipeline:
         return result
 
     def _build_hub_loo_z(self, entities, w_size, decay, fit_end_year):
-        """Fix C1: hub-sin-k re-incrustado desde la cartera CRUDA, para cada radio k.
+        """Construye las trayectorias Leave-One-Out (LOO) del nodo central a nivel de cartera cruda.
 
-        El hub sintetico es la suma lineal de la cartera, asi que la resta hub - k es EXACTA
-        a nivel crudo. La serie resultante pasa por el MISMO camino no lineal que cualquier
-        entidad (log1p -> TCROC -> reservorio -> PCA), en lugar de restar estados latentes
-        (que deflacta el acoplamiento; ver HALLAZGO_C1_LOO_HUB.md).
+        La cartera central se calcula sustrayendo la serie temporal de cada entidad k
+        antes de aplicar la transformación no lineal (log1p -> TCROC -> reservorio -> PCA).
         Devuelve {spoke: {'years', 'z'}} o None si HUB_LOO_MODE != 'raw'.
         """
         if HUB_LOO_MODE != "raw":
@@ -166,7 +160,7 @@ class MLOpsPipeline:
                 )
                 active_entities = [e for e in active_entities if e in z_data]
 
-                # Fix C1: hub-sin-k re-incrustado desde crudo, por configuracion (nada heredado)
+                # Construir representaciones LOO para la cartera central
                 hub_loo = self._build_hub_loo_z(
                     active_entities, w_size, decay, TEST_START_YEAR - 1
                 )
@@ -245,7 +239,7 @@ class MLOpsPipeline:
         self.active_ents = [e for e in HIERARCHICAL_ORDER if e in alpha_final_dict]
         
         self.z_final = {}
-        self.pca_transformers = {}  # ── FIX-3 ──
+        self.pca_transformers = {}
         self.scalers = {}
         self.z_final = self._build_embeddings(
             alpha_final_dict, self.active_ents, TEST_START_YEAR - 1, store=True
@@ -253,7 +247,7 @@ class MLOpsPipeline:
         self.active_ents = [e for e in self.active_ents if e in self.z_final]
         print(f"Active entities ({len(self.active_ents)}): {self.active_ents}")
             
-        # Fix C1: hub-sin-k oficial para el modelo final (se guarda para forecast/bootstrap)
+        # LOO del nodo central para el modelo final
         self.hub_loo_z = self._build_hub_loo_z(
             self.active_ents, self.best_w, self.best_lam, TEST_START_YEAR - 1
         )
@@ -269,12 +263,12 @@ class MLOpsPipeline:
         # Plots
         plot_structure_matrix(self.p_matrix_active, self.active_ents, self.best_w, self.best_lam, os.path.join(self.images_dir, "structure_matrix.png"))
         
-        # Eigenvalue Spectrum via Ridge (Audit v5 Fix)
+        # Espectro de autovalores mediante regresión Ridge
         h_t0 = np.hstack([self.z_final[e]["H"][:, :-1] for e in self.active_ents]).T
         h_t1 = np.hstack([self.z_final[e]["H"][:, 1:] for e in self.active_ents]).T
 
         try:
-            ridge_pres = Ridge(alpha=1.0, fit_intercept=False) # v5 Fix: Ridge
+            ridge_pres = Ridge(alpha=1.0, fit_intercept=False)
             ridge_pres.fit(h_t0, h_t1)
             pres_matrix = ridge_pres.coef_
         except Exception as e:
@@ -303,7 +297,7 @@ class MLOpsPipeline:
         h_hub = hub_data["H"].T
         pred_hub = readout.predict(h_hub)
         
-        # ── FIX-4: Calcular y reportar R² y RMSE del readout ──
+        # Métricas de precisión del readout del nodo central
         obs_amt = hub_data["alpha_raw"][0]
         obs_cnt = hub_data["alpha_raw"][1]
         pred_amt = pred_hub[:, 0]
@@ -319,7 +313,7 @@ class MLOpsPipeline:
         print(f"    Count:   R = {r2_cnt:.4f}, RMSE = {rmse_cnt:.6f}")
         print(f"    N points: {len(obs_amt)}")
         
-        # ── FIX-4: Exportar métricas a CSV para el paper ──
+        # Exportar métricas de evaluación a CSV
         metrics_summary = pd.DataFrame([{
             "Metric": "Hub_Readout_Amount", "R": r2_amt, "RMSE": rmse_amt, "N": len(obs_amt)
         }, {
@@ -394,20 +388,17 @@ class MLOpsPipeline:
         print("-" * 60)
 
         z_c = z_curr.copy()
-        forecast_rows = []  # ── FIX-5: Acumular para CSV ──
+        forecast_rows = []
         
         for yr in FORECAST_YEARS:
             z_c = P_forecast @ z_c
             
             for i, e in enumerate(self.active_ents):
-                # ════════════════════════════════════════════════════════
-                # FIX-3: Reconstruir H desde z usando PCA inverse_transform
-                # ════════════════════════════════════════════════════════
+                # Reconstruir estado reservorio H desde el espacio latente z
                 if e in self.pca_transformers:
                     pca_e = self.pca_transformers[e]
                     h_vec_c = pca_e.inverse_transform([[z_c[i]]])  # (1, 50)
                 else:
-                    # Fallback para entidades sin PCA
                     h_prof = self.z_final[e]["H"].mean(axis=1)
                     h_prof /= (np.linalg.norm(h_prof) + 1e-9)
                     h_vec_c = (h_prof * z_c[i]).reshape(1, -1)
@@ -429,20 +420,19 @@ class MLOpsPipeline:
                 
                 print(f"{e:<20} | {yr} | ${pred_amt_c:,.0f} | {pred_cnt_c:.1f}")
                 
-                # ── FIX-5: Acumular forecast ──
                 forecast_rows.append({
                     "Entity": e, "Year": yr,
                     "Pred_Amount": pred_amt_c, "Pred_Count": pred_cnt_c,
                     "z_latent": z_c[i], "alpha_amt": a_amt_c, "alpha_cnt": a_cnt_c
                 })
         
-        # ── FIX-5: Exportar forecast a CSV para Table del paper ──
+        # Exportar proyecciones a CSV
         df_forecast = pd.DataFrame(forecast_rows)
         df_forecast.to_csv(os.path.join(self.output_dir, "forecast_table.csv"), index=False)
         print(f"\nForecast saved to {os.path.join(self.output_dir, 'forecast_table.csv')}")
 
     def step_6_bootstrap_validation(self):
-        print("\n=== STEP 6: BOOTSTRAP VALIDATION (Audit C7/M2) ===")
+        print("\n=== STEP 6: BOOTSTRAP VALIDATION ===")
         topo_mask = build_topology_mask(self.active_ents, SYNTHETIC_HUB_NAME)
         
         P_mean, P_std, P_cv, P_sig = bootstrap_coupling_matrix(
@@ -454,7 +444,6 @@ class MLOpsPipeline:
         print(f"{'Target Entity':<20} | {'Mean Coeff (Sum)':<16} | {'CV (Avg)':<10} | {'Significant?':<12}")
         print("-" * 65)
         
-        # ── FIX-4: Acumular para CSV ──
         boot_rows = []
         
         for i, ent in enumerate(self.active_ents):
@@ -476,7 +465,7 @@ class MLOpsPipeline:
                 "Avg_CV": avg_cv, "Significant": is_sig
             })
         
-        # ── FIX-4: Exportar bootstrap a CSV ──
+        # Exportar resumen bootstrap a CSV
         pd.DataFrame(boot_rows).to_csv(
             os.path.join(self.output_dir, "bootstrap_summary.csv"), index=False
         )

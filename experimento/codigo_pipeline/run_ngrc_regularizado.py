@@ -52,7 +52,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(BASE_DIR, "output")
 os.makedirs(OUT, exist_ok=True)
 
-# Config oficial post-fix-C1 (ver config/hyperparameters.py: "re-seleccionada bajo paper_eq")
+# Hiperparámetros óptimos
 W_STAR, LAM_STAR = 3, 0.88
 
 print("Cargando datos BCIE (misma fuente en vivo que Articulo_2; nada congelado)...")
@@ -63,8 +63,7 @@ alpha_data = build_alpha_by_entity(df, ents_all, W_STAR, LAM_STAR)
 active = [e for e in HIERARCHICAL_ORDER if e in alpha_data]
 print(f"Entidades activas: {len(active)}")
 
-# Fix C1: series CRUDAS hub-sin-k, para re-incrustarlas con el embedding de CADA variante
-# (identico al patron de run_ngrc_variant_REFERENCIA_original.py — no se cambia esta parte).
+# Construcción de series agregadas crudas LOO del nodo central para cada variante
 hub_raw = df[df[ENTITY_COL] == SYNTHETIC_HUB_NAME].groupby(TIME_COL)[FEATURE_COLS].sum()
 _frames = []
 for _k in [e for e in active if e != SYNTHETIC_HUB_NAME]:

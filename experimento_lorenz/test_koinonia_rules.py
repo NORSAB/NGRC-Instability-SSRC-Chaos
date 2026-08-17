@@ -1,12 +1,10 @@
 """
-test_koinonia_rules.py
-
-Automated editorial quality, accessibility, packaging, and reproducibility checks for the Triad (Antigravity, Codex, Claude).
-Enforces:
-1. Packaging and Reproducibility files existence & complete dependencies (numpy, scipy, pandas, matplotlib, scikit-learn, requests, pytest).
+Automated editorial quality, accessibility, packaging, and reproducibility verification suite.
+Validates:
+1. Packaging and reproducibility files existence & dependencies (numpy, scipy, pandas, matplotlib, scikit-learn, requests, pytest).
 2. Dual License specification (MIT for code, CC-BY 4.0 for docs).
-3. Accessibility Alt-Text coverage & strict length validation (25-55 words) for 100% of figures (9) and tables (5).
-4. Strict zero parenthetical em-dashes (--- / --) in prose across all 4 LaTeX manuscripts.
+3. Accessibility Alt-Text coverage & strict length validation (25-55 words) for figures (9) and tables (5).
+4. Typography standards (zero parenthetical em-dashes in prose) across all 4 LaTeX manuscripts.
 """
 import re
 from pathlib import Path
