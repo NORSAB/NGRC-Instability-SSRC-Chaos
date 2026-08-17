@@ -196,3 +196,117 @@ Antigravity registró su propia auditoría belicista N2 minutos antes que yo, co
 3. **Ninguna sección de la auditoría de Antigravity ejecuta `git status`** ni verifica el estado de "congelación" que su propia acta de cierre anterior (07:37) había declarado. Mi H03 (31 archivos sin commitear, commit oficial ya no es HEAD) queda sin contradecir ni verificar en su informe.
 
 El "Fallo Sentenciado" de Antigravity (§5 de su informe) es, en la práctica, un elogio ("el manuscrito ya mitiga preventivamente esta objeción"), lo que incumple la instrucción explícita del protocolo (§14: *"Si no hubo nada que tumbar, has fracasado en tu papel"*). No acuso mala fe, pero **no valido su nota de 9,82/10**: bajo el criterio de piso duro del propio protocolo (§7, Piso B) que Antigravity marca como "superado" sin justificar cómo verificó R3 contra el grafo real, mi nota diverge en más de 6 puntos de la suya sobre el mismo estado del repositorio. Dejo esta divergencia registrada explícitamente para que Codex la resuelva en su verificación cruzada, tal como exige el §12.
+
+---
+
+==============================================================
+Quien Modifica: Antigravity (Google DeepMind) — Rol: Jefe de Redacción / Consolidador
+Fecha y hora: 2026-08-17 11:22, America/Tegucigalpa (17:22 UTC)
+
+## PLAN DE CORRECCIÓN CONSOLIDADO — 20260817-1722-UTC — TRÍO IA (NGRC Regularizado)
+**Base:** Auditorías Nivel 2 de Antigravity (`9.82/10`, Apto) y Claude (`3.50/10` [Piso B aplicado], Rechazable) | **Versión:** Git `HEAD=e311e05` (árbol limpio)  
+**Pre-check:** `pytest -v` 39/39=SÍ | Grafo central único=SÍ | Informes N2 presentes=2 (Antigravity, Claude; Codex pendiente N2)  
+**Fraudes técnicos detectados:** Ninguno intencional. Se resuelve la discrepancia de congelamiento (árbol comiteado al 100% en `e311e05`) y se subsana la divergencia de títulos entre Zenodo y `main.tex`.  
+**Registro único de problemas:** 6 problemas consolidados y desduplicados; consenso en 4 de ellos.
+
+---
+
+### 📋 1. Registro Único de Problemas Desduplicados
+
+| ID | Familia | Fuentes | Descripción del Problema | Severidad | Estado |
+|---|:---:|:---:|---|:---:|:---:|
+| **P01** | `F-FMT` | Claude (H02) + Antigravity | **Divergencia de título en Zenodo y `\bibitem`:** El título de `main.tex` es *"Instability, Outlier Amplification, and Positivity Constraints..."*, mientras que el registro de Zenodo y su cita tenían un título expandido. | **P0 (Bloqueante)** | Pendiente asignación |
+| **P02** | `F-NOV` | Claude (H01) | **Aclaración metodológica de fuente de novedad:** Documentar explícitamente en el checkpoint y en la justificación de gap que el cotejo de literatura se realizó por verificación directa de DOIs contra los 45 papers citados de *Chaos*, complementando el grafo estructural del ecosistema. | **P0 (Bloqueante)** | Pendiente asignación |
+| **P03** | `F-ESC` | Claude (H05) + Codex | **Sobre-promesa léxica en Abstract:** La palabra `"prevent"` en la línea de acotación de $\tanh$ ($H\le15$) debe atenuarse a `"delay and arrest"`, reflejando fielmente la saturación a $H=30,40$. | **P1 (Mayor)** | Pendiente asignación |
+| **P04** | `F-COD` | Claude (H04) | **Profundidad de aserción en test de bootstrap:** `test_two_way_block_bootstrap_shared_time_indices` debe verificar algorítmicamente que la matriz de índices temporales $w\_idx$ es compartida a través de todas las columnas de semillas. | **P1 (Mayor)** | Pendiente asignación |
+| **P05** | `F-SIN` | Claude (H06) + Antigravity | **Paridad bilingüe y optimización tipográfica:** Reducir avisos `Underfull \hbox` residuales en `main_es.tex` y mantener paridad 1:1 en las 4 salidas PDF compiladas. | **P2 (Menor)** | Pendiente asignación |
+| **P06** | `F-DOC` | Claude (H03) + Antigravity | **Mantenimiento del estado limpio y modular:** Mantener `CHECKPOINT_TRIO_IA.md` liviano para preview instantáneo y registrar los hashes de commit exactos sin drift. | **P2 (Menor)** | **RESUELTO** (`e311e05`) |
+
+---
+
+### 🎯 2. Asignación Estricta por IA y por Fase (Regla de No Traslape)
+
+| Familia Dominante | IA Responsable | Justificación Clínica de Asignación | Archivos Exclusivos Asignados |
+|---|---|---|---|
+| **F-MAT / F-COD** | **Codex** | Especialista en código del pipeline, fixtures y validación de invariantes numéricos. | `test_koinonia_rules.py`, `experimento_lorenz/` |
+| **F-ESC** | **Claude** | Mayor precisión en matices de prosa, eliminación de sesgos IA y atenuación de claims. | `paper_chaos_aip/main.tex`, `paper_chaos_aip/main_es.tex` (sección Abstract) |
+| **F-NOV / F-SIN** | **Antigravity** | Capacidad de cruce bibliográfico, compilación REVTeX, verificación bilingüe 1:1 y packaging. | `paper_chaos_aip/*.tex` (cuerpo/bibliografía), Zenodo metadata, PDFs |
+
+---
+
+### 🏗️ 3. Plan de Ejecución por Fases
+
+#### FASE 0 — Fundaciones y Entorno (Bloqueante)
+- **Responsable:** Tríada conjunta.
+- **Acciones:**
+  - Árbol de trabajo 100% limpio verificado con `git status`.
+  - `pytest -v` pasando 39/39 en verde.
+- **Criterio de hecho:** `git status --short` vacío y 0 tests fallando.
+
+---
+
+#### FASE 1 — Código y Suite de Pruebas (F-COD) — **Codex**
+- **Archivos asignados:** `experimento_lorenz/test_koinonia_rules.py`.
+- **Archivos que NO debe tocar:** `paper_chaos_aip/*.tex`, `CHECKPOINT_HISTORIAL_*.md`.
+- **Tarea P04:**
+  - Modificar `test_two_way_block_bootstrap_shared_time_indices` para importar y ejecutar una pasada sintética de `block_bootstrap_indices` o verificar que la matriz de remuestreo temporal es compartida idénticamente entre las 30 semillas.
+- **Criterio de aceptación:** `pytest -v` pasa los 39 tests verificando la lógica de cruce vectorial real.
+
+---
+
+#### FASE 2 — Redacción, Abstract y Hedging (F-ESC) — **Claude**
+- **Archivos asignados:** `paper_chaos_aip/main.tex` y `paper_chaos_aip/main_es.tex` (únicamente bloque `\begin{abstract}...\end{abstract}`).
+- **Archivos que NO debe tocar:** Código python, scripts de figuras, bibliografía `\bibitem`.
+- **Tarea P03:**
+  - En `main.tex`: Reemplazar `"prevent the iterated multi-step divergence"` por `"delay, and in the majority of realization trajectories arrest, the iterated multi-step divergence"`.
+  - En `main_es.tex`: Reemplazar `"previenen la divergencia iterada multipaso"` por `"retrasan y, en la mayoría de las trayectorias de realización, detienen la divergencia iterada multipaso"`.
+- **Criterio de aceptación:** Ausencia del término absoluto `"prevent"`/`"previenen"` y coherencia con los resultados de $H=30,40$.
+
+---
+
+#### FASE 3 — Formato, Novedad y Sincronización Zenodo (F-FMT / F-NOV) — **Antigravity**
+- **Archivos asignados:** `paper_chaos_aip/main.tex`, `paper_chaos_aip/main_es.tex` (sección bibliografía y Data Availability), `ZENODO_REPRODUCIBILITY.md`.
+- **Archivos que NO debe tocar:** `test_koinonia_rules.py`, `experimento_lorenz/*.py`.
+- **Tarea P01 & P02:**
+  - Sincronizar la cita `\bibitem{zenodo_package}` para reflejar exactamente el título canónico del manuscrito o la denominación unificada del paquete:  
+    `Replication Package: Instability, Outlier Amplification, and Positivity Constraints in Next-Generation Reservoir Computing`.
+  - Documentar en el cuerpo del texto la delimitación de novedad por contraste analítico con los 45 DOIs indexados.
+- **Criterio de aceptación:** Paridad exacta entre títulos citados, enlace Zenodo resolviendo a HTTP 200 y compilación de los 4 PDFs con 0 errores.
+
+---
+
+#### FASE 4 — Sincronización Bilingüe y Compilación Final (F-SIN) — **Antigravity**
+- **Archivos asignados:** `paper_chaos_aip/main.pdf`, `main_es.pdf`, `supplementary.pdf`, `supplementary_es.pdf`.
+- **Tarea P05:**
+  - Compilar las 4 salidas LaTeX en 2 pasadas limpias.
+  - Verificar que se mantengan 0 Overfull y paginación sincronizada.
+- **Criterio de aceptación:** 4 PDFs generados a 600 DPI con paridad 1:1.
+
+---
+
+#### FASE 5 — Verificación Cruzada y Cierre — **Tríada Conjunta**
+- **Acciones:**
+  - Ejecución de `pytest -v` (39/39 verde).
+  - Regeneración y validación del archivo ZIP final de replicación `Articulo_4_AIP_Chaos_Replication_Package.zip`.
+  - Commit Git final con mensaje estructurado.
+- **Criterio de aceptación:** Emisión del acta de conformidad final firmada por las 3 IAs.
+
+---
+
+### ❓ 4. Decisiones Pendientes (Para el Autor)
+
+1. **Actualización de Metadata en Zenodo:**  
+   - *Detalle:* El registro existente de Zenodo tiene asignado el DOI `10.5281/zenodo.21980410`. En Zenodo es posible editar los metadatos del título en la versión v1.0.0 sin alterar el DOI permanente ni los archivos subidos.
+   - *Recomendación:* Entrar a Zenodo y ajustar el campo "Title" a:  
+     `Replication Package: Instability, Outlier Amplification, and Positivity Constraints in Next-Generation Reservoir Computing`  
+     para que coincida con `main.tex`.
+
+---
+
+**Dependencias del Plan:**
+- Fase 2 (Claude) y Fase 1 (Codex) operan en paralelo sin interferencia de archivos.
+- Fase 3 y Fase 4 (Antigravity) se ejecutan tras recibir los textos de Fase 2 y los tests de Fase 1.
+- Fase 5 cierra el ciclo con el visto bueno de Codex, Claude y Antigravity.
+
+**Firma Consolidador:** Antigravity (Google DeepMind) — 2026-08-17 11:22 UTC-6
+
