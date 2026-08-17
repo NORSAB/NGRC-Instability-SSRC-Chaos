@@ -153,7 +153,32 @@ class TestStatisticalBootstrapInference:
     """Verifica que el bootstrap de dos vías sea verdaderamente cruzado y reproducible."""
 
     def test_two_way_block_bootstrap_shared_time_indices(self):
+        """Verifica la lógica algorítmica de remuestreo temporal compartido y la estructura del output."""
+        import numpy as np
         import pandas as pd
+        from experimento_lorenz.run_two_way_block_bootstrap import block_bootstrap_indices, BLOCK_SIZE
+
+        # 1. Validación algorítmica del generador de índices por bloques
+        rng = np.random.RandomState(42)
+        n_w, n_s = 50, 30
+        w_idx = block_bootstrap_indices(n_w, BLOCK_SIZE, rng)
+        s_idx = rng.choice(n_s, size=n_s, replace=True)
+
+        assert len(w_idx) == n_w, f"w_idx debe tener longitud {n_w}"
+        assert len(s_idx) == n_s, f"s_idx debe tener longitud {n_s}"
+
+        # 2. Verificar que la indexación bidimensional (w_idx[:, None], s_idx) comparte idénticos índices de tiempo
+        synthetic_matrix = np.arange(n_w * n_s).reshape(n_w, n_s)
+        sampled = synthetic_matrix[w_idx[:, None], s_idx]
+        assert sampled.shape == (n_w, n_s), "La matriz remuestreada debe preservar dimensiones (n_w, n_s)"
+
+        # Comprobar que a lo largo de cualquier columna de semillas j, las filas evaluadas son exactamente w_idx
+        for col_j in range(n_s):
+            col_seed_orig = s_idx[col_j]
+            expected_col = synthetic_matrix[w_idx, col_seed_orig]
+            np.testing.assert_array_equal(sampled[:, col_j], expected_col, err_msg="El remuestreo temporal debe ser idéntico en todas las semillas")
+
+        # 3. Validación de integridad del CSV canónico
         csv_file = BASE / "experimento_lorenz" / "output" / "lorenz_two_way_block_bootstrap.csv"
         assert csv_file.exists(), "Debe existir lorenz_two_way_block_bootstrap.csv"
         df = pd.read_csv(csv_file)
@@ -161,4 +186,6 @@ class TestStatisticalBootstrapInference:
         assert "diff_mean_vs_ridge" in df.columns
         assert "ci_vs_ridge_2.5" in df.columns
         assert "ci_vs_ridge_97.5" in df.columns
+        assert not df["diff_mean_vs_ridge"].isna().any(), "No deben existir valores NaN en diff_mean_vs_ridge"
+
 

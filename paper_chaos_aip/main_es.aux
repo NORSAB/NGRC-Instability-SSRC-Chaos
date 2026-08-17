@@ -32,10 +32,10 @@
 \newlabel{eq:ngrc_state}{{1}{3}{}{equation.1}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {2}Arquitectura de Reservorio Recurrente Disperso (ESN)}{3}{section*.7}\protected@file@percent }
 \newlabel{eq:esn_state}{{2}{3}{}{equation.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B}Teorema de Inflación Cuártica de Traza (Escalamiento $M^4$)}{3}{section*.8}\protected@file@percent }
-\newlabel{subsec:m4_theorem}{{II\,B}{3}{}{section*.8}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Mediana de $\lambda \propto \operatorname  {tr}(\mathbf  {F}^\top \mathbf  {F})$ en función de la magnitud del shock inyectado $M$ ($\sigma $), en escala log--log, medida directamente del experimento en Lorenz63 (\S  \ref {sec:lorenz}). El ajuste de ley de potencia, restringido al lector Ridge NG-RC, arroja una pendiente empírica de $3.93$, validando el escalamiento $\sim M^4$ predicho por el Teorema 1.}}{3}{figure.1}\protected@file@percent }
 \newlabel{fig:ridge_fragility}{{1}{3}{Mediana de $\lambda \propto \operatorname {tr}(\mathbf {F}^\top \mathbf {F})$ en función de la magnitud del shock inyectado $M$ ($\sigma $), en escala log--log, medida directamente del experimento en Lorenz63 (\S \ref {sec:lorenz}). El ajuste de ley de potencia, restringido al lector Ridge NG-RC, arroja una pendiente empírica de $3.93$, validando el escalamiento $\sim M^4$ predicho por el Teorema 1}{figure.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B}Teorema de Inflación Cuártica de Traza (Escalamiento $M^4$)}{3}{section*.8}\protected@file@percent }
+\newlabel{subsec:m4_theorem}{{II\,B}{3}{}{section*.8}{}}
 \newlabel{eq:ridge_heuristic}{{3}{3}{}{equation.3}{}}
 \citation{tikhonovarsenin1977solutions}
 \citation{lorenz1963deterministic}
@@ -65,21 +65,19 @@
 \newlabel{sec:empirical}{{IV}{6}{}{section*.13}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {A}Objetivos con Cota Inferior y Sensibilidad de Pérdida}{6}{section*.14}\protected@file@percent }
 \newlabel{eq:qlike}{{10}{6}{}{equation.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B}Conos Convexos vs. Monomios con Signo}{6}{section*.15}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces QLIKE fuera de muestra en 9 series de divisas y criptomonedas ($T \approx 3900$ observaciones diarias), ordenado por la mediana entre series del QLIKE medio (promedio temporal por serie y luego mediana de las 9 series). La mediana agregada se reporta como referencia. ``Ridge Legacy'' está recortado en $\epsilon = 10^{-10}$.}}{6}{table.2}\protected@file@percent }
 \newlabel{tab:fx_qlike}{{II}{6}{QLIKE fuera de muestra en 9 series de divisas y criptomonedas ($T \approx 3900$ observaciones diarias), ordenado por la mediana entre series del QLIKE medio (promedio temporal por serie y luego mediana de las 9 series). La mediana agregada se reporta como referencia. ``Ridge Legacy'' está recortado en $\epsilon = 10^{-10}$}{table.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B}Conos Convexos vs. Monomios con Signo}{6}{section*.15}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {V}Discusión y Conclusiones}{6}{section*.16}\protected@file@percent }
-\newlabel{sec:discussion}{{V}{6}{}{section*.16}{}}
 \citation{platt2023constraining}
 \citation{fumagalli2025datadriven}
-\citation{zenodo_package}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Pérdida QLIKE mediana en función del piso numérico artificial $\epsilon $. Los lectores tradicionales con signo (Ridge, OLS, NNLS con signo) explotan al hacer $\epsilon \to 0$ debido a predicciones de varianza negativa, mientras que NNLS no negativo se mantiene constante en $1.4498$ para $\epsilon \le 10^{-8}$ y varía levemente a $1.2244$ en $\epsilon = 10^{-6}$ porque 3 de los 1,485 pronósticos positivos caen por debajo de dicho umbral.}}{7}{figure.4}\protected@file@percent }
 \newlabel{fig:qlike_tradeoff}{{4}{7}{Pérdida QLIKE mediana en función del piso numérico artificial $\epsilon $. Los lectores tradicionales con signo (Ridge, OLS, NNLS con signo) explotan al hacer $\epsilon \to 0$ debido a predicciones de varianza negativa, mientras que NNLS no negativo se mantiene constante en $1.4498$ para $\epsilon \le 10^{-8}$ y varía levemente a $1.2244$ en $\epsilon = 10^{-6}$ porque 3 de los 1,485 pronósticos positivos caen por debajo de dicho umbral}{figure.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Discusión y Conclusiones}{7}{section*.16}\protected@file@percent }
+\newlabel{sec:discussion}{{V}{7}{}{section*.16}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {}Material Suplementario}{7}{section*.17}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {}Declaraciones del Autor}{7}{section*.18}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {}Conflicto de Intereses}{7}{section*.19}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {}Contribuciones del Autor}{7}{section*.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {}Disponibilidad de Datos}{7}{section*.21}\protected@file@percent }
+\citation{zenodo_package}
 \bibcite{jaeger2001echo}{{1}{}{{}}{{}}}
 \bibcite{maass2002realtime}{{2}{}{{}}{{}}}
 \bibcite{nakajima2021reservoir}{{3}{}{{}}{{}}}
@@ -113,6 +111,8 @@
 \bibcite{cestnik2026ngrc}{{31}{}{{}}{{}}}
 \bibcite{gauthier2025locality}{{32}{}{{}}{{}}}
 \bibcite{prosperino2025tailored}{{33}{}{{}}{{}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {}Contribuciones del Autor}{8}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {}Disponibilidad de Datos}{8}{section*.21}\protected@file@percent }
 \bibcite{lakmesari2026regime}{{34}{}{{}}{{}}}
 \bibcite{hart2024attractor}{{35}{}{{}}{{}}}
 \bibcite{hart2025generic}{{36}{}{{}}{{}}}

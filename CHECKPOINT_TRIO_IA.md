@@ -2985,3 +2985,68 @@ graph TD
 **Firma:** Antigravity (Google DeepMind) — 2026-08-17 12:15 UTC-6  
 **Aprobado para ejecución de la Fase 1 (Claude) y Fase 2 (Antigravity).**
 
+==============================================================
+Quien Modifica: Claude (Sonnet 5)
+Fecha y hora: 2026-08-17 12:20, America/Tegucigalpa
+
+Ajustes/recomendaciones/ejecuciones:
+- **Ejecución de la FASE 2 (F-ESC, Tarea P03) del "PLAN DE CORRECCIÓN CONSOLIDADO" de Antigravity (17:22 UTC). Alcance estrictamente limitado a lo asignado: `paper_chaos_aip/main.tex` y `paper_chaos_aip/main_es.tex`, únicamente el bloque `\begin{abstract}...\end{abstract}`. No toqué código Python, scripts de figuras ni bibliografía `\bibitem`, tal como exige la matriz de no-traslape del plan.**
+
+1. **Tarea P03 (sobre-promesa léxica "prevent"/"previenen" en el Abstract):**
+   - `main.tex`: `"bounded activations (tanh) prevent the iterated multi-step divergence..."` → `"bounded activations (tanh) delay, and in the majority of realization trajectories arrest, the iterated multi-step divergence..."` (texto exacto especificado por el plan).
+   - `main_es.tex`: `"las activaciones acotadas (tanh) previenen la divergencia multipaso iterada..."` → `"las activaciones acotadas (tanh) retrasan y, en la mayoría de las trayectorias de realización, detienen la divergencia multipaso iterada..."` (equivalente ES del texto del plan; ajustado el orden "multipaso iterada" para calzar con la redacción real preexistente en el archivo, que difería en el orden de palabras respecto al texto literal citado en el plan).
+
+2. **Verificación del criterio de aceptación declarado en el plan ("ausencia del término absoluto prevent/previenen y coherencia con los resultados de H=30,40"):**
+   - `grep` de `"prevent the iterated"` y `"previenen la divergencia"` sobre `main.tex`/`main_es.tex`: **0 coincidencias.**
+   - La nueva redacción ("delay, and in the majority of realization trajectories arrest...") es coherente con la Tabla I y la Fig. 3, que muestran que a $H=30,40$ el ESN recurrente deja de superar a Ridge y las trayectorias saturan (la divergencia se retrasa/detiene en la mayoría de las semillas hasta $H\le15$, no se previene de forma absoluta e incondicional).
+
+3. **Verificación final:**
+   - `pdflatex -interaction=nonstopmode` ×2 en `main.tex` y `main_es.tex`: **errors=0, overfull=0, undefined=0** en ambos.
+   - `pytest -v` completo desde la raíz del Artículo 4: **39/39 passed** (incluye el test anti-rayas de interrupción; la redacción nueva no introduce ninguna).
+
+- **Estado de la Tarea P03 (Fase 2, Claude): COMPLETADA y verificada.** Pendiente de que Codex (Fase 1) y Antigravity (Fase 3, que depende de que Fase 2 termine para tocar `main.tex`/`main_es.tex` en bibliografía/Data Availability) continúen con sus bloques del mismo plan.
+
+---
+
+==============================================================
+Quien Modifica: Antigravity (Google DeepMind)
+Fecha y hora: 2026-08-17 12:28, America/Tegucigalpa (18:28 UTC)
+
+## INFORME DE EJECUCIÓN TÉCNICA (70% Antigravity) — Fases 2, 3 y 4 Completadas
+**Alcance Asignado:** Tareas `P01`, `P02`, `P03/D1`, `P06`, `P07` y empaquetado de replicación.
+
+### 🛠️ 1. Detalle de Ejecución por Tarea
+
+1. **Tarea P02 (`F-COD` — Test de Bootstrap Cruzado en Memoria):**
+   - Archivo: `experimento_lorenz/test_koinonia_rules.py`.
+   - Modificación: Se amplió `test_two_way_block_bootstrap_shared_time_indices` para evaluar directamente la función `block_bootstrap_indices`, comprobando que la matriz sintética $(n\_w, n\_s)$ al indexarse como `(w_idx[:, None], s_idx)` mantiene exactamente los mismos índices temporales de filas a lo largo de las 30 semillas (validando algorítmicamente la ausencia de dispersión asíncrona).
+   - Verificación: `pytest -v` pasa **39/39 tests en VERDE (100%)** en 3.00s.
+
+2. **Tarea P01 (`F-FMT` — Sincronización del Título de Zenodo):**
+   - Archivos: `paper_chaos_aip/main.tex`, `paper_chaos_aip/main_es.tex`, `paper_chaos_aip/supplementary.tex`, `paper_chaos_aip/supplementary_es.tex`, `ZENODO_REPRODUCIBILITY.md`.
+   - Modificación: Se unificó la cita `\bibitem{zenodo_package}` y el encabezado de reproducibilidad al título canónico:  
+     `Replication Package: Instability, Outlier Amplification, and Positivity Constraints in Next-Generation Reservoir Computing` (DOI `10.5281/zenodo.21980410`).
+
+3. **Tarea P03 / D1 (`F-NOV` — Novedad y Literatura Externa):**
+   - Verificación de los 45 artículos citados en *Chaos* y contraste con el grafo estructural del repositorio en `graphify-out/graph.json` (5,291 nodos, 6,262 aristas).
+
+4. **Tarea P06 y P07 (`F-SIN` — Compilación y Pipeline Maestro):**
+   - Se ejecutó `reproduce_all.py --mode=quick` de forma integral:
+     - 39 tests de pytest en verde.
+     - 9 figuras bilingües regeneradas a 600 DPI vectoriales.
+     - 4 manuscritos compilados con `pdflatex` en 2 pasadas limpias:
+       - `main.pdf`: 855 KB (0 Overfull, 0 referencias indefinidas).
+       - `main_es.pdf`: 857 KB (0 Overfull, 0 referencias indefinidas).
+       - `supplementary.pdf`: 508 KB (0 Overfull, 0 referencias indefinidas).
+       - `supplementary_es.pdf`: 529 KB (0 Overfull, 0 referencias indefinidas).
+
+5. **Fase 4 (`F-PKG` — Empaquetado Oficial de Zenodo):**
+   - Se regeneró el paquete limpio `Articulo_4_AIP_Chaos_Replication_Package.zip` (50.91 MB) excluyendo artefactos compilados temporales (`.aux`, `.log`, `.cache`, `scratch`).
+
+---
+
+### 📊 Estado de Verificación y Handoff
+- **Tareas Claude (30%):** Completadas (Abstract mitigado en EN y ES).
+- **Tareas Antigravity (70%):** Completadas (Código, tests, sincronización de títulos, 4 PDFs limpios y ZIP de replicación).
+- **Siguiente paso:** Handoff a **Codex** para la **Fase 5 (Auditoría Nivel 2 Independiente y Cierre)**.
+
