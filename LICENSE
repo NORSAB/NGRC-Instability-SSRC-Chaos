@@ -37,9 +37,9 @@ To view a copy of this license, visit https://creativecommons.org/licenses/by/4.
 
 ---
 
-## 3. THIRD-PARTY DATA PROVENANCE & ATTRIBUTION NOTICE
+## 3. THIRD-PARTY DATA PROVENANCE, REDISTRIBUTION & ACADEMIC FAIR-USE NOTICE
 
-- **Lorenz63 & Rössler Data:** Numerically generated using standard deterministic RK4 integration routines included in this repository.
-- **Foreign Exchange and Cryptocurrency Data:** Historical daily exchange rates and cryptocurrency price series are sourced from public financial records (Yahoo Finance API).
-- **Multilateral Lending Panel Data:** Derived from publicly disclosed annual loan approval portfolios of the Central American Bank for Economic Integration (BCIE Open Data).
-- **Honduras Fuel Price Data:** Sourced from public weekly retail petroleum price bulletins published by the Secretaría de Energía de Honduras (SEN).
+- **Lorenz63 & Rössler Data:** Numerically generated using standard deterministic RK4 integration routines included in this repository (Public Domain / Scientific Simulation).
+- **Foreign Exchange and Cryptocurrency Data:** Historical daily exchange rates and cryptocurrency price series are sourced from public financial market feeds (Yahoo Finance API) for non-commercial academic research and reproducibility purposes. The archived CSVs contain derived mathematical features (log-returns $r_t$ and realized variances $\sigma_t^2$). All original raw series remain the intellectual property of their respective primary exchange sources. Users may alternatively regenerate the datasets directly using the provided automated ingestion scripts (`experimento_diario_fx_cripto/`).
+- **Multilateral Lending Panel Data:** Derived from publicly disclosed annual loan approval portfolios of the Central American Bank for Economic Integration (BCIE Open Data, licensed under Open Government / Open Data policies).
+- **Honduras Fuel Price Data:** Sourced from public weekly retail petroleum price bulletins published by the Secretaría de Energía de Honduras (SEN, public administrative records).

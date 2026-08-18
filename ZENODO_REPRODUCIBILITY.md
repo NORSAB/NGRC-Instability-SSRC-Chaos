@@ -115,5 +115,20 @@ This re-executes the Lorenz63 30-seed ablation, Rössler sweeps, and financial b
 ## 5. Third-Party Data & External Repositories
 
 - **Honduras Fuel Dataset:** The processed weekly series are bundled inside `experimento_combustibles_honduras/output/`. If the optional raw external repository is available, its location can be specified via the `PAPER4_FUEL_REPOSITORY` environment variable.
-- **FX / Cryptocurrency Data:** 9 daily series (2018–2026) are bundled in `experimento_diario_fx_cripto/output/`.
+- **FX / Cryptocurrency Data:** 9 daily series (2018–2026) are bundled in `experimento_diario_fx_cripto/output/`. Sourced via Yahoo Finance API for academic research and reproducibility; scripts for fresh retrieval are included in `experimento_diario_fx_cripto/`.
 - **BCIE Loan Approvals:** Public portfolio disclosure records (1961–2025) are bundled in `experimento/codigo_pipeline/output/`.
+
+---
+
+## 6. Zenodo Deposit Metadata & Archive Verification
+
+- **Zenodo Live Record v2:** [https://zenodo.org/records/21987030](https://zenodo.org/records/21987030)
+- **Version 2 DOI:** `10.5281/zenodo.21987030`
+- **Concept DOI:** `10.5281/zenodo.21980409`
+- **Deposited Remote Archive (Zenodo Record 21987030):**
+  - **Filename:** `Articulo_4_AIP_Chaos_Replication_Package.zip`
+  - **Exact Size:** `53,418,461 bytes` (~50.94 MB)
+  - **MD5 Checksum:** `99278185bb215582f3a61d1988ee50f6`
+- **Local Master Build:**
+  - Can be built anytime using `python -c "import zipfile..."` or packaged via repository export. Contains the complete source tree, test suite (39/39 passing), and compiled REVTeX 4-2 PDFs.
+

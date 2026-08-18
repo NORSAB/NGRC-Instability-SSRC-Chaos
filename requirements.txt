@@ -1,11 +1,11 @@
-# Replication Environment Dependencies
+# Replication Environment Pinned Dependencies
 # Project: Next-Generation Reservoir Computing (NG-RC) & SSRC (Chaos: AIP Publishing)
-# Python >= 3.10
+# Python 3.10 - 3.13 (Tested on Python 3.13.14)
 
-numpy>=1.24.0
-scipy>=1.10.0
-pandas>=2.0.0
-matplotlib>=3.7.0
-scikit-learn>=1.3.0
-requests>=2.31.0
-pytest>=7.4.0
+numpy==2.4.6
+scipy==1.17.1
+pandas==3.0.3
+matplotlib==3.10.9
+scikit-learn==1.8.0
+requests==2.34.2
+pytest==9.0.3
