@@ -3824,3 +3824,15 @@ Tres actas de cierre distintas (de Antigravity) declararon este punto "100% sinc
 **Estado de esta verificación:** ningún archivo del paper fue modificado en esta ronda — solo se leyó, se comparó contra fuentes externas (API de Zenodo, entorno Python real, contenido del ZIP) y se actualizó el grafo graphify.
 
 **Firma:** Claude (Sonnet 5).
+==============================================================
+Quien Modifica: Claude (Sonnet 5)
+Fecha y hora: 2026-08-17 19:10, UTC (13:10 America/Tegucigalpa)
+
+Ajustes/recomendaciones/ejecuciones:
+- **Cierre de la actualización de graphify pendiente de la entrada anterior.** El primer intento de extracción semántica falló (el subagente agotó el límite de tokens de salida al intentar procesar CHECKPOINT_TRIO_IA.md completo, que ya supera 3800 líneas). Lo reintenté excluyendo deliberadamente ese archivo del chunk semántico (es un log de auditoría en crecimiento constante, sin valor duradero para el grafo de conocimiento) y procesé los 10 documentos reales restantes (ZENODO_REPRODUCIBILITY.md, requirements.txt/requirements-min.txt, environment.yml, alt-text, prompts de auditoría, docs/literature/THEORETICAL_FOUNDATIONS_CHAOS_2026.md).
+- El merge final disparó la salvaguarda propia de graphify: "Refusing to overwrite" por una reducción neta de nodos (5294 vs 5337 en disco, -43). Verifiqué la causa antes de forzar: 85 archivos fuente (las figuras PDF/PNG regeneradas del propio artículo, ya excluidas del pipeline semántico en rondas anteriores) fueron podados por haber sido borrados/regenerados, y el merge deduplicó legítimamente 138 nodos (47 exactos + 91 difusos) entre el chunk nuevo y el grafo existente. Confirmada la causa como pérdida de nodos redundantes, no de información real, forcé la escritura (force=True).
+- Estado final del grafo central: **5,294 nodos, 6,340 aristas, 816 comunidades**. Verificado de nuevo tras el merge: **45/45 referencias del main.tex siguen con nodo lit_ref_* en el grafo** (no se perdió ninguna en la poda/dedup).
+- `pytest -v` final: **39/39 en verde** (11.59s).
+- Limpieza de archivos temporales de graphify-out/ completada; manifiesto y contador de costos actualizados (215,000 tokens de entrada / 1,613,393 de salida acumulados en 6 corridas de esta sesión).
+
+**Estado: actualización de graphify COMPLETADA. CHECKPOINT_TRIO_IA.md sigue siendo el único archivo .md de seguimiento (ESTADO_ACTUAL_CHECKPOINT.md eliminado en la entrada anterior). Verificación maestra de cierre de hallazgos de las 3 IA: CERRADA para esta sesión — único pendiente real: subir el ZIP a Zenodo, acción que solo el autor humano puede ejecutar.**
