@@ -25,6 +25,29 @@ def block_bootstrap_indices(n_items: int, block_size: int, rng: np.random.Random
     return np.array(indices[:n_items])
 
 
+def resample_two_way_block_diff(
+    piv_a: np.ndarray,
+    piv_b: np.ndarray,
+    block_size: int = BLOCK_SIZE,
+    n_boot: int = N_BOOT,
+    rng: np.random.RandomState | None = None
+) -> tuple[float, float, float]:
+    """Calcula la diferencia muestral y el intervalo percentil de bootstrap de dos vías con tiempo compartido."""
+    if rng is None:
+        rng = np.random.RandomState(42)
+    n_w, n_s = piv_a.shape
+    diff_sample = float(np.mean(piv_a - piv_b))
+    boot_diffs = []
+    for _ in range(n_boot):
+        w_idx = block_bootstrap_indices(n_w, block_size, rng)
+        s_idx = rng.choice(n_s, size=n_s, replace=True)
+        a_b = piv_a[w_idx[:, None], s_idx]
+        b_b = piv_b[w_idx[:, None], s_idx]
+        boot_diffs.append(np.mean(a_b - b_b))
+    ci_low, ci_high = np.percentile(boot_diffs, [2.5, 97.5])
+    return diff_sample, float(ci_low), float(ci_high)
+
+
 def run_bootstrap_analysis():
     print("Leyendo datos completos de ablacion estocastica...")
     df = pd.read_csv(IN_CSV)

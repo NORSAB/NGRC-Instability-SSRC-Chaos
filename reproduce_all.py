@@ -63,13 +63,15 @@ def run_simulations() -> bool:
         ROOT_DIR / "experimento_combustibles_honduras" / "run_combustibles_hn.py",
     ]
     for script in sim_scripts:
-        if script.exists():
-            print(f"  Running simulation: {script.name}...")
-            res = subprocess.run([sys.executable, str(script)], cwd=str(script.parent))
-            if res.returncode != 0:
-                print(f"  [FAIL] Simulation script {script.name} returned non-zero exit code.")
-                return False
-            print(f"  [OK] {script.name} completed.")
+        if not script.exists():
+            print(f"  [ERROR] Required simulation script not found: {script}")
+            return False
+        print(f"  Running simulation: {script.name}...")
+        res = subprocess.run([sys.executable, str(script)], cwd=str(script.parent))
+        if res.returncode != 0:
+            print(f"  [FAIL] Simulation script {script.name} returned non-zero exit code.")
+            return False
+        print(f"  [OK] {script.name} completed.")
     return True
 
 def run_tests() -> bool:

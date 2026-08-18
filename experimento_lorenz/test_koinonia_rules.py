@@ -156,7 +156,11 @@ class TestStatisticalBootstrapInference:
         """Verifica la lógica algorítmica de remuestreo temporal compartido y la estructura del output."""
         import numpy as np
         import pandas as pd
-        from experimento_lorenz.run_two_way_block_bootstrap import block_bootstrap_indices, BLOCK_SIZE
+        from experimento_lorenz.run_two_way_block_bootstrap import (
+            block_bootstrap_indices,
+            resample_two_way_block_diff,
+            BLOCK_SIZE,
+        )
 
         # 1. Validación algorítmica del generador de índices por bloques
         rng = np.random.RandomState(42)
@@ -178,7 +182,36 @@ class TestStatisticalBootstrapInference:
             expected_col = synthetic_matrix[w_idx, col_seed_orig]
             np.testing.assert_array_equal(sampled[:, col_j], expected_col, err_msg="El remuestreo temporal debe ser idéntico en todas las semillas")
 
-        # 3. Validación de integridad del CSV canónico
+        # 3. Probar la función de producción resample_two_way_block_diff con datos de covarianza cruzada no trivial
+        # Se inyecta una fuerte tendencia temporal compartida y ruido estocástico
+        time_trend = np.linspace(0, 10, n_w)[:, None]
+        seed_trend = np.linspace(0, 2, n_s)[None, :]
+        noise_a = rng.normal(0, 0.05, size=(n_w, n_s))
+        noise_b = rng.normal(0, 0.05, size=(n_w, n_s))
+
+        mat_a = time_trend + seed_trend + noise_a
+        mat_b = time_trend + seed_trend + 0.5 + noise_b
+
+        d_mean, ci_low, ci_high = resample_two_way_block_diff(mat_a, mat_b, block_size=BLOCK_SIZE, n_boot=200, rng=rng)
+        assert abs(d_mean - (-0.5)) < 0.05, f"La diferencia media debe ser ~ -0.5, obtenida {d_mean}"
+        shared_ci_width = ci_high - ci_low
+
+        # Verificar que el remuestreo independiente/desalineado de tiempo produce una varianza al menos 10x mayor
+        unshared_diffs = []
+        for _ in range(200):
+            w_idx_a = block_bootstrap_indices(n_w, BLOCK_SIZE, rng)
+            w_idx_b = block_bootstrap_indices(n_w, BLOCK_SIZE, rng)
+            s_idx_b = rng.choice(n_s, size=n_s, replace=True)
+            unshared_diffs.append(np.mean(mat_a[w_idx_a[:, None], s_idx_b] - mat_b[w_idx_b[:, None], s_idx_b]))
+        unshared_ci_low, unshared_ci_high = np.percentile(unshared_diffs, [2.5, 97.5])
+        unshared_ci_width = unshared_ci_high - unshared_ci_low
+
+        assert unshared_ci_width > 10 * shared_ci_width, (
+            f"El remuestreo temporal compartido debe cancelar la tendencia temporal "
+            f"(ancho compartido={shared_ci_width:.4f}, no compartido={unshared_ci_width:.4f})"
+        )
+
+        # 4. Validación de integridad del CSV canónico
         csv_file = BASE / "experimento_lorenz" / "output" / "lorenz_two_way_block_bootstrap.csv"
         assert csv_file.exists(), "Debe existir lorenz_two_way_block_bootstrap.csv"
         df = pd.read_csv(csv_file)

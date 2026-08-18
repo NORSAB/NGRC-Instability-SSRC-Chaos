@@ -2,7 +2,7 @@
 **Title:** Replication Package: Instability, Outlier Amplification, and Positivity Constraints in Next-Generation Reservoir Computing  
 **Author:** Norman Reynaldo Sabillón Castro  
 **Target Journal:** *Chaos: An Interdisciplinary Journal of Nonlinear Science* (AIP Publishing)  
-**Zenodo DOI:** [10.5281/zenodo.21980410](https://doi.org/10.5281/zenodo.21980410)  
+**Zenodo DOI:** [10.5281/zenodo.21987030](https://doi.org/10.5281/zenodo.21987030) (Concept DOI: [10.5281/zenodo.21980409](https://doi.org/10.5281/zenodo.21980409))  
 **License:** Dual License — MIT License (Software / Code) / Creative Commons CC-BY 4.0 (Data, Visualizations & Documentation)  
 
 ---
@@ -45,6 +45,8 @@ Articulo_4_NGRC_Regularizado_SSRC/
 │   ├── qlike_tail_diagnostics.py        # Tail diagnostics & per-series block bootstrap
 │   ├── volatility_models.py             # Econometric and positive cone readouts
 │   └── output/                          # Audited out-of-sample CSV records
+├── data/                            # Raw historical datasets (Honduras retail fuel, etc.)
+│   └── repositorio_combustibles_honduras.csv
 ├── experimento_combustibles_honduras/ # Weekly retail fuel volatility (Honduras)
 │   ├── run_combustibles_hn.py           # Out-of-sample volatility forecasting
 │   ├── data_paths.py                    # Relative data path resolver with env fallback
