@@ -3756,3 +3756,71 @@ Leí `experimento_lorenz/output/lorenz_rigorous_summary.csv` yo mismo y comparé
 
 ---
 
+==============================================================
+Quien Modifica: Claude (Sonnet 5)
+Fecha y hora: 2026-08-18 00:15, UTC (18:15 America/Tegucigalpa)
+
+## VERIFICACIÓN MAESTRA DE CIERRE — Todos los hallazgos de las 3 IA (Codex, Antigravity, Claude), 6 rondas de auditoría
+
+**Encargo del usuario:** no es una auditoría nueva. Es una verificación de que TODO lo encontrado en las rondas anteriores está realmente cerrado, con foco explícito en riesgos de derechos de autor de datos que pudieran causar rechazo, y una lista clara de lo que sigue pendiente.
+
+**Metodología:** releí el listado completo de hallazgos de Codex (auditoría 19:58 UTC, C01-C12) y de mis propias 6 rondas de auditoría N1/N2, y verifiqué cada uno contra el archivo/API/código real en este momento — no contra ningún acta de cierre de otro agente.
+
+---
+
+### ✅ CERRADO Y VERIFICADO (evidencia directa, no de oídas)
+
+| # | Hallazgo original | Quién lo señaló | Verificación de esta ronda |
+|---|---|---|---|
+| 1 | Teorema 1 afirmaba falsamente uniformidad en $C$ | Codex C01 | `main.tex:102,121` dice "for fixed... $C \ge 0$... as $M\to\infty$". Correcto. |
+| 2 | Reproducción no autocontenida (CSV de combustibles ausente) | Codex C02 | `data/repositorio_combustibles_honduras.csv` existe; `data_paths.py` lo resuelve primero. |
+| 3 | Sin declaración de uso de IA (política AIP) | Codex C04 | `main.tex:292-293`, sección `Use of AI-Assisted Tools` presente y honesta. |
+| 4 | Grilla de $\lambda$ no coincidía con el código | Codex C07 | `main.tex:176` lista el conjunto exacto `{10^-8,...,100}`. |
+| 5 | "Adaptive temporal low-pass filter" sin sustento causal | Codex C10 | Reemplazado por "performance consistent with adaptive temporal smoothing" en ambos idiomas, ambas ubicaciones. |
+| 6 | Grafo sin literatura externa (bloqueaba R3/Piso B en 3 rondas N2) | Claude, H01 persistente | **45/45** referencias con nodo `lit_ref_*` (autor/año/DOI) en `graph.json`, verificado con script propio, corrigiendo mi lectura errónea de una ronda anterior. |
+| 7 | Cobertura FX (15 años) vs. cripto (10 años) sin distinguir | Codex C08 | Corregido por mí en una ronda anterior; verificado de nuevo, sigue correcto. |
+| 8 | Test de bootstrap no tocaba la función de producción real | Codex C09 | `test_two_way_block_bootstrap_shared_time_indices` ahora usa datos con tendencia temporal+semilla correlacionada, llama `resample_two_way_block_diff()` real, y compara remuestreo compartido vs. desalineado. Pasa. (Nota de precisión: el umbral codificado es `>10x`, no ">250x" como dice el commit — ver sección de imprecisiones menores). |
+| 9 | Título del `\bibitem` de Zenodo no coincidía con el DOI real | Claude, rondas 4-5 | El DOI v2 (`10.5281/zenodo.21987030`) citado en `main.tex`/`main_es.tex` resuelve, en vivo, al título exacto del manuscrito. |
+| 10 | `requirements.txt` sin versiones fijas (`>=` en vez de exactas) | Codex C11 | Ahora usa `==`; verifiqué que cada versión (`numpy==2.4.6`, `scipy==1.17.1`, etc.) coincide exactamente con lo instalado en este entorno — no son números inventados. |
+| 11 | Dependencia de una única trayectoria física (semilla 7) nunca declarada | Claude, ronda 6 | Nuevo párrafo explícito en Discusión (`main.tex:178`, `main_es.tex:176`): aclara que las "30 realizaciones" son del reservorio, no de la trayectoria, y reconoce la limitación abiertamente. |
+| 12 | Riesgo de licencia de datos de Yahoo Finance bajo CC-BY 4.0 | Claude, ronda 6 | Verifiqué el contenido real del ZIP: **no se redistribuyen precios crudos**, solo estadísticas derivadas (QLIKE, kappa, resultados OOS); `LICENSE §3` ahora lo declara explícitamente y ofrece los scripts de ingesta para que cada usuario obtenga sus propios datos. Riesgo mitigado de forma sustantiva, no solo con una nota. |
+| 13 | "Prevent"/"arrest" no medido en el Abstract | Codex H02, Claude | Ahora dice "delay and reduce iterative error amplification", que sí corresponde a lo medido. |
+| 14 | Etiqueta editorial `\textbf{Lead Paragraph:}` + falta de Acknowledgments | Codex C12 | Etiqueta removida, `Acknowledgments` presente. |
+| 15 | Rutas absolutas del autor en scripts | Codex, rondas previas | 0 encontradas en esta verificación (`grep` sobre todo `.py`/`.tex`). |
+| 16 | Rayas de interrupción en prosa | Regla permanente del trío | 0 en los 4 `.tex`, verificado con la lógica exacta del test. |
+| 17 | Archivo huérfano `test_aip.tex`/`.pdf` | Claude, ronda 1 | Confirmado ausente. |
+| 18 | Paginación EN/ES del suplemento desincronizada (4 vs. 5 páginas) | Claude/Codex | Ambos en 5 páginas ahora. |
+
+**39/39 pytest, 0 errores/Overfull/undefined en los 4 PDFs, `git status` limpio (commit `7d45cbc`) — todo reverificado en esta misma sesión.**
+
+---
+
+### ⚠️ PENDIENTE — NO SE PUEDE CERRAR SIN QUE EL AUTOR HUMANO ACTÚE
+
+**El ZIP depositado en Zenodo sigue sin ser el ZIP actual del repositorio.** Verificado de forma independiente **cuatro veces en rondas distintas** contra la API en vivo de Zenodo (`https://zenodo.org/api/records/21987030`):
+
+- Archivo remoto: **53,418,461 bytes**, MD5 `99278185c3837608d0348dc7fa40c486` (sin cambios desde el primer depósito).
+- Archivo local actual: **53,424,301 bytes**, MD5 `2b5121ebe71392400d3b735488cf816d` (se ha regenerado al menos 3 veces desde entonces).
+
+Tres actas de cierre distintas (de Antigravity) declararon este punto "100% sincronizado" o "CUMPLIDO (100%)" sin comparar el hash contra el archivo remoto real. **Ninguna de las tres IA tiene credenciales de Zenodo para subir un archivo** — esto es estructuralmente imposible de cerrar sin que tú entres a zenodo.org, inicies sesión, y subas el ZIP local actual como nueva versión del depósito (o reemplaces el archivo si la versión v2 aún admite edición).
+
+**De todos los hallazgos de las 6 rondas de auditoría, este es el único que sí bloquearía un envío real:** un revisor de *Chaos* que siga el DOI citado en la Declaración de Disponibilidad de Datos descargará un paquete que no es exactamente el que corresponde al manuscrito final.
+
+---
+
+### 🔧 MENOR / NO BLOQUEANTE (cosmético, opcional cerrar)
+
+1. Avisos `Underfull \hbox`: 22 en `main.tex`, 11 en `main_es.tex` (subieron desde 13/10 por las adiciones de esta ronda). Son avisos de espaciado, no errores; no ocultan ni cortan contenido.
+2. Sin corrección por comparaciones múltiples en los conteos descriptivos tipo "X de Y condiciones" (p. ej. el 5/3/2 a $15\sigma$). Riesgo estadístico bajo porque el paper se apoya en intervalos bootstrap, no en tests de hipótesis con $p$-valor; lo dejo anotado por si un revisor estadístico lo pregunta.
+3. El mensaje del commit `5243484` y una entrada del checkpoint citan un umbral de ">250x" para el test de bootstrap reforzado; el código real implementa `>10x`. El test en sí es válido; solo el número citado en la documentación no coincide con el código.
+
+---
+
+### Actualización de graphify y consolidación documental
+
+- Ejecuté `/graphify --update`: detectó 78 archivos nuevos/cambiados desde la última corrida. De ellos, 22 "papers" y 18 "images" son las propias figuras PDF/PNG regeneradas del artículo (sin valor para el grafo, mismo criterio que en rondas anteriores) — no se re-procesaron para no desperdiciar ~40 despachos de subagentes. Se procesaron los 27 archivos de código (AST, extracción determinista: 207 nodos, 477 aristas nuevas) y los 11 documentos reales (`CHECKPOINT_TRIO_IA.md`, `ZENODO_REPRODUCIBILITY.md`, `requirements.txt`/`requirements-min.txt`, `environment.yml`, alt-text, prompts de auditoría, el archivo de literatura) vía extracción semántica.
+- `CHECKPOINT_TRIO_IA.md` sigue siendo el **único** archivo `.md` de seguimiento (verificado: no existe ningún `CHECKPOINT_HISTORIAL_*` ni copia paralela en el árbol).
+
+**Estado de esta verificación:** ningún archivo del paper fue modificado en esta ronda — solo se leyó, se comparó contra fuentes externas (API de Zenodo, entorno Python real, contenido del ZIP) y se actualizó el grafo graphify.
+
+**Firma:** Claude (Sonnet 5).
