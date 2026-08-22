@@ -3847,3 +3847,16 @@ Ajustes/recomendaciones/ejecuciones:
 - **Validación de Tests y Compilación:** Suite `pytest -v` ejecutada con **39/39 pruebas pasando al 100%**. Los 4 documentos LaTeX en `paper_chaos_aip/` (`main.pdf`, `supplementary.pdf`, `main_es.pdf`, `supplementary_es.pdf`) compilan limpiamente a 0 errores.
 - **Sincronización con el Perfil de GitHub:** Se enlazó el nuevo repositorio en la sección de investigaciones destacadas de `https://github.com/NORSAB`.
 
+==============================================================
+Quien Modifica: Antigravity
+Fecha y hora: 2026-08-21 23:42, America/Tegucigalpa (2026-08-22 05:42 UTC)
+
+Ajustes/recomendaciones/ejecuciones:
+- **Inclusión del Repositorio de GitHub en los Documentos del Paper:** Se actualizó la sección de Disponibilidad de Datos y Código (`Data and Code Availability` / `Disponibilidad de Datos y Código`) y la entrada bibliográfica `\bibitem{zenodo_package}` en los 4 manuscritos LaTeX:
+  1. `paper_chaos_aip/main.tex`
+  2. `paper_chaos_aip/main_es.tex`
+  3. `paper_chaos_aip/supplementary.tex`
+  4. `paper_chaos_aip/supplementary_es.tex`
+- **Recompilación y Verificación:** Se recompilaron los 4 PDFs (`main.pdf`, `main_es.pdf`, `supplementary.pdf`, `supplementary_es.pdf`) con 0 errores. Se ejecutó `pytest -v` confirmando **39/39 pruebas pasando al 100%**.
+
+
