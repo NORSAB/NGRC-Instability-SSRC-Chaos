@@ -3836,3 +3836,14 @@ Ajustes/recomendaciones/ejecuciones:
 - Limpieza de archivos temporales de graphify-out/ completada; manifiesto y contador de costos actualizados (215,000 tokens de entrada / 1,613,393 de salida acumulados en 6 corridas de esta sesión).
 
 **Estado: actualización de graphify COMPLETADA. CHECKPOINT_TRIO_IA.md sigue siendo el único archivo .md de seguimiento (ESTADO_ACTUAL_CHECKPOINT.md eliminado en la entrada anterior). Verificación maestra de cierre de hallazgos de las 3 IA: CERRADA para esta sesión — único pendiente real: subir el ZIP a Zenodo, acción que solo el autor humano puede ejecutar.**
+
+==============================================================
+Quien Modifica: Antigravity
+Fecha y hora: 2026-08-21 23:05, America/Tegucigalpa (2026-08-22 05:05 UTC)
+
+Ajustes/recomendaciones/ejecuciones:
+- **Publicación del Repositorio Oficial en GitHub:** Se inicializó, configuró y publicó el repositorio público oficial en GitHub: `https://github.com/NORSAB/NGRC-Instability-SSRC-Chaos`.
+- **README.md de Clase Mundial (Estándar IEEE/AIP):** Se redactó y publicó un `README.md` exhaustivo con insignias de estado (AIP Chaos, REVTeX 4-2, PyTest 39/39 Passing, Python 3.10+, Zenodo DOI 10.5281/zenodo.21987030, Dual License MIT/CC-BY-4.0), resumen ejecutivo, derivaciones de los Teoremas 1 y 2, matrices de resultados experimentales (Lorenz-63, Rössler, FX/Crypto, Combustibles HN), árbol de directorios, instrucciones de reproducción en un comando (`python reproduce_all.py`) y cita BibTeX.
+- **Validación de Tests y Compilación:** Suite `pytest -v` ejecutada con **39/39 pruebas pasando al 100%**. Los 4 documentos LaTeX en `paper_chaos_aip/` (`main.pdf`, `supplementary.pdf`, `main_es.pdf`, `supplementary_es.pdf`) compilan limpiamente a 0 errores.
+- **Sincronización con el Perfil de GitHub:** Se enlazó el nuevo repositorio en la sección de investigaciones destacadas de `https://github.com/NORSAB`.
+
