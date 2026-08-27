@@ -145,7 +145,7 @@ print(f"\nGuardado: {os.path.join(OUT, 'comparacion_cobertura_pareja.csv')}")
 print(df_out.to_string(index=False))
 
 # ------------------------------------------------------------------------------------------
-# 4. También guardamos la comparación de cobertura ANTES/DESPUÉS (para el .md) — cuántas
+# 4. También guardamos la comparación de cobertura ANTES/DESPUÉS (para el .md): cuántas
 #    entidades pierde cada variante al pasar de cobertura propia a cobertura pareja.
 # ------------------------------------------------------------------------------------------
 cobertura_rows = []

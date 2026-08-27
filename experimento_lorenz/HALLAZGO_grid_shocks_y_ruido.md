@@ -1,25 +1,13 @@
-# Lorenz63: grilla de shocks y ruido de medición, protocolo corregido
+# Lorenz63: grilla de shocks y ruido de medición
 
-## Cambios de protocolo
-
-Las corridas del 13 de agosto de 2026 usan un SSRC recurrente real y validación temporal
-interna para la λ de Ridge y del *readout* SSRC. La normalización se ajusta con los primeros
-500 puntos. Ninguna estadística del punto OOS exterior participa en la selección.
-
-### Estado de la lectura histórica
-
-Quedan retiradas las tablas y conclusiones de la corrida anterior que atribuían a Ridge un
-ΔMASE cercano a `+1.261`, describían al antiguo “reservorio” como estable o proponían validar
-en el futuro la regla fija `λ = 0.1*traza(X'X)/D`. Esas cifras provenían del protocolo ya
-reemplazado. La validación temporal de λ ya está implementada y los únicos valores vigentes
-son los reproducidos abajo desde los CSV actuales. No se mezclan resultados históricos con la
-corrida corregida.
+El SSRC es recurrente (`W_res` real) con validación temporal interna para la λ de Ridge y del
+*readout* SSRC. La normalización se ajusta con los primeros 500 puntos; ninguna estadística del
+punto OOS exterior participa en la selección.
 
 ## Grilla de 50 shocks
 
-Se probaron cinco ubicaciones, cinco magnitudes entre 5 y 30 desviaciones estándar y ambos
-signos. Cada configuración recorre la trayectoria completa y separa las ventanas que incluyen
-el shock de las ventanas de calma.
+Cinco ubicaciones, cinco magnitudes entre 5 y 30 desviaciones estándar, ambos signos. Cada
+configuración recorre la trayectoria completa y separa ventanas con shock de ventanas en calma.
 
 ### Geometría
 
@@ -31,8 +19,9 @@ el shock de las ventanas de calma.
 | 20 | 0.125391 | 0.092379 | 0.182036 | 10/10 |
 | 30 | 0.653232 | 0.480586 | 0.841262 | 10/10 |
 
-Hasta 30 desviaciones estándar, el shock reduce κ en todas las configuraciones. El efecto se
-debilita al crecer la magnitud y se invierte en el barrido extendido desde 40 desviaciones.
+Hasta 30 desviaciones estándar, el shock reduce κ en todas las configuraciones; el efecto se
+debilita al crecer la magnitud y se invierte desde 40 desviaciones (ver
+`HALLAZGO_umbral_shock_y_ruido_multipaso.md`).
 
 ### Error de pronóstico
 
@@ -46,16 +35,15 @@ Mediana de `MASE_shock - MASE_calma` sobre ubicación y signo:
 | 20 | -0.027812 | 0.029806 | -0.018351 | 0.152339 | -0.072801 |
 | 30 | -0.051584 | -0.009999 | -0.054696 | 0.238701 | -0.168100 |
 
-La interpretación antigua ya no se sostiene. Con λ validada, Ridge no es el lector que más se
-desestabiliza. El SSRC es el mejor en calma, pero su deterioro local aumenta con la magnitud
-del shock. El signo negativo de algunos deltas tampoco significa una mejora causal: el
-denominador MASE se calcula dentro de una ventana que contiene el shock y puede aumentar.
+Con λ validada, Ridge no es el lector que más se desestabiliza; el SSRC es el mejor en calma,
+pero su deterioro local aumenta con la magnitud del shock. Un delta negativo no implica mejora
+causal: el denominador MASE se calcula dentro de una ventana que contiene el shock y puede
+aumentar.
 
 ## Ruido de medición
 
-Para cada nivel distinto de cero se usaron cinco semillas y dos objetivos: recuperar la señal
-limpia o predecir la observación ruidosa. En el objetivo limpio, la media entre semillas de la
-mediana por ventana fue:
+Cinco semillas por nivel de ruido, dos objetivos: recuperar la señal limpia o predecir la
+observación ruidosa. Objetivo limpio, media entre semillas de la mediana por ventana:
 
 | σ ruido | OLS | Ridge validado | NNLS | SSRC recurrente | Naive |
 |---:|---:|---:|---:|---:|---:|
@@ -68,15 +56,13 @@ mediana por ventana fue:
 
 SSRC conserva la menor MASE entre los lectores aprendidos en todos los niveles, aunque pierde
 ventaja conforme el ruido domina la señal. Ridge y OLS permanecen muy próximos. NNLS solo se
-acerca a ellos cuando todos los lectores están ya en un régimen de error alto; no aparece una
-ventaja robusta de la restricción no negativa en este objetivo con signo.
+acerca a ellos en el régimen de error alto; no hay ventaja robusta de la restricción no
+negativa en este objetivo con signo.
 
-## Conclusión acotada
+## Conclusión
 
-El experimento no respalda una afirmación universal contra Ridge. Respalda tres resultados más
-precisos: κ puede bajar ante un shock y el error subir; Ridge validado permanece cerca de OLS
-y no muestra el deterioro extremo atribuido a la corrida retirada; y un SSRC realmente
-recurrente domina en Lorenz, aunque también acusa los shocks y el ruido extremos.
+κ puede bajar ante un shock y el error subir; Ridge validado permanece cerca de OLS; un SSRC
+realmente recurrente domina en Lorenz, aunque también acusa los shocks y el ruido extremos.
 
 ## Evidencia
 

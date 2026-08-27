@@ -1,6 +1,5 @@
 """
-Tarea 1 (seguimiento a HALLAZGO_lorenz.md): grilla de shocks sintéticos sobre Lorenz63 —
-ubicación x magnitud x signo — para confirmar o acotar el patrón "shock BAJA kappa(cov(F))"
+Tarea 1 (seguimiento a HALLAZGO_lorenz.md): grilla de shocks sintéticos sobre Lorenz63: ubicación x magnitud x signo: para confirmar o acotar el patrón "shock BAJA kappa(cov(F))"
 encontrado con un solo shock (t=20000, +15 sigma, n=25 ventanas).
 
 El guion comparte ``lorenz_common`` y no importa ``run_lorenz_shock.py``, por lo que no

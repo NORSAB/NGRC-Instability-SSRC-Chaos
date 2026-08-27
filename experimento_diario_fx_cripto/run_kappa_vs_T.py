@@ -14,7 +14,7 @@ Para cada serie, en retornos logaritmicos diarios, se construye el MISMO bloque 
 NG-RC (constante + lineal(delays) + cuadratico) que en run_ngrc_regularizado.py, para una
 grilla de tamanos de ventana T (30..1500 dias) y k in {2,3}. Se mide kappa(cov(F)) crudo y
 regularizado (Ledoit-Wolf) en cada punto, para ubicar el T de cruce donde deja de ser
-practicamente singular — la pregunta central de esta fase.
+practicamente singular: la pregunta central de esta fase.
 
 Salida: output/kappa_vs_T.csv, output/kappa_vs_T_resumen.md
 """
@@ -44,7 +44,7 @@ def kappa_for_window(logret_window, k):
     """logret_window: array de retornos log en la ventana. Retorna (kappa_raw, kappa_lw).
 
     FIX 2026-08-12: la columna 0 de F es la constante (sesgo). np.cov CENTRA cada columna
-    (resta su media) antes de calcular covarianza — una columna constante queda en varianza
+    (resta su media) antes de calcular covarianza: una columna constante queda en varianza
     EXACTA cero tras centrar, lo que fuerza kappa=inf mecanicamente sin importar T ni el
     resto de las columnas (bug, no hallazgo). Se excluye la constante antes de cov/PCA, tal
     como hace sklearn.PCA implicitamente (centra y la columna constante queda inerte, pero
@@ -53,7 +53,7 @@ def kappa_for_window(logret_window, k):
     F = ngrc_states(x_std, k)
     if F is None or F.shape[1] < 5:
         return None
-    Fs = F.T[:, 1:]  # (T-k+1, D-1) — se excluye la columna constante (indice 0)
+    Fs = F.T[:, 1:]  # (T-k+1, D-1): se excluye la columna constante (indice 0)
     cov_raw = np.cov(Fs, rowvar=False)
     kappa_raw = float(np.linalg.cond(cov_raw))
     try:
@@ -107,7 +107,7 @@ never = (df.groupby(["entity", "k"])["well_conditioned"].any()
 never = never[~never["well_conditioned"]][["entity", "k"]]
 
 with open("output/kappa_vs_T_resumen.md", "w", encoding="utf-8") as f:
-    f.write("# kappa(cov(F)) vs T — universo diario FX Latam + cripto\n\n")
+    f.write("# kappa(cov(F)) vs T: universo diario FX Latam + cripto\n\n")
     f.write("T minimo (dias) donde kappa_raw < 100 (deja de ser practicamente singular):\n\n")
     f.write(cross.to_markdown(index=False) if not cross.empty else "(ninguna combinacion cruzo el umbral)")
     f.write("\n\n")

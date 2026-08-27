@@ -1,6 +1,6 @@
 """
 Experimento de control: Lorenz63, el benchmark CLASICO de NG-RC (Gauthier et al. 2021,
-tambien usado por arXiv:2505.00846, arXiv:2407.08641, arXiv:2507.08738 — todos SOLO en
+tambien usado por arXiv:2505.00846, arXiv:2407.08641, arXiv:2507.08738: todos SOLO en
 regimen limpio, sin shocks). Comparte solo las utilidades causales de ``lorenz_common``;
 no importa ni ejecuta los otros experimentos. El SSRC de control es recurrente: cada estado
 usa W_res y el estado anterior.
@@ -9,12 +9,11 @@ Dos preguntas:
   1. Control positivo: ¿el pipeline reproduce el comportamiento esperado de la literatura
      en el sistema donde NG-RC es conocido por funcionar bien? (trayectoria limpia, sin shock)
   2. Extension que la literatura NO prueba: se inyecta UN shock sintetico (spike aditivo de
-     magnitud conocida en un punto conocido) sobre una trayectoria por lo demas limpia —
-     la prueba mas controlada posible de si kappa(cov(F)) se dispara por el shock en si
+     magnitud conocida en un punto conocido) sobre una trayectoria por lo demas limpia: la prueba mas controlada posible de si kappa(cov(F)) se dispara por el shock en si
      (aislado de todo el ruido real de mercado que trae FX/cripto), y si el lector NNLS/
      regularizado sostiene mejor el pronostico OOS alrededor del shock que OLS/Ridge.
 
-Target: x(t+1) directo (NO x(t+1)^2 — a diferencia del experimento de volatilidad FX, aqui
+Target: x(t+1) directo (NO x(t+1)^2: a diferencia del experimento de volatilidad FX, aqui
 NO hay razon a priori de no-negatividad; si NNLS igual ayuda, es evidencia independiente).
 
 Salida: output/kappa_lorenz.csv, output/oos_lorenz.csv, output/resumen_lorenz.md
@@ -69,7 +68,7 @@ def simulate_lorenz(n_steps, dt, seed=SEED):
 
 def simulate_and_subsample(n_feature_points, skip, dt_integrate, n_burnin, seed=SEED):
     """Integra a paso fino (precision) y sub-muestrea cada `skip` pasos para las features
-    NG-RC (dt_feature = dt_integrate*skip) — evita la cuasi-colinealidad de sobremuestreo."""
+    NG-RC (dt_feature = dt_integrate*skip): evita la cuasi-colinealidad de sobremuestreo."""
     n_total = n_burnin + n_feature_points * skip
     traj = simulate_lorenz(n_total, dt_integrate, seed=seed)
     traj = traj[n_burnin:]
@@ -79,7 +78,7 @@ def simulate_and_subsample(n_feature_points, skip, dt_integrate, n_burnin, seed=
 def ngrc_features(x, k):
     """Identico en definicion a los otros dos experimentos: constante EXCLUIDA (fix del
     12-ago), lineal(delays) + cuadratico. x: (T,). Retorna F (T-k, D) alineado a
-    y[i] = x[i+k] (prediccion 1 paso adelante — NO al cuadrado, a diferencia del target
+    y[i] = x[i+k] (prediccion 1 paso adelante: NO al cuadrado, a diferencia del target
     de volatilidad FX)."""
     T = len(x)
     n_rows = T - k

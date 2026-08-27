@@ -1,4 +1,4 @@
-# kappa(cov(F)) vs T — universo diario FX Latam + cripto
+# kappa(cov(F)) vs T: universo diario FX Latam + cripto
 
 T minimo (dias) donde kappa_raw < 100 (deja de ser practicamente singular):
 

@@ -1,5 +1,5 @@
 """
-Experimento Lorenz63 — PLS(1) supervisado frente a OLS/Ridge/NNLS/SSRC recurrente.
+Experimento Lorenz63: PLS(1) supervisado frente a OLS/Ridge/NNLS/SSRC recurrente.
 
 Contexto (ver documento de avance, S2, y HALLAZGO_lorenz.md): se demostro que Ridge y
 Ledoit-Wolf (regularizadores que suman lambda*I o encogen hacia la identidad) NO cambian la

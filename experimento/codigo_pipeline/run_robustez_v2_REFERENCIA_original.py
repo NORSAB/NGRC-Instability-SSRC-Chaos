@@ -1,5 +1,5 @@
 """
-ROBUSTEZ COMPLETA BAJO PROTOCOLO V2 (sin fuga) — insumos para migrar el paper CONCAPAN.
+ROBUSTEZ COMPLETA BAJO PROTOCOLO V2 (sin fuga): insumos para migrar el paper CONCAPAN.
 Re-corre con embeddings fit<=2019, W=3, lambda=0.88, arch (50, 0.95, 0.05):
   1) 20 semillas              2) 5 ventanas rodantes (2016-2020 .. 2020-2024)
   3) Ablacion de componentes  4) NG-RC determinista (k=3)

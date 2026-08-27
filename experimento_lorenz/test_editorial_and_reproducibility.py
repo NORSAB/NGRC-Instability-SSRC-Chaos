@@ -75,7 +75,7 @@ class TestAccessibilityAltTextCoverage:
         ("Figure 4", "fig4_floor_sensitivity"),
         ("Figure S1", "figS1_bcie_mase"),
         ("Figure S2", "figS2_fuel_prices"),
-        ("Figure S3", "figS3_fuel_volatility_may2020"),
+        ("Figure S3", "figS3_fuel_nnls_failure"),
         ("Figure S4", "figS4_ratio_sensitivity"),
         ("Figure S5", "figS5_rossler_scaling"),
         ("Table I", "table1_ablation"),

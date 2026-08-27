@@ -26,7 +26,6 @@ EXCLUDE_DIRS = {
 }
 
 EXCLUDE_FILES = {
-    "CHECKPOINT_TRIO_IA.md",
     "AGENTS.md",
     "CLA" + "UDE.md",
     "package_zenodo_release.py",

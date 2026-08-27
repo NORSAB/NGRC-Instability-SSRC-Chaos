@@ -150,7 +150,7 @@ md.append("La columna constante ya no pasa por `StandardScaler`: se agrega como 
 
 veredicto = "MATIZADO"
 md.append(f"\n## Veredicto sobre singularidad genuina después de las correcciones\n")
-md.append(f"**VEREDICTO: {veredicto}** — con escalado train-only e intercepto explícito, queda un "
+md.append(f"**VEREDICTO: {veredicto}**: con escalado train-only e intercepto explícito, queda un "
            f"núcleo pequeño de entidades genuinamente singulares: **{n_singular_targets}** "
            f"combinaciones entidad(objetivo)×variante×k con κ=∞ por causa real (T≤D o rango "
            f"deficiente en entrenamiento), sobre "
@@ -168,10 +168,10 @@ md.append(f"- Filas totales de kappa registradas (entidad×variante×k, incluye 
 
 md.append("## Nota metodológica: definición de 'genuinamente singular' por variante\n")
 md.append("- **baseline** (sin regularizar): usa `kappa_raw` sobre `Fs` (YA sin la constante, por "
-          "el FIX 2026-08-12 previo) — es la matriz que de verdad se autovector-descompone.\n"
+          "el FIX 2026-08-12 previo): es la matriz que de verdad se autovector-descompone.\n"
           "- **ledoitwolf / tikhonov_covariance**: usan `kappa_used` (posterior a la regularización, también "
           "sobre `Fs` sin la constante). Si SIGUE siendo infinito tras sumar shrinkage/λI, ninguna "
-          "regularización de la covarianza lo corrige — es la estructura T≤D del bloque NG-RC "
+          "regularización de la covarianza lo corrige: es la estructura T≤D del bloque NG-RC "
           "(constante+lineal+cuadrático), no falta de shrinkage.\n"
           "- **nnls_directo**: `kappa_used=inf` se cuenta como genuinamente singular cuando "
           "`n_train <= D_features` (escasez real de muestra, NNLS con pesos en cero). El "
@@ -184,7 +184,7 @@ md.append(f"- Entidades citadas en el registro como historia corta: `{', '.join(
           f"- Genuinamente singulares aquí que NO estaban en esa lista corta del registro: "
           f"`{', '.join(solo_en_singulares) if solo_en_singulares else '(ninguna)'}`.\n"
           f"- Del registro, NO reaparecen como genuinamente singulares en este barrido: "
-          f"`{', '.join(solo_en_registro) if solo_en_registro else '(ninguna — todas reaparecen)'}`.\n")
+          f"`{', '.join(solo_en_registro) if solo_en_registro else '(ninguna: todas reaparecen)'}`.\n")
 
 md.append("## ¿Concentran el error OOS? (entidades genuinamente singulares vs el resto)\n")
 if len(mase_sing) > 0 and len(mase_nosing) > 0:
@@ -199,17 +199,17 @@ if len(mase_sing) > 0 and len(mase_nosing) > 0:
                   f"{mase_sing.mean() / max(mase_nosing.mean(), 1e-9):.2f}x el de las no singulares.\n")
     else:
         md.append(f"- **No concentran más error de forma clara** en esta muestra "
-                  f"({mase_sing.mean():.3f} vs {mase_nosing.mean():.3f}) — honestidad: la muestra de "
+                  f"({mase_sing.mean():.3f} vs {mase_nosing.mean():.3f}): honestidad: la muestra de "
                   f"combinaciones genuinamente singulares CON dato OOS es muy pequeña "
                   f"(n={len(mase_sing)}), poco poder estadístico; se reporta como observación "
                   f"descriptiva, no como prueba formal.\n")
 else:
     md.append(f"- Solo **{len(mase_sing)}** combinaciones genuinamente singulares tienen dato OOS "
-              f"propio (la mayoría queda, por definición, SIN cobertura en 2020-2025 — la "
+              f"propio (la mayoría queda, por definición, SIN cobertura en 2020-2025: la "
               f"singularidad real en entrenamiento se traduce directamente en pérdida de "
               f"COBERTURA, no en peor error medible). Esto es en sí mismo el hallazgo principal: "
               f"el mecanismo T≤D no empeora el pronóstico de las entidades afectadas, las "
-              f"**elimina** de la comparación — es un sesgo de cobertura, no un sesgo de precisión "
+              f"**elimina** de la comparación: es un sesgo de cobertura, no un sesgo de precisión "
               f"(ver Tarea 2 / sección de cobertura pareja).\n")
 
 md.append("## Resumen por variante × k\n")
@@ -238,10 +238,10 @@ md.append("- La definición de 'singular' usada aquí (`kappa_used = inf`, con l
           "con snapshots anteriores del registro).\n")
 
 md.append("\n## Archivos\n")
-md.append("- `codigo_pipeline/analysis_common.py` — utilidades compartidas que reutilizan la "
+md.append("- `codigo_pipeline/analysis_common.py`: utilidades compartidas que reutilizan la "
           "implementación causal y agregan detalle por entidad.\n"
-          "- `codigo_pipeline/analisis_kappa_entidad.py` — este script.\n"
-          "- `codigo_pipeline/output/kappa_entidad_detalle.csv` — detalle completo entidad×variante×k.\n")
+          "- `codigo_pipeline/analisis_kappa_entidad.py`: este script.\n"
+          "- `codigo_pipeline/output/kappa_entidad_detalle.csv`: detalle completo entidad×variante×k.\n")
 
 with open(EXP_MD, "w", encoding="utf-8") as f:
     f.write("\n".join(md))

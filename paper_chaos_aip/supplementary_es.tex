@@ -10,6 +10,12 @@
 
 \hypersetup{colorlinks=true,linkcolor=blue!70!black,citecolor=blue!70!black,urlcolor=blue!70!black}
 
+% Sin guiones automaticos de corte de linea en todo el documento (pedido explicito del autor).
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\tolerance=9999
+\emergencystretch=3em
+
 \begin{document}
 
 \title{Material Suplementario: Inestabilidad, Amplificaci\'on de Valores At\'ipicos y Restricciones de Positividad en Computaci\'on por Reservorio de Pr\'oxima Generaci\'on}
@@ -56,7 +62,7 @@ PCA Base ($k=2$) & 1.3125 & 32 & 0.75 (no) \\
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{figures_es/fig12_bcie_causal.pdf}
+\includegraphics[width=6.69in]{figures_es/fig12_bcie_causal.pdf}
 \caption{Panel anual del BCIE: MASE causal fuera de muestra por lector, comparación en 8 entidades comunes, 2020--2025.}
 \label{fig:bcie}
 \vspace{2pt}
@@ -98,7 +104,7 @@ Log-link Ridge & 1.815 & 0.342 & 0\% \\
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{figures_es/fig7_combustibles_precios.pdf}
+\includegraphics[width=6.69in]{figures_es/fig7_combustibles_precios.pdf}
 \caption{Precios semanales de combustibles en Honduras, 2017--2026, con ventanas sombreadas para COVID-19, huracanes Eta/Iota, guerra Rusia--Ucrania y crisis en Medio Oriente 2026.}
 \label{fig:fuel_prices}
 \vspace{2pt}
@@ -172,7 +178,7 @@ Victoria filtrado de ruido & 100\% (todas) & 53\%--67\% \\
 A $H=10$, OLS sin regularizar diverge a MASE superior a $10^{15}$ bajo retroalimentación iterada en R\"ossler, ilustrando con nitidez la explosión de monomios no acotados.
 
 \section*{Disponibilidad de Datos y Código}
-Los datos que respaldan los hallazgos de este estudio y los canales completos de reproducción en Python están disponibles abiertamente en Zenodo en \url{https://doi.org/10.5281/zenodo.22126627} y en GitHub en \url{https://github.com/NORSAB/NGRC-Instability-SSRC-Chaos}.
+Los datos que respaldan los hallazgos de este estudio y los canales completos de reproducción en Python están disponibles abiertamente en Zenodo en \url{https://doi.org/10.5281/zenodo.22131199} y en GitHub en \url{https://github.com/NORSAB/NGRC-Instability-SSRC-Chaos}.
 
 \begin{thebibliography}{9}
 

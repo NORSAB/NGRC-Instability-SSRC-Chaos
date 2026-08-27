@@ -1,5 +1,5 @@
 """
-Evaluation Metrics — v6 Mejorado
+Evaluation Metrics: v6 Mejorado
 =================================
 Cambios:
   MEJORA-2: evaluate_metrics_oos ahora retorna per-entity breakdown

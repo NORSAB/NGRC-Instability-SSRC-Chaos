@@ -1,19 +1,10 @@
-# Lorenz63: control sintético corregido
+# Lorenz63: control sintético con SSRC recurrente
 
-## Qué se corrigió
-
-La corrida del 13 de agosto de 2026 reemplaza dos decisiones que impedían interpretar el
-experimento anterior:
-
-1. El método llamado “reservorio” era una proyección aleatoria fila a fila. Ahora es un SSRC
-   realmente recurrente: cada estado satisface
-   `h_t = tanh(W_in F_t + W_res h_{t-1})`, con `W_res` escalada a radio espectral 0.9.
-2. Ridge y el *readout* del SSRC ya no usan de forma fija
-   `0.1*traza(X'X)/D`. En cada ventana exterior de 500 observaciones, el 80% inicial ajusta
-   nueve candidatos de λ y el 20% final los valida sin barajar. El punto OOS queda fuera.
-
-Además, la normalización de la trayectoria usa solo los primeros 500 puntos. Así se evita que
-la media o la desviación estándar del futuro entren en las ventanas tempranas.
+El lector SSRC es recurrente: cada estado satisface `h_t = tanh(W_in F_t + W_res h_{t-1})`,
+con `W_res` escalado a radio espectral 0.9. Ridge y el *readout* del SSRC seleccionan λ por
+validación temporal interna (80% ajuste / 20% validación por ventana exterior de 500
+observaciones, sin usar el punto OOS). La normalización de la trayectoria usa solo los primeros
+500 puntos.
 
 ## Resultado de un paso
 
@@ -27,44 +18,28 @@ Mediana de MASE, 1,475 ventanas en calma:
 | Naive | 0.861371 |
 | NNLS | 0.873664 |
 
-El cambio de arquitectura es sustantivo: el SSRC recurrente mejora con claridad a OLS. Esta
-cifra no puede compararse con la del antiguo “reservorio”, porque aquel cálculo nunca usó
-`W_res`. La explicación que ahora sí corresponde es conjunta: la memoria recurrente conserva
-información secuencial y `tanh` limita la amplitud del estado.
-
-Ridge, una vez seleccionado dentro de la ventana, prácticamente empata con OLS. Por tanto, el
-resultado anterior no demostraba que Ridge fuera inútil; mostraba que la regla fija
-proporcional a la traza podía sobre-regularizar.
+Ridge, seleccionado dentro de la ventana, empata con OLS.
 
 ## Shock de 15 desviaciones estándar
 
-El patrón geométrico se mantiene. La mediana de κ(cov(F)) pasa de aproximadamente
-`1.287e6` en calma a `5.047e4` en las 25 ventanas que contienen el shock. Que κ baje no
-significa que el pronóstico mejore: en esas ventanas, las medianas de MASE fueron 0.230864
-para OLS, 0.342772 para Ridge, 0.270098 para SSRC y 1.199792 para NNLS.
+La mediana de κ(cov(F)) pasa de ~`1.287e6` en calma a `5.047e4` en las 25 ventanas que
+contienen el shock. En esas ventanas, las medianas de MASE fueron 0.230864 (OLS), 0.342772
+(Ridge), 0.270098 (SSRC) y 1.199792 (NNLS). κ es un diagnóstico geométrico, no una función de
+pérdida: que baje no implica que el pronóstico mejore.
 
-El shock cambia la escala y separa direcciones antes casi colineales. Ese efecto puede reducir
-el número de condición a la vez que aumenta el error de algunos lectores. κ sigue siendo un
-diagnóstico geométrico, no una función de pérdida.
+## Escalamiento M^4
 
-## Qué queda de M^4
+El barrido explícito de λ (14 ventanas, dos escenarios) muestra mediana del error absoluto OOS
+de 0.065206 con selección temporal frente a 0.181025 con la regla fija de razón 0.1. Un shock
+de magnitud M puede llevar términos de la covarianza a escala M^4; una λ fijada como proporción
+de la traza hereda esa sensibilidad.
 
-El barrido explícito de λ usa 14 ventanas de dos escenarios. La validación interna eligió
-cuatro razones de λ distintas. En esa muestra, la mediana del error absoluto OOS fue 0.065206
-con selección temporal y 0.181025 con la regla fija de razón 0.1.
+## NNLS
 
-Por eso M^4 queda acotado a una afirmación verificable: las características cuadráticas hacen
-que un shock de magnitud M pueda llevar términos de la covarianza a escala M^4, y una λ fijada
-como proporción de la traza hereda esa sensibilidad de escala. No implica que toda solución
-Ridge sea frágil ni que barrer λ sea inútil.
+NNLS no ayuda aquí: `x(t+1)` cambia de signo y la restricción actúa sobre los pesos, no sobre
+un objetivo naturalmente no negativo.
 
-## Lectura de NNLS
-
-NNLS no ayuda aquí porque `x(t+1)` cambia de signo y la restricción actúa sobre los pesos, no
-sobre un objetivo naturalmente no negativo. Este control no contradice un posible beneficio
-de NNLS en volatilidad; impide generalizarlo fuera de ese tipo de objetivo.
-
-## Evidencia reproducible
+## Evidencia
 
 - `run_lorenz_shock.py`: control limpio y shock único.
 - `run_lorenz_lambda_sensitivity.py`: barrido explícito y comparación con la heurística 0.1.

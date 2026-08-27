@@ -1,16 +1,14 @@
-# PLS(1) no sustituye al bloque NG-RC completo en Lorenz63
+# PLS(1) frente al bloque NG-RC completo en Lorenz63
 
-## Pregunta
+PLS separa dos objetos matemáticos: sumar λI a una matriz de covarianza no cambia sus
+eigenvectores, mientras que la λ de una regresión Ridge sí cambia los coeficientes. PLS añade
+una tercera opción: una dirección supervisada por el objetivo.
 
-PLS(1) se incorporó para separar dos objetos matemáticos. Sumar λI a una matriz de covarianza
-no cambia sus eigenvectores; en cambio, la λ de una regresión Ridge sí cambia los coeficientes.
-PLS añade una tercera posibilidad: elegir una dirección supervisada por el objetivo.
-
-## Protocolo corregido
+## Protocolo
 
 La trayectoria se normalizó con los primeros 500 puntos, sin estadísticas futuras. Ridge y el
-*readout* del SSRC seleccionan λ mediante validación temporal interna. El SSRC usa `W_res` y
-un estado secuencial real. PLS se ajusta únicamente con la ventana exterior de entrenamiento.
+*readout* del SSRC seleccionan λ por validación temporal interna; el SSRC usa `W_res` y un
+estado secuencial real. PLS se ajusta únicamente con la ventana exterior de entrenamiento.
 
 ## Resultado en calma
 
@@ -24,12 +22,10 @@ un estado secuencial real. PLS se ajusta únicamente con la ventana exterior de 
 | PLS(1) | 1.995561 | 2.173376 |
 
 PLS(1) pierde demasiada información al comprimir las nueve características NG-RC a una sola
-dirección. La supervisión por el objetivo no compensa esa reducción. Como no superó a OLS en
-calma, el protocolo predefinido omitió la fase de shock.
-
-Este resultado no permite decir que “regularizar no ayuda”. Permite una conclusión más
-estrecha: una sola componente PLS no representa bien esta dinámica, mientras Ridge validado
-conserva el bloque completo y empata con OLS.
+dirección; la supervisión por el objetivo no compensa esa reducción. No superó a OLS en calma,
+por lo que el protocolo predefinido omitió la fase de shock. El resultado es acotado: una sola
+componente PLS no representa bien esta dinámica, mientras Ridge validado conserva el bloque
+completo y empata con OLS.
 
 ## Evidencia
 

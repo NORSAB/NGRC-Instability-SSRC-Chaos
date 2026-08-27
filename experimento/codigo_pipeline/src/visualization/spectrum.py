@@ -1,5 +1,5 @@
 """
-Eigenvalue Spectrum Visualization — v6 Mejorado
+Eigenvalue Spectrum Visualization: v6 Mejorado
 ================================================
 Cambios:
   MEJORA-6: Anotar ρ, n_eigenvalues, |eig|_mean dentro del plot

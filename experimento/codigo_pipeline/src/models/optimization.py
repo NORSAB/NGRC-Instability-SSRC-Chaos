@@ -37,7 +37,7 @@ def _rowwise_nnls_matrix(data_matrix: np.ndarray, mask: np.ndarray) -> np.ndarra
 
     Cada fila i es un NNLS independiente sobre las columnas que permite la máscara.
     A diferencia del solver legado (TransitionMatrix), NO impone normalización de
-    columnas a suma 1 — ese paso no forma parte de la ecuación publicada y bajo el
+    columnas a suma 1: ese paso no forma parte de la ecuación publicada y bajo el
     LOO infla la persistencia por construcción (ver HALLAZGO_C1_LOO_HUB.md).
     """
     from scipy.optimize import nnls as _nnls

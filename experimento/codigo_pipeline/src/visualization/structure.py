@@ -1,5 +1,5 @@
 """
-Structural Coupling Matrix Visualization — v6 Limpio
+Structural Coupling Matrix Visualization: v6 Limpio
 =====================================================
 Cambios:
   LIMPIEZA: Eliminado import numpy redundante dentro de función

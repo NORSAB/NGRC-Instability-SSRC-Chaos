@@ -8,7 +8,7 @@
 [![Format: REVTeX 4-2](https://img.shields.io/badge/Format-REVTeX_4--2-0284C7?style=for-the-badge&logo=latex&logoColor=white)](paper_chaos_aip/)
 [![Test Suite: 46 Passed](https://img.shields.io/badge/PyTest-46%2F46_Passed_(100%25)-10B981?style=for-the-badge&logo=pytest&logoColor=white)](experimento_lorenz/)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](requirements.txt)
-[![Zenodo DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.22126627-0891B2?style=for-the-badge&logo=zenodo&logoColor=white)](https://doi.org/10.5281/zenodo.22126627)
+[![Zenodo DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.22131199-0891B2?style=for-the-badge&logo=zenodo&logoColor=white)](https://doi.org/10.5281/zenodo.22131199)
 [![Dual License: MIT + CC-BY-4.0](https://img.shields.io/badge/License-MIT_%2F_CC--BY--4.0-F59E0B?style=for-the-badge)](LICENSE)
 
 <br>
@@ -33,12 +33,12 @@ This repository hosts the **complete mathematical derivations, 30-seed stochasti
 
 ## 🔬 Core Scientific Findings & Theorems
 
-### 1. Analytical Mechanism of Quartic Trace Scaling ($\sim M^4$) — Theorem 1
+### 1. Analytical Mechanism of Quartic Trace Scaling ($\sim M^4$): Theorem 1
 When an isolated outlier shock of magnitude $M$ enters a time series, the trace of the quadratic NG-RC Gram matrix scales as:
 $$\operatorname{tr}(\mathbf{F}^\top\mathbf{F}) = \mathcal{O}(M^4) + \mathcal{O}(M^2) + \mathcal{O}(T(C^2+C^4))$$
 Consequently, heuristic trace-based Ridge regularizations ($\lambda \propto \operatorname{tr}(\mathbf{F}^\top\mathbf{F})$) inflate $\lambda$ by orders of magnitude, causing catastrophic over-regularization across calm dynamical regimes. Empirically verified across chaotic attractors with a measured log-log slope of **3.93**.
 
-### 2. Spectral Invariance under Covariance Regularization — Theorem 2
+### 2. Spectral Invariance under Covariance Regularization: Theorem 2
 Tikhonov spectral shifts $\mathbf{C} + \lambda\mathbf{I}$ on sample covariances preserve principal eigenvectors identically:
 $$\mathbf{v}_i(\mathbf{C} + \lambda\mathbf{I}) = \mathbf{v}_i(\mathbf{C}), \quad \mu_i = \sigma_i^2 + \lambda$$
 This mathematically decouples covariance conditioning from readout regularization, ensuring that spectral stabilization does not rotate principal dynamical subspaces.
@@ -183,7 +183,7 @@ If you utilize this codebase, theorems, or benchmark data in your research, plea
   journal   = {Chaos: An Interdisciplinary Journal of Nonlinear Science},
   year      = {2026},
   note      = {Under review},
-  doi       = {10.5281/zenodo.22126627},
+  doi       = {10.5281/zenodo.22131199},
   url       = {https://github.com/NORSAB/NGRC-Instability-SSRC-Chaos}
 }
 ```
@@ -202,4 +202,4 @@ If you utilize this codebase, theorems, or benchmark data in your research, plea
 - **Honduras fuel prices:** 496 weekly observations from 2017 to 2026 compiled from the public
   price panels published by [`proceso.hn`](https://proceso.hn/tabla-de-precios-combustibles-2026/).
 - **Archived data and code:** Zenodo DOI
-  [`10.5281/zenodo.22126627`](https://doi.org/10.5281/zenodo.22126627).
+  [`10.5281/zenodo.22131199`](https://doi.org/10.5281/zenodo.22131199).

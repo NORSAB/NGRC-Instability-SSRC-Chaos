@@ -1,5 +1,5 @@
 """
-Topology and Entity Definitions — v6 Limpio
+Topology and Entity Definitions: v6 Limpio
 =============================================
 Cambios:
   LIMPIEZA: Eliminado ORDEN_PAISES redundante.

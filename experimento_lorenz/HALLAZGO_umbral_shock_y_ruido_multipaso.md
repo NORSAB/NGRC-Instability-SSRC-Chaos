@@ -2,25 +2,23 @@
 
 ## Umbral geométrico
 
-El barrido extendido localiza la inversión del patrón κ shock/calma. La mediana de la razón es
-2.1995 a 40 desviaciones estándar, 5.3211 a 50, 26.6085 a 75, 83.5737 a 100, 420.4373 a 150
-y 1327.9881 a 200. En la grilla anterior, entre 5 y 30 desviaciones, todas las razones eran
-menores que uno.
+El barrido extendido localiza la inversión del patrón κ shock/calma: la mediana de la razón es
+2.1995 a 40 desviaciones estándar, 5.3211 a 50, 26.6085 a 75, 83.5737 a 100, 420.4373 a 150 y
+1327.9881 a 200 (frente a razones siempre menores que uno entre 5 y 30 desviaciones, ver
+`HALLAZGO_grid_shocks_y_ruido.md`).
 
-La transición es coherente con la estructura cuadrática del bloque NG-RC. Cuando el shock es
-moderado, separa direcciones casi colineales; cuando es extremo, los productos cuadráticos
-dominan y algunos términos de covarianza crecen como M^4. Esta es una propiedad de las
-características y su covarianza, no una prueba de que Ridge sea universalmente frágil.
+La transición es coherente con la estructura cuadrática del bloque NG-RC: un shock moderado
+separa direcciones casi colineales, mientras que uno extremo hace dominar los productos
+cuadráticos, y algunos términos de covarianza crecen como M^4. Es una propiedad de las
+características y su covarianza, no evidencia de fragilidad universal de Ridge.
 
-## Corrección del pronóstico multipaso
+## Protocolo del pronóstico multipaso
 
-La versión anterior iniciaba la historia `K-1` posiciones demasiado atrás. Ahora, para el punto
-exterior `t0`, la historia conocida es `x[t0:t0+K]`, cuyo último elemento es
-`x[t0+K-1]`. Cada predicción se añade a esa historia.
-
-En SSRC, el estado previo es el último estado observado antes de `t0`; cada paso pronosticado
-actualiza causalmente `h` con `W_res`. No se reinicia el estado ni se consulta la trayectoria
-verdadera futura. Ridge y el *readout* SSRC seleccionan λ dentro de la ventana exterior.
+Para el punto exterior `t0`, la historia conocida es `x[t0:t0+K]`, cuyo último elemento es
+`x[t0+K-1]`; cada predicción se añade a esa historia. En SSRC, el estado previo es el último
+estado observado antes de `t0`; cada paso pronosticado actualiza causalmente `h` con `W_res`,
+sin reiniciar el estado ni consultar la trayectoria verdadera futura. Ridge y el *readout* SSRC
+seleccionan λ dentro de la ventana exterior.
 
 ## Resultados
 
@@ -39,10 +37,9 @@ Mediana de MASE acumulada:
 | 10 | 0.20 | 2.436548 | 2.232507 | 1.998604 | 2.000752 | **1.053848** |
 | 10 | 0.50 | 1.325962 | 1.141699 | 1.143181 | 1.155600 | **0.936786** |
 
-SSRC gana en los diez escenarios. La ventaja ya no puede atribuirse solo a una proyección
-aleatoria acotada: el cálculo usa memoria recurrente real y `tanh`. Ridge supera ligeramente a
-OLS en dos celdas y pierde por márgenes pequeños en las demás; no hay una dominancia estable
-que justifique una afirmación universal en ningún sentido.
+SSRC gana en los diez escenarios; el cálculo usa memoria recurrente real y `tanh`, no una
+proyección aleatoria acotada. Ridge supera ligeramente a OLS en dos celdas y pierde por
+márgenes pequeños en las demás, sin una dominancia estable en ningún sentido.
 
 ## Evidencia
 

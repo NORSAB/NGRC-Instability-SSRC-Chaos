@@ -25,7 +25,7 @@ Variantes:
                     aplica a los PESOS y no garantiza que z_t ni el pronostico sean positivos.
 
 Se registra ademas, por variante y por k, el numero de condicion kappa de la covarianza o
-del diseno NNLS usado — la pieza diagnostica que conecta
+del diseno NNLS usado: la pieza diagnostica que conecta
 empiricamente con el mecanismo de ill-conditioning descrito en arXiv:2505.00846.
 
 Salida: output/ngrc_regularizado_comparison.csv, output/kappa_diagnostico.csv
@@ -165,7 +165,7 @@ def builder_reservoir(ent):
     )
     return yrs, z
 
-print(f"\n==== Config oficial W={W_STAR}, lambda={LAM_STAR} — protocolo causal (train<=2019, OOS 2020-2025) ====")
+print(f"\n==== Config oficial W={W_STAR}, lambda={LAM_STAR}: protocolo causal (train<=2019, OOS 2020-2025) ====")
 r = evaluate_embedding(builder_reservoir, "Reservoir aleatorio (seed 7, referencia)")
 if r: results.append(r)
 

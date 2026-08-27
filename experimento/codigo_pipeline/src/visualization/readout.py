@@ -1,5 +1,5 @@
 """
-Readout and Decomposition Visualization — v6 Mejorado
+Readout and Decomposition Visualization: v6 Mejorado
 ======================================================
 Cambios:
   MEJORA-4: R² y RMSE anotados dentro de cada panel del Hub Readout

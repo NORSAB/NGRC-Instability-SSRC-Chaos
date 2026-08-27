@@ -2,8 +2,8 @@
 **Title:** Replication Package: Instability, Outlier Amplification, and Positivity Constraints in Next-Generation Reservoir Computing  
 **Author:** Norman Reynaldo Sabillón Castro  
 **Target Journal:** *Chaos: An Interdisciplinary Journal of Nonlinear Science* (AIP Publishing)  
-**Zenodo DOI:** [10.5281/zenodo.22126627](https://doi.org/10.5281/zenodo.22126627) (Concept DOI: [10.5281/zenodo.22121356](https://doi.org/10.5281/zenodo.22121356))
-**License:** Dual License — MIT License (Software / Code) / Creative Commons CC-BY 4.0 (Data, Visualizations & Documentation)  
+**Zenodo DOI:** [10.5281/zenodo.22131199](https://doi.org/10.5281/zenodo.22131199)
+**License:** Dual License: MIT License (Software / Code) / Creative Commons CC-BY 4.0 (Data, Visualizations & Documentation)
 
 ---
 
@@ -77,7 +77,7 @@ conda activate ngrc-chaos-replication
 
 The master script `reproduce_all.py` supports two execution modes:
 
-### Quick Mode (Default — Fast Validation, Testing, Figures & LaTeX Compilation):
+### Quick Mode (Default: Fast Validation, Testing, Figures & LaTeX Compilation):
 ```bash
 python reproduce_all.py --mode=quick
 ```
@@ -122,9 +122,8 @@ This re-executes the Lorenz63 30-seed ablation, Rössler sweeps, and financial b
 
 ## 6. Zenodo Deposit Metadata & Archive Verification
 
-- **Zenodo Version Record:** [https://zenodo.org/records/22126627](https://zenodo.org/records/22126627)
-- **Version DOI:** `10.5281/zenodo.22126627`
-- **Concept DOI (All Versions):** `10.5281/zenodo.22121356`
+- **Zenodo Record:** [https://zenodo.org/records/22131199](https://zenodo.org/records/22131199)
+- **DOI:** `10.5281/zenodo.22131199`
 - **Release Archive:**
   - **Filename:** `Articulo_4_AIP_Chaos_Replication_Package.zip`
   - **Verification:** Zenodo publishes the authoritative file size and MD5 checksum on the version record. These values are checked against the local deterministic build after publication.
@@ -132,6 +131,6 @@ This re-executes the Lorenz63 30-seed ablation, Rössler sweeps, and financial b
   - **License:** MIT License / Creative Commons Attribution 4.0 International
 - **Canonical Local Production Archive:**
   - Can be generated at any time via `python package_zenodo_release.py`.
-  - **Release Integrity:** Strictly packages only scientific code, datasets, documentation, and REVTeX manuscripts. Private workflow, prompt, and checkpoint files are excluded and verified by `test_zip_package_excludes_private_workflow_files`.
+  - **Release Integrity:** Strictly packages only scientific code, datasets, documentation, and REVTeX manuscripts. Internal development notes are excluded and verified by `test_zip_package_excludes_private_workflow_files`.
   - **Test Suite Status:** 46 of 46 tests passing (100% Green).
   - **Compilation Status:** 4 of 4 REVTeX 4-2 PDFs compiled with 0 Overfull boxes.
