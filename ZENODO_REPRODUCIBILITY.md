@@ -2,7 +2,7 @@
 **Title:** Replication Package: Instability, Outlier Amplification, and Positivity Constraints in Next-Generation Reservoir Computing  
 **Author:** Norman Reynaldo Sabillón Castro  
 **Target Journal:** *Chaos: An Interdisciplinary Journal of Nonlinear Science* (AIP Publishing)  
-**Zenodo DOI:** [10.5281/zenodo.22121457](https://doi.org/10.5281/zenodo.22121457) (Concept DOI: [10.5281/zenodo.22121356](https://doi.org/10.5281/zenodo.22121356))  
+**Zenodo DOI:** [10.5281/zenodo.22126627](https://doi.org/10.5281/zenodo.22126627) (Concept DOI: [10.5281/zenodo.22121356](https://doi.org/10.5281/zenodo.22121356))
 **License:** Dual License — MIT License (Software / Code) / Creative Commons CC-BY 4.0 (Data, Visualizations & Documentation)  
 
 ---
@@ -15,7 +15,7 @@ All simulation outputs and canonical CSV files are pre-computed and included in 
 
 ```
 Articulo_4_NGRC_Regularizado_SSRC/
-├── requirements.txt                 # Exact PIP dependencies (Python >= 3.10)
+├── requirements.txt                 # Minimum compatible PIP dependencies (Python >= 3.10)
 ├── environment.yml                  # Conda / Mamba environment specification
 ├── LICENSE                          # MIT (Code) & CC-BY 4.0 (Docs) Dual License
 ├── reproduce_all.py                 # Master one-command replication orchestrator (--mode=quick/full)
@@ -114,16 +114,16 @@ This re-executes the Lorenz63 30-seed ablation, Rössler sweeps, and financial b
 
 ## 5. Third-Party Data & External Repositories
 
-- **Honduras Fuel Dataset:** The processed weekly series are bundled inside `experimento_combustibles_honduras/output/`. If the optional raw external repository is available, its location can be specified via the `PAPER4_FUEL_REPOSITORY` environment variable.
-- **FX / Cryptocurrency Data:** 9 daily series (2018–2026) are bundled in `experimento_diario_fx_cripto/output/`. Sourced via Yahoo Finance API for academic research and reproducibility; scripts for fresh retrieval are included in `experimento_diario_fx_cripto/`.
-- **BCIE Loan Approvals:** Public portfolio disclosure records (1961–2025) are bundled in `experimento/codigo_pipeline/output/`.
+- **Honduras Fuel Dataset:** 496 weekly observations from 2 January 2017 through 10 August 2026 are bundled in `experimento_combustibles_honduras/data/`. They were compiled from the public weekly price panels published by [Proceso Digital](https://proceso.hn/tabla-de-precios-combustibles-2026/). The packaged snapshot is the default input; `PAPER4_FUEL_REPOSITORY` can point to a replacement CSV.
+- **FX / Cryptocurrency Data:** 9 daily series (2018–2026) are bundled in `experimento_diario_fx_cripto/output/`. Daily closes were obtained through the Yahoo Finance chart API; the exact symbols and retrieval routine are in `experimento_diario_fx_cripto/volatility_models.py`.
+- **BCIE Loan Approvals:** Official public portfolio disclosure records (1961–2025) come from the [BCIE open-data portal](https://datosabiertos.bcie.org), resource `ce88a753-57f5-4266-a57e-394600c8435d`. The loader and bundled analytical outputs are in `experimento/codigo_pipeline/`.
 
 ---
 
 ## 6. Zenodo Deposit Metadata & Archive Verification
 
-- **Zenodo Version Record:** [https://zenodo.org/records/22121457](https://zenodo.org/records/22121457)
-- **Version DOI:** `10.5281/zenodo.22121457`
+- **Zenodo Version Record:** [https://zenodo.org/records/22126627](https://zenodo.org/records/22126627)
+- **Version DOI:** `10.5281/zenodo.22126627`
 - **Concept DOI (All Versions):** `10.5281/zenodo.22121356`
 - **Release Archive:**
   - **Filename:** `Articulo_4_AIP_Chaos_Replication_Package.zip`

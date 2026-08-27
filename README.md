@@ -8,7 +8,7 @@
 [![Format: REVTeX 4-2](https://img.shields.io/badge/Format-REVTeX_4--2-0284C7?style=for-the-badge&logo=latex&logoColor=white)](paper_chaos_aip/)
 [![Test Suite: 46 Passed](https://img.shields.io/badge/PyTest-46%2F46_Passed_(100%25)-10B981?style=for-the-badge&logo=pytest&logoColor=white)](experimento_lorenz/)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](requirements.txt)
-[![Zenodo DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.22121457-0891B2?style=for-the-badge&logo=zenodo&logoColor=white)](https://doi.org/10.5281/zenodo.22121457)
+[![Zenodo DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.22126627-0891B2?style=for-the-badge&logo=zenodo&logoColor=white)](https://doi.org/10.5281/zenodo.22126627)
 [![Dual License: MIT + CC-BY-4.0](https://img.shields.io/badge/License-MIT_%2F_CC--BY--4.0-F59E0B?style=for-the-badge)](LICENSE)
 
 <br>
@@ -104,7 +104,7 @@ In daily FX and cryptocurrency volatility series, Non-Negative Least Squares (**
 ├── data/                            # Curated open datasets and derived statistics
 ├── docs/                            # Deep technical documentation and proofs
 ├── reproduce_all.py                 # Master one-command replication entrypoint
-├── requirements.txt                 # Exact pinned dependency environment
+├── requirements.txt                 # Minimum compatible dependency environment
 ├── environment.yml                  # Conda environment definition
 ├── ZENODO_REPRODUCIBILITY.md        # Open science & Zenodo replication record
 └── LICENSE                          # MIT (Code) / CC-BY-4.0 (Manuscript/Data)
@@ -165,9 +165,10 @@ pdflatex supplementary_es.tex && pdflatex supplementary_es.tex
 | Package | Version | Package | Version |
 | :--- | :--- | :--- | :--- |
 | **Python** | `3.10+ / 3.13.14` | **NumPy** | `2.4.6` |
-| **SciPy** | `1.17.1` | **Pandas** | `2.2.3` |
-| **Scikit-Learn** | `1.6.1` | **PyTest** | `9.0.3` |
-| **Matplotlib** | `3.10.0` | **Arch** | `7.1.0` |
+| **SciPy** | `1.17.1` | **Pandas** | `3.0.3` |
+| **Scikit-Learn** | `1.8.0` | **PyTest** | `9.0.3` |
+| **Matplotlib** | `3.10.9` | **Requests** | `2.34.2` |
+| **Seaborn** | `0.13.2` | **Statsmodels** | `0.14.6` |
 
 ---
 
@@ -182,7 +183,7 @@ If you utilize this codebase, theorems, or benchmark data in your research, plea
   journal   = {Chaos: An Interdisciplinary Journal of Nonlinear Science},
   year      = {2026},
   note      = {Under review},
-  doi       = {10.5281/zenodo.22121457},
+  doi       = {10.5281/zenodo.22126627},
   url       = {https://github.com/NORSAB/NGRC-Instability-SSRC-Chaos}
 }
 ```
@@ -193,4 +194,12 @@ If you utilize this codebase, theorems, or benchmark data in your research, plea
 
 - **Code and Scripts:** Licensed under the [MIT License](LICENSE).
 - **Manuscripts, Figures, and Documentation:** Licensed under [Creative Commons Attribution 4.0 International (CC-BY-4.0)](https://creativecommons.org/licenses/by/4.0/).
-- **Data Provenance:** Zenodo Archive DOI: [`10.5281/zenodo.22121457`](https://doi.org/10.5281/zenodo.22121457).
+- **FX and cryptocurrency data:** daily closes obtained through the Yahoo Finance chart API;
+  the bundled snapshots and retrieval code are included in the replication package.
+- **BCIE loan approvals:** official open-data resource from
+  [`datosabiertos.bcie.org`](https://datosabiertos.bcie.org), resource
+  `ce88a753-57f5-4266-a57e-394600c8435d`.
+- **Honduras fuel prices:** 496 weekly observations from 2017 to 2026 compiled from the public
+  price panels published by [`proceso.hn`](https://proceso.hn/tabla-de-precios-combustibles-2026/).
+- **Archived data and code:** Zenodo DOI
+  [`10.5281/zenodo.22126627`](https://doi.org/10.5281/zenodo.22126627).

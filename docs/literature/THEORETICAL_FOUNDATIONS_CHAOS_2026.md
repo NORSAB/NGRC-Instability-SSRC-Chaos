@@ -60,4 +60,4 @@
 - **Dimitris N. Politis, Joseph P. Romano (1994)**: politis1994stationary — The stationary bootstrap. Remuestreo no paramétrico para series de tiempo dependientes. DOI: 10.1080/01621459.1994.10476870.
 - **Ser-Huang Poon, Clive W. J. Granger (2003)**: poongranger2003forecasting — Forecasting volatility in financial markets: A review. DOI: 10.1257/002205103765762743.
 - **Torben G. Andersen, Tim Bollerslev (1998)**: andersenbollerslev1998answering — Answering the skeptics: Yes, standard volatility models do provide accurate forecasts. DOI: 10.2307/2527343.
-- **Norman Reynaldo Sabillon Castro (2026)**: zenodo_package — Replication Package: Instability, Outlier Amplification, and Positivity Constraints in Next-Generation Reservoir Computing. Paquete canónico abierto. DOI: 10.5281/zenodo.22121457.
+- **Norman Reynaldo Sabillon Castro (2026)**: zenodo_package — Replication Package: Instability, Outlier Amplification, and Positivity Constraints in Next-Generation Reservoir Computing. Paquete canónico abierto. DOI: 10.5281/zenodo.22126627.

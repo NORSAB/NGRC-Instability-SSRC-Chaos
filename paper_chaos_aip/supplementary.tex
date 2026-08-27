@@ -29,7 +29,7 @@
 \label{sec:bcie}
 % ======================================================================
 
-The Central American Bank for Economic Integration (BCIE/CABEI) publishes an open panel of loan approvals by member country, 1961--2025. We construct a synthetic systemic hub from the pooled approvals and estimate a coupling operator $\mathbf{P}^*$ via row-wise non-negative least squares under a hub-and-spoke topology mask, comparing four compressions of the NG-RC quadratic feature block (PCA baseline, Ledoit--Wolf shrinkage \cite{ledoitwolf2004wellconditioned}, Tikhonov-shifted covariance, and direct NNLS regression) against a genuine recurrent sparse ESN reference, under a causal protocol (training through 2019, out-of-sample 2020--2025). Significance is assessed with the Diebold--Mariano test \cite{dieboldmariano1995comparing}.
+The Central American Bank for Economic Integration (BCIE/CABEI) publishes an open panel of loan approvals by member country, 1961--2025, through its official portal at \url{https://datosabiertos.bcie.org}; the replication package identifies the exact resource and bundles the analytical snapshot. We construct a synthetic systemic hub from the pooled approvals and estimate a coupling operator $\mathbf{P}^*$ via row-wise non-negative least squares under a hub-and-spoke topology mask, comparing four compressions of the NG-RC quadratic feature block (PCA baseline, Ledoit--Wolf shrinkage \cite{ledoitwolf2004wellconditioned}, Tikhonov-shifted covariance, and direct NNLS regression) against a genuine recurrent sparse ESN reference, under a causal protocol (training through 2019, out-of-sample 2020--2025). Significance is assessed with the Diebold--Mariano test \cite{dieboldmariano1995comparing}.
 
 \begin{table}[h]
 \centering
@@ -70,7 +70,7 @@ NNLS direct achieves the lowest point estimate, consistent with the FX/crypto an
 \label{sec:fuel}
 % ======================================================================
 
-We repeat the volatility comparison on 496 weekly observations (2017--2026) of four retail fuel products (Super gasoline, Regular gasoline, Diesel, Kerosene) regulated under Honduras' import-parity pricing system. Here, models predict the \textbf{squared weekly log-returns} ($r_{t+1}^2 = (\log(P_{t+1}/P_t))^2 \ge 0$), evaluated under both QLIKE and MASE.
+We repeat the volatility comparison on 496 weekly observations (2017--2026) of four retail fuel products (Super gasoline, Regular gasoline, Diesel, Kerosene) regulated under Honduras' import-parity pricing system. The series were compiled from the public weekly price panels published by Proceso Digital at \url{https://proceso.hn/tabla-de-precios-combustibles-2026/}, and the frozen snapshot is bundled with the code. Here, models predict the \textbf{squared weekly log-returns} ($r_{t+1}^2 = (\log(P_{t+1}/P_t))^2 \ge 0$), evaluated under both QLIKE and MASE.
 
 \begin{table}[h]
 \centering
@@ -172,7 +172,7 @@ Noise-filtering win rate & 100\% (all) & 53\%--67\% \\
 At $H=10$, the unconstrained OLS readout occasionally diverges to MASE exceeding $10^{15}$ under iterated feedback on R\"ossler, starkly illustrating the unconstrained error-compounding mechanism.
 
 \section*{Data and Code Availability}
-The data that support the findings of this study and the complete Python reproduction pipelines are openly available in Zenodo at \url{https://doi.org/10.5281/zenodo.22121457} and on GitHub at \url{https://github.com/NORSAB/NGRC-Instability-SSRC-Chaos}.
+The data that support the findings of this study and the complete Python reproduction pipelines are openly available in Zenodo at \url{https://doi.org/10.5281/zenodo.22126627} and on GitHub at \url{https://github.com/NORSAB/NGRC-Instability-SSRC-Chaos}.
 
 \begin{thebibliography}{9}
 

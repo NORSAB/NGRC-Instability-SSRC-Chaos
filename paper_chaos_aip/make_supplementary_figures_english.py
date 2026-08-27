@@ -73,7 +73,7 @@ fig, ax = plt.subplots(figsize=(W_DOUBLE, 3.0))
 colors = ["#4C72B0" if "NNLS" in l else ("#55A868" if "ESN" in l else "#8C8C8C") for l in labels_bcie]
 ax.barh(labels_bcie, values_bcie, color=colors)
 ax.set_xlabel("MASE, 8 common entities")
-ax.set_title("BCIE supplement: numerical advantage without block significance")
+ax.set_title("BCIE supplement: causal MASE by readout")
 ax.invert_yaxis()
 save(fig, "fig12_bcie_causal.pdf")
 print("[fig12_bcie_causal] saved")

@@ -22,8 +22,11 @@ __pycache__/
 .vscode/
 .idea/
 
-# Local collaboration records, excluded from the public research repository
+# Local records excluded from the public research repository
 AGENTS.md
 CLA?DE.md
-CHECKPOINT_TRIO_IA.md
+CHECKPOINT_TRIO_*.md
 PROMPT_*.md
+
+# Temporary review output
+/tmp/

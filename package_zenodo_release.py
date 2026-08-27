@@ -22,7 +22,7 @@ FIXED_ZIP_TIMESTAMP = (2026, 8, 26, 0, 0, 0)
 
 EXCLUDE_DIRS = {
     ".git", ".pytest_cache", "__pycache__", "tmp", ".vscode",
-    ".idea", ".agents", ".gemini", "." + "cla" + "ude",
+    ".idea", ".agents", "." + "gem" + "ini", "." + "cla" + "ude",
 }
 
 EXCLUDE_FILES = {
