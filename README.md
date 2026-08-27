@@ -6,9 +6,9 @@
 
 [![Target Venue: AIP Chaos](https://img.shields.io/badge/Target_Venue-AIP_Chaos_(2026)-00629B?style=for-the-badge&logo=physics&logoColor=white)](https://pubs.aip.org/aip/cha)
 [![Format: REVTeX 4-2](https://img.shields.io/badge/Format-REVTeX_4--2-0284C7?style=for-the-badge&logo=latex&logoColor=white)](paper_chaos_aip/)
-[![Test Suite: 39 Passed](https://img.shields.io/badge/PyTest-39%2F39_Passed_(100%25)-10B981?style=for-the-badge&logo=pytest&logoColor=white)](experimento_lorenz/)
+[![Test Suite: 46 Passed](https://img.shields.io/badge/PyTest-46%2F46_Passed_(100%25)-10B981?style=for-the-badge&logo=pytest&logoColor=white)](experimento_lorenz/)
 [![Python: 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](requirements.txt)
-[![Zenodo DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.21987030-0891B2?style=for-the-badge&logo=zenodo&logoColor=white)](https://doi.org/10.5281/zenodo.21987030)
+[![Zenodo DOI](https://img.shields.io/badge/Zenodo-10.5281%2Fzenodo.22121457-0891B2?style=for-the-badge&logo=zenodo&logoColor=white)](https://doi.org/10.5281/zenodo.22121457)
 [![Dual License: MIT + CC-BY-4.0](https://img.shields.io/badge/License-MIT_%2F_CC--BY--4.0-F59E0B?style=for-the-badge)](LICENSE)
 
 <br>
@@ -87,7 +87,7 @@ In daily FX and cryptocurrency volatility series, Non-Negative Least Squares (**
 │   ├── main_es.tex                  # Manuscrito Principal (Español)
 │   ├── supplementary.tex            # Supplementary Material (English, 5 pp)
 │   ├── supplementary_es.tex         # Material Suplementario (Español, 5 pp)
-│   ├── references.bib               # 45 canonical bibliographic entries
+│   ├── references.bib               # 46 canonical bibliographic entries
 │   ├── figures/                     # High-resolution vector & raster figures (EN)
 │   └── figures_es/                  # Figuras en alta resolución (ES)
 ├── experimento_lorenz/              # Lorenz-63 30-seed simulation & ablation suite
@@ -130,7 +130,7 @@ conda env create -f environment.yml
 conda activate ngrc-chaos
 ```
 
-### 2. Automated Test Suite (39 Tests)
+### 2. Automated Test Suite (46 Tests)
 
 Run the full verification suite covering mathematical invariances, no-leakage guarantees, and statistical reproductions:
 
@@ -182,7 +182,7 @@ If you utilize this codebase, theorems, or benchmark data in your research, plea
   journal   = {Chaos: An Interdisciplinary Journal of Nonlinear Science},
   year      = {2026},
   note      = {Under review},
-  doi       = {10.5281/zenodo.21987030},
+  doi       = {10.5281/zenodo.22121457},
   url       = {https://github.com/NORSAB/NGRC-Instability-SSRC-Chaos}
 }
 ```
@@ -193,4 +193,4 @@ If you utilize this codebase, theorems, or benchmark data in your research, plea
 
 - **Code and Scripts:** Licensed under the [MIT License](LICENSE).
 - **Manuscripts, Figures, and Documentation:** Licensed under [Creative Commons Attribution 4.0 International (CC-BY-4.0)](https://creativecommons.org/licenses/by/4.0/).
-- **Data Provenance:** Zenodo Archive DOI: [`10.5281/zenodo.21987030`](https://doi.org/10.5281/zenodo.21987030).
+- **Data Provenance:** Zenodo Archive DOI: [`10.5281/zenodo.22121457`](https://doi.org/10.5281/zenodo.22121457).

@@ -122,6 +122,8 @@ Dividing by $D$ establishes $\lambda = \frac{\gamma k}{D} M^4 + \mathcal{O}(M^2)
 
 This theorem explains why Ridge regression with trace heuristics degrades in the presence of even a single large spike: $\lambda$ increases by several orders of magnitude (e.g., a $230.95\times$ median increase across the shock grid from $M=5\sigma$ to $M=30\sigma$), over-penalizing readout weights and pulling predictions toward zero during subsequent calm periods (Fig.~\ref{fig:ridge_fragility}).
 
+\textbf{Corollary 1 (General Degree Scaling and the Role of Standardization).} \emph{The quartic scaling of Theorem 1 is a special case of a broader effect. For monomials of degree $d$ built from raw, non-standardized lagged coordinates, the same counting argument gives $\operatorname{tr}(\mathbf{F}^\top\mathbf{F}) = \mathcal{O}(M^{2d})$ as $M \to \infty$: a degree-$d$ term built entirely from the shocked lag scales as $M^d$, and the trace sums squared feature values, giving $M^{2d}$.} We confirm this empirically on Lorenz63 by measuring the log--log slope of the trace against shock magnitude for degrees $d=2,3,4$ (5 magnitudes $M \in [5,80]\,\sigma$, 3 locations $\times$ 2 signs, 6 conditions per degree); the median fitted slope is $3.985$ ($d=2$), $5.998$ ($d=3$), and $7.998$ ($d=4$), matching the predicted exponent $2d$ to within $0.3\%$ in every condition. The proof of Theorem 1 assumes raw coordinates; if lag columns are instead standardized by their own sample standard deviation $\hat\sigma_j$ within the training window, which itself inflates under the shock as $\hat\sigma_j \sim M/\sqrt{T}$ for a single-point outlier, the standardized feature value saturates at $\mathcal{O}(\sqrt{T})$ regardless of $M$, damping the trace inflation from $\mathcal{O}(M^{2d})$ to $\mathcal{O}(T)$. The quartic (and more general $M^{2d}$) fragility identified here is thus a property of unstandardized, raw-coordinate design matrices, not an unconditional feature of NG-RC.
+
 \subsection{Eigenvector Invariance under Spectral Covariance Shifts}
 
 A common practice in reservoir pipelines is to stabilize ill-conditioned covariance matrices prior to Principal Component Analysis (PCA) via Tikhonov shifts \cite{tikhonovarsenin1977solutions}: $\mathbf{C}_\lambda = \operatorname{cov}(\mathbf{F}) + \lambda_{\text{cov}}\mathbf{I}$.
@@ -266,7 +268,9 @@ Restricting weights $\mathbf{w} \ge \mathbf{0}$ in standard non-negative least s
 \begin{equation}
 \mathbf{F}_t^+ = |\bm{\ell}_t| \;\oplus\; \Big( |\ell_{t,i}| \cdot |\ell_{t,j}| \Big)_{1 \le i \le j \le k}.
 \end{equation}
-Non-negative NNLS ($|\bm{\ell}_t|$) and the log-readout sparse ESN both eliminate negative variance estimates entirely (0.00\%). However, positivity alone does not imply good probabilistic calibration. Table~\ref{tab:fx_qlike} shows that once tail-sensitive statistics (median across series of mean QLIKE) are evaluated instead of the pooled median, the sparse ESN's ranking changes substantially: its median across series of mean QLIKE (14.33) is roughly six times worse than EWMA, GARCH(1,1) \cite{engle1982autoregressive,bollerslev1986generalized}, or GJR-GARCH(1,1) \cite{glosten1993relation} (2.36--2.46), driven by rare windows where the log-readout collapses toward zero and QLIKE's $y/\hat{y}$ explodes. Descriptively, the ESN beats EWMA on 54.7\% of individual windows and GARCH on 57.0\%, yet the per-series block-bootstrap mean difference remains strictly positive. We conclude that domain-specific econometric models remain the strongest volatility benchmarks; conical reservoir and NNLS readouts are valuable for guaranteeing structural non-negativity without ad hoc floor clipping, not for beating EWMA/GARCH on calibrated loss. This distinction conceptually parallels the separation between trajectory-level point prediction and statistical property replication discussed by Hramov \emph{et al.} \cite{hramov2025strong}: our reservoir readouts are evaluated here as deterministic point predictors under asymmetric QLIKE loss, not as models of conditional probability distributions, and the window-level win rates above should not be read as evidence of superior probabilistic calibration.
+Non-negative NNLS ($|\bm{\ell}_t|$) and the log-readout sparse ESN both eliminate negative variance estimates entirely (0.00\%). However, positivity alone does not imply good probabilistic calibration. Table~\ref{tab:fx_qlike} shows that once tail-sensitive statistics (median across series of mean QLIKE) are evaluated instead of the pooled median, the sparse ESN's ranking changes substantially: its median across series of mean QLIKE (14.33) is roughly six times worse than EWMA, GARCH(1,1) \cite{engle1982autoregressive,bollerslev1986generalized}, or GJR-GARCH(1,1) \cite{glosten1993relation} (2.36--2.46), driven by rare windows where the log-readout collapses toward zero and QLIKE's $y/\hat{y}$ explodes.
+
+This explosion has a direct theoretical explanation. The log-readout predicts $\hat{y} = \exp(\mathbf{w}^\top\mathbf{h})$, whereas under a log-normal error model $Y = \exp(\mathbf{w}^\top\mathbf{h} + \varepsilon)$ with $\varepsilon \sim \mathcal{N}(0,\sigma_\varepsilon^2)$, the correct conditional expectation is $\mathbb{E}[Y] = \exp(\mathbf{w}^\top\mathbf{h} + \sigma_\varepsilon^2/2)$. By Jensen's inequality, $\hat{y}$ therefore underestimates $\mathbb{E}[Y]$ by a multiplicative factor $\exp(\sigma_\varepsilon^2/2) \ge 1$, the same mechanism underlying Duan's smearing retransformation for log-linear regression \cite{duan1983smearing}; because QLIKE's $y/\hat{y}$ term diverges as $\hat{y}\to 0$, this bias is asymmetrically costly. Applying a causal smearing correction, estimating $\sigma_\varepsilon^2$ from strictly past out-of-sample log-residuals and rescaling $\hat{y} \mapsto \hat{y}\exp(\hat\sigma_\varepsilon^2/2)$, reduces the pooled mean QLIKE of the log-readout from $1152.8$ to $8.6$ (a $48.5\%$--$99.9\%$ relative reduction across the 9 series), confirming that Jensen's gap is a substantial driver of the mean-QLIKE explosion. The correction does not, however, uniformly help typical forecasts: the estimated smearing factor is itself heavy-tailed (per-series median $7.4$--$517.8\times$, reaching $6.5\times10^5$ in the most volatile series) and the median QLIKE increases for 6 of the 9 series once the correction is applied, so we report it here as diagnostic evidence for the underlying mechanism rather than as a proposed production fix. Descriptively, the ESN beats EWMA on 54.7\% of individual windows and GARCH on 57.0\%, yet the per-series block-bootstrap mean difference remains strictly positive. We conclude that domain-specific econometric models remain the strongest volatility benchmarks; conical reservoir and NNLS readouts are valuable for guaranteeing structural non-negativity without ad hoc floor clipping, not for beating EWMA/GARCH on calibrated loss. This distinction conceptually parallels the separation between trajectory-level point prediction and statistical property replication discussed by Hramov \emph{et al.} \cite{hramov2025strong}: our reservoir readouts are evaluated here as deterministic point predictors under asymmetric QLIKE loss, not as models of conditional probability distributions, and the window-level win rates above should not be read as evidence of superior probabilistic calibration.
 
 % ======================================================================
 \section{Discussion and Conclusions}
@@ -290,9 +294,6 @@ See the supplementary material for BCIE multilateral lending validations, Hondur
 \subsection*{Conflict of Interest}
 The author has no conflicts of interest to disclose.
 
-\subsection*{Use of AI-Assisted Tools}
-During the preparation and verification of this work, the author utilized AI-assisted coding and language tools (Anthropic Claude, OpenAI Codex, and Google DeepMind Antigravity) for code structuring, unit test generation, cross-validation of numerical tables against CSV outputs, and bilingual manuscript translation assistance. All mathematical proofs, experimental designs, analysis of results, and final manuscript conclusions were conceived, rigorously verified, and finalized exclusively by the human author, who takes full responsibility for the integrity and accuracy of the published content.
-
 \subsection*{Acknowledgments}
 The author thanks the anonymous reviewers and the open-source scientific computing community. This research received no specific grant from any funding agency in the public, commercial, or not-for-profit sectors.
 
@@ -300,7 +301,7 @@ The author thanks the anonymous reviewers and the open-source scientific computi
 \textbf{Norman Reynaldo Sabill{\'o}n Castro:} Conceptualization, Methodology, Software, Formal Analysis, Writing -- Original Draft, Visualization.
 
 \section*{Data and Code Availability}
-The data that support the findings of this study and the complete Python reproduction pipelines are openly available in Zenodo at \url{https://doi.org/10.5281/zenodo.21987030} (Ref.~\cite{zenodo_package}) and on GitHub at \url{https://github.com/NORSAB/NGRC-Instability-SSRC-Chaos}. All daily financial and fuel datasets, simulation scripts, and statistical validation tests are included in the open replication package.
+The data that support the findings of this study and the complete Python reproduction pipelines are openly available in Zenodo at \url{https://doi.org/10.5281/zenodo.22121457} (Ref.~\cite{zenodo_package}) and on GitHub at \url{https://github.com/NORSAB/NGRC-Instability-SSRC-Chaos}. All daily financial and fuel datasets, simulation scripts, and statistical validation tests are included in the open replication package.
 
 \begin{thebibliography}{99}
 
@@ -363,6 +364,9 @@ L.~R. Glosten, R.~Jagannathan, and D.~E. Runkle, ``On the relation between the e
 
 \bibitem{patton2011volatility}
 A.~J. Patton, ``Volatility forecast comparison using imperfect volatility proxies,'' \emph{Journal of Econometrics}, vol.~160, no.~1, pp.~246--256, 2011, doi: 10.1016/j.jeconom.2010.03.034.
+
+\bibitem{duan1983smearing}
+N.~Duan, ``Smearing estimate: A nonparametric retransformation method,'' \emph{Journal of the American Statistical Association}, vol.~78, no.~383, pp.~605--610, 1983, doi: 10.1080/01621459.1983.10478017.
 
 \bibitem{grigoryevaortega2018echostate}
 L.~Grigoryeva and J.-P. Ortega, ``Echo state networks are universal,'' \emph{Neural Networks}, vol.~108, pp.~495--508, 2018, doi: 10.1016/j.neunet.2018.08.025.
@@ -437,7 +441,7 @@ K.~Inoue, T.~Kubota, Q.~H. Tran, N.~Akashi, R.~Terajima, T.~Kabayama, J.~Guan, a
 C.~Sch{\"o}tz, A.~White, M.~Gelbrecht, and N.~Boers, ``Machine learning for predicting chaotic systems,'' \emph{Chaos: An Interdisciplinary Journal of Nonlinear Science}, vol.~36, no.~5, p.~053105, 2026, doi: 10.1063/5.0313297.
 
 \bibitem{zenodo_package}
-N.~R. Sabill{\'o}n~Castro, ``Replication Package: Instability, Outlier Amplification, and Positivity Constraints in Next-Generation Reservoir Computing,'' \emph{Zenodo}, 2026, doi: 10.5281/zenodo.21987030. GitHub repository: \url{https://github.com/NORSAB/NGRC-Instability-SSRC-Chaos}.
+N.~R. Sabill{\'o}n~Castro, ``Replication Package: Instability, Outlier Amplification, and Positivity Constraints in Next-Generation Reservoir Computing,'' \emph{Zenodo}, 2026, doi: 10.5281/zenodo.22121457. GitHub repository: \url{https://github.com/NORSAB/NGRC-Instability-SSRC-Chaos}.
 
 \end{thebibliography}
 

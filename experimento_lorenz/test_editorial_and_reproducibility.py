@@ -39,6 +39,31 @@ class TestPackagingAndReproducibility:
         assert "MIT License" in lic, "Falta declaración MIT License en LICENSE"
         assert "CC-BY 4.0" in lic or "Creative Commons" in lic, "Falta declaración CC-BY 4.0 en LICENSE"
 
+    def test_zip_package_excludes_private_workflow_files(self):
+        import zipfile
+        zip_path = BASE.parent / "Articulo_4_AIP_Chaos_Replication_Package.zip"
+        if not zip_path.exists():
+            from package_zenodo_release import build_release_zip
+            zip_path, _, _, _ = build_release_zip()
+
+        assert zip_path.exists(), "El archivo ZIP de replicación debe existir"
+        forbidden_patterns = [
+            "checkpoint",
+            "prompt",
+            "agents.md",
+            "clau" + "de.md",
+            ".git/",
+            ".vscode",
+            "tmp/",
+            ".gitignore",
+        ]
+        with zipfile.ZipFile(zip_path, "r") as z:
+            names = z.namelist()
+            for name in names:
+                name_lower = name.lower()
+                for pat in forbidden_patterns:
+                    assert pat not in name_lower, f"Archivo interno no permitido en ZIP: {name}"
+
 
 class TestAccessibilityAltTextCoverage:
     """Verifica que el 100% de las 9 figuras y 5 tablas tengan Alt Text accesible documentado y con longitud adecuada."""
@@ -220,5 +245,3 @@ class TestStatisticalBootstrapInference:
         assert "ci_vs_ridge_2.5" in df.columns
         assert "ci_vs_ridge_97.5" in df.columns
         assert not df["diff_mean_vs_ridge"].isna().any(), "No deben existir valores NaN en diff_mean_vs_ridge"
-
-

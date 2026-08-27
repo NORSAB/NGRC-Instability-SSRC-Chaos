@@ -136,7 +136,7 @@ ax.scatter(sub_traj[:, 0], sub_traj[:, 2], s=0.3, alpha=0.35, color="#4C72B0", r
 ax.scatter(shock_pt[0], shock_pt[1], s=45, color="#C44E52", marker="x", lw=2, label=r"Synthetic outlier ($+15\sigma$)")
 ax.set_xlabel("$x(t)$ (Observable)")
 ax.set_ylabel("$z(t)$")
-ax.set_title("Lorenz63: Attractor & Off-manifold Shock", fontsize=9.5)
+ax.set_title("Lorenz63: Attractor & Off-manifold Shock", fontsize=8.8)
 ax.legend(loc="upper right", frameon=False, fontsize=8.5)
 
 # Version Espanol
@@ -145,7 +145,7 @@ ax.scatter(sub_traj[:, 0], sub_traj[:, 2], s=0.3, alpha=0.35, color="#4C72B0", r
 ax.scatter(shock_pt[0], shock_pt[1], s=45, color="#C44E52", marker="x", lw=2, label=r"Outlier sintético ($+15\sigma$)")
 ax.set_xlabel("$x(t)$ (Observable)")
 ax.set_ylabel("$z(t)$")
-ax.set_title("Lorenz63: Atractor y Shock Fuera del Manifold", fontsize=9.5)
+ax.set_title("Lorenz63: Atractor y Shock Fuera del Manifold", fontsize=8.8)
 ax.legend(loc="upper right", frameon=False, fontsize=8.5)
 
 save_bilingual(fig_en, fig_es, "fig2b_lorenz_atractor")

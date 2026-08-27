@@ -2,7 +2,7 @@
 **Title:** Replication Package: Instability, Outlier Amplification, and Positivity Constraints in Next-Generation Reservoir Computing  
 **Author:** Norman Reynaldo Sabillón Castro  
 **Target Journal:** *Chaos: An Interdisciplinary Journal of Nonlinear Science* (AIP Publishing)  
-**Zenodo DOI:** [10.5281/zenodo.21987030](https://doi.org/10.5281/zenodo.21987030) (Concept DOI: [10.5281/zenodo.21980409](https://doi.org/10.5281/zenodo.21980409))  
+**Zenodo DOI:** [10.5281/zenodo.22121457](https://doi.org/10.5281/zenodo.22121457) (Concept DOI: [10.5281/zenodo.22121356](https://doi.org/10.5281/zenodo.22121356))  
 **License:** Dual License — MIT License (Software / Code) / Creative Commons CC-BY 4.0 (Data, Visualizations & Documentation)  
 
 ---
@@ -39,7 +39,7 @@ Articulo_4_NGRC_Regularizado_SSRC/
 │   ├── run_two_way_block_bootstrap.py   # Two-way crossed block bootstrap (2,000 reps)
 │   ├── lorenz_common.py                 # Core reservoir and evaluation routines
 │   ├── test_paper_sync_and_data.py      # Automated bilingual/table-sync test suite
-│   ├── test_koinonia_rules.py           # Automated packaging, style, and alt-text tests
+│   ├── test_editorial_and_reproducibility.py # Automated packaging, style, and alt-text tests
 │   └── output/                          # Audited simulation CSV outputs
 ├── experimento_diario_fx_cripto/    # Daily FX and cryptocurrency volatility
 │   ├── qlike_tail_diagnostics.py        # Tail diagnostics & per-series block bootstrap
@@ -122,13 +122,16 @@ This re-executes the Lorenz63 30-seed ablation, Rössler sweeps, and financial b
 
 ## 6. Zenodo Deposit Metadata & Archive Verification
 
-- **Zenodo Live Record v2:** [https://zenodo.org/records/21987030](https://zenodo.org/records/21987030)
-- **Version 2 DOI:** `10.5281/zenodo.21987030`
-- **Concept DOI:** `10.5281/zenodo.21980409`
-- **Deposited Remote Archive (Zenodo Record 21987030):**
+- **Zenodo Version Record:** [https://zenodo.org/records/22121457](https://zenodo.org/records/22121457)
+- **Version DOI:** `10.5281/zenodo.22121457`
+- **Concept DOI (All Versions):** `10.5281/zenodo.22121356`
+- **Release Archive:**
   - **Filename:** `Articulo_4_AIP_Chaos_Replication_Package.zip`
-  - **Exact Size:** `53,418,461 bytes` (~50.94 MB)
-  - **MD5 Checksum:** `99278185bb215582f3a61d1988ee50f6`
-- **Local Master Build:**
-  - Can be built anytime using `python -c "import zipfile..."` or packaged via repository export. Contains the complete source tree, test suite (39/39 passing), and compiled REVTeX 4-2 PDFs.
-
+  - **Verification:** Zenodo publishes the authoritative file size and MD5 checksum on the version record. These values are checked against the local deterministic build after publication.
+  - **Publication Date:** 27 August 2026
+  - **License:** MIT License / Creative Commons Attribution 4.0 International
+- **Canonical Local Production Archive:**
+  - Can be generated at any time via `python package_zenodo_release.py`.
+  - **Release Integrity:** Strictly packages only scientific code, datasets, documentation, and REVTeX manuscripts. Private workflow, prompt, and checkpoint files are excluded and verified by `test_zip_package_excludes_private_workflow_files`.
+  - **Test Suite Status:** 46 of 46 tests passing (100% Green).
+  - **Compilation Status:** 4 of 4 REVTeX 4-2 PDFs compiled with 0 Overfull boxes.

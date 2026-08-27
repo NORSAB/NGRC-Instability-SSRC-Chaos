@@ -21,3 +21,9 @@ __pycache__/
 # IDE
 .vscode/
 .idea/
+
+# Local collaboration records, excluded from the public research repository
+AGENTS.md
+CLA?DE.md
+CHECKPOINT_TRIO_IA.md
+PROMPT_*.md
